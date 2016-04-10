@@ -9,14 +9,9 @@ import android.view.MotionEvent;
 
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.background.Background;
-import com.gamesbykevin.breakout.bird.Bird;
-import com.gamesbykevin.breakout.pipes.Pipes;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
-import com.gamesbykevin.breakout.storage.score.Digits;
-import com.gamesbykevin.breakout.storage.score.Score;
 
 /**
  * The main game logic will happen here
@@ -39,24 +34,14 @@ public final class Game implements IGame
     //is the game over?
     private boolean gameover = false;
     
-    //track the best score for each mode index
-    private Score scoreboard;
-    
-    //object used to render a nice looking number
-    private Digits digits;
-    
     //the duration we want to vibrate the phone for
     private static final long VIBRATION_DURATION = 500L;
     
-    //our bird
-    private Bird bird;
-    
-    //collection of pipes
-    private Pipes pipes;
-    
-    //did the user press the screen
-    private boolean press = false;
-    
+    /**
+     * Our value to identify if vibrate is enabled
+     */
+	public static final int VIBRATE_ENABLED = 0;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -66,18 +51,6 @@ public final class Game implements IGame
     {
         //our main screen object reference
         this.screen = screen;
-        
-        //create a new score board
-        this.scoreboard = new Score(screen.getScreenOptions(), screen.getPanel().getActivity());
-        
-        //create our bird
-        this.bird = new Bird(this);
-        
-        //create our pipes container
-        this.pipes = new Pipes(this);
-        
-        //create new instance
-        this.digits = new Digits();
     }
     
     /**
@@ -87,33 +60,6 @@ public final class Game implements IGame
     public ScreenManager getScreen()
     {
         return this.screen;
-    }
-    
-    /**
-     * Get the digits
-     * @return Object used to render numbers
-     */
-    public Digits getDigits()
-    {
-    	return this.digits;
-    }
-    
-    /**
-     * Get the bird
-     * @return The bird in play
-     */
-    public Bird getBird()
-    {
-    	return this.bird;
-    }
-    
-    /**
-     * Get the pipes
-     * @return The container for the pipes in play
-     */
-    public Pipes getPipes()
-    {
-    	return this.pipes;
     }
     
     /**
@@ -139,15 +85,6 @@ public final class Game implements IGame
     }
     
     /**
-     * Get the score board
-     * @return The object containing the personal best records
-     */
-    public Score getScoreboard()
-    {
-    	return this.scoreboard;
-    }
-    
-    /**
      * Reset the game
      */
     private void reset() 
@@ -161,35 +98,13 @@ public final class Game implements IGame
         	//flag game over false
         	setGameover(false);
         	
-        	if (getBird() != null)
-        		getBird().reset();
-        	
-        	if (getPipes() != null)
-        		getPipes().reset();
-        	
-        	//reset current score
-        	getScoreboard().setCurrentScore(0);
-        	getDigits().setNumber(0, 0, Score.SCORE_Y, true);
-        	
-    		//reset depending on the difficulty
+        	/*
     		switch (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Difficulty))
     		{
-	    		//Normal
-	    		case 0:
     			default:
-    				getPipes().setPipeGap(Pipes.PIPE_GAP_NORMAL);
-	    			break;
-	    			
-	    		//Hard
-	    		case 1:
-	    			getPipes().setPipeGap(Pipes.PIPE_GAP_HARD);
-	    			break;
-	    			
-	    		//Easy
-	    		case 2:
-	    			getPipes().setPipeGap(Pipes.PIPE_GAP_EASY);
 	    			break;
     		}
+    		*/
     	}
     }
     
@@ -267,24 +182,15 @@ public final class Game implements IGame
     	
     	if (action == MotionEvent.ACTION_UP)
     	{
-    		//flag press false
-    		press = false;
+    		
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
-			if (!press)
-			{
-				//flag press true
-				press = true;
-				
-				//start jumping
-	    		if (getBird() != null)
-	    			getBird().jump();
-			}
+    		
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
-			//do something here?
+			
     	}
     }
     
@@ -302,15 +208,7 @@ public final class Game implements IGame
         }
         else
         {
-        	//update the bird
-    		getBird().update();
-    		
-    		//update the pipes
-    		getPipes().update();
-    		
-    		//the background should be scrolling if the bird is not dead
-        	if (!getBird().isDead())
-        		getScreen().getBackground().update();
+        	
         }
     }
     
@@ -320,7 +218,7 @@ public final class Game implements IGame
     public void vibrate()
     {
 		//make sure vibrate option is enabled
-		if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Vibrate) == 0)
+		if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Vibrate) == VIBRATE_ENABLED)
 		{
     		//get our vibrate object
     		Vibrator v = (Vibrator) getScreen().getPanel().getActivity().getSystemService(Context.VIBRATOR_SERVICE);
@@ -348,20 +246,7 @@ public final class Game implements IGame
     	}
     	else
     	{
-    		//render pipes
-        	if (getPipes() != null)
-        		getPipes().render(canvas);
     		
-    		//render current score as long as the bird is alive
-    		if (getDigits() != null && !getBird().isDead())
-    			getDigits().render(canvas);
-    		
-    		//render the ground
-    		getScreen().getBackground().renderAnimation(canvas, Background.Key.Ground);
-    		
-        	//render the bird last
-    		if (getBird() != null)
-    			getBird().render(canvas);
     	}
     }
     
@@ -369,17 +254,5 @@ public final class Game implements IGame
     public void dispose()
     {
         this.paint = null;
-        
-        if (this.scoreboard != null)
-        {
-        	this.scoreboard.dispose();
-        	this.scoreboard = null;
-        }
-        
-        if (this.bird != null)
-        {
-        	this.bird.dispose();
-        	this.bird = null;
-        }
     }
 }

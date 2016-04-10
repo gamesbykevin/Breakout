@@ -1,5 +1,6 @@
 package com.gamesbykevin.breakout.screen;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,9 +8,9 @@ import android.graphics.Typeface;
 import com.gamesbykevin.androidframework.resources.Audio;
 
 import com.gamesbykevin.androidframework.resources.Disposable;
+import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.background.Background;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import java.util.HashMap;
@@ -40,35 +41,38 @@ public final class ScreenManager implements Screen, Disposable
     //the paint object used for the button text
     private Paint paint;
     
+    //the background of the game
+    private final Bitmap background;
+    
     /**
      * The x-coordinate where we want the logo to be displayed
      */
-    public static final int LOGO_X = 25;
+    public static final int LOGO_X = 20;
     
     /**
      * The y-coordinate where we want the logo to be displayed
      */
-    public static final int LOGO_Y = 50;
+    public static final int LOGO_Y = 10;
     
     /**
      * The x-coordinate where we want to start putting the buttons
      */
-    public static final int BUTTON_X = 40;
+    public static final int BUTTON_X = 121;
     
     /**
      * The y-coordinate where we want to start putting the buttons
      */
-    public static final int BUTTON_Y = 250;
+    public static final int BUTTON_Y = 125;
     
     /**
      * The y-coordinate spacing between each button
      */
-    public static final int BUTTON_Y_INCREMENT = MenuScreen.BUTTON_HEIGHT + (int)(MenuScreen.BUTTON_HEIGHT * .25);
+    public static final int BUTTON_Y_INCREMENT = MenuScreen.BUTTON_HEIGHT + (int)(MenuScreen.BUTTON_HEIGHT * .1);
     
     /**
      * The y-coordinate spacing between each button
      */
-    public static final int BUTTON_X_INCREMENT = MenuScreen.BUTTON_WIDTH + (int)(MenuScreen.BUTTON_WIDTH * .25);
+    public static final int BUTTON_X_INCREMENT = MenuScreen.BUTTON_WIDTH + (int)(MenuScreen.BUTTON_WIDTH * .05);
     
     /**
      * The alpha visibility to apply when darkening the background
@@ -78,10 +82,7 @@ public final class ScreenManager implements Screen, Disposable
     /**
      * Default font size
      */
-    public static final float DEFAULT_FONT_SIZE = 20f;
-    
-    //the scrolling background
-    private Background background;
+    public static final float DEFAULT_FONT_SIZE = 24f;
     
     /**
      * Create our main screen
@@ -89,6 +90,9 @@ public final class ScreenManager implements Screen, Disposable
      */
     public ScreenManager(final GamePanel panel)
     {
+    	//store background
+    	this.background = Images.getImage(Assets.ImageMenuKey.Background);
+    	
         //store our game panel reference
         this.panel = panel;
         
@@ -103,9 +107,6 @@ public final class ScreenManager implements Screen, Disposable
         
         //default to the ready state
         setState(State.Ready);
-        
-        //create the background
-        this.background = new Background();
     }
     
     @Override
@@ -132,7 +133,7 @@ public final class ScreenManager implements Screen, Disposable
             this.paint.setTextSize(DEFAULT_FONT_SIZE);
 
             //set the color
-            this.paint.setColor(Color.BLACK);
+            this.paint.setColor(Color.WHITE);
         }
         
         //return object
@@ -148,15 +149,6 @@ public final class ScreenManager implements Screen, Disposable
     {
     	//update current screen
         getScreen(getState()).update();
-    }
-    
-    /**
-     * Get the background object
-     * @return The background object
-     */
-    public Background getBackground()
-    {
-    	return this.background;
     }
     
     /**
@@ -232,7 +224,7 @@ public final class ScreenManager implements Screen, Disposable
 	        		Audio.stop();
 	        		
 	        		//play menu theme
-	        		Audio.play(Assets.AudioMenuKey.Music, true);
+	        		//Audio.play(Assets.AudioMenuKey.Music, true);
 	        	}
 	        }
 	        else if (state == State.Running)
@@ -241,7 +233,7 @@ public final class ScreenManager implements Screen, Disposable
 	        	Audio.stop();
 	        	
 	        	//play main theme music
-	        	Audio.play(Assets.AudioGameKey.Music, true);
+	        	//Audio.play(Assets.AudioGameKey.Music, true);
 	        }
     	}
     	finally
@@ -258,8 +250,8 @@ public final class ScreenManager implements Screen, Disposable
             //fill background
             canvas.drawColor(Color.BLACK);
             
-            //draw the background
-            getBackground().render(canvas);
+            //draw background
+            canvas.drawBitmap(background, 0, 0, null);
             
             //render the game
             getScreenGame().render(canvas);
@@ -382,12 +374,6 @@ public final class ScreenManager implements Screen, Disposable
             
             screens.clear();
             screens = null;
-        }
-        
-        if (background != null)
-        {
-        	background.dispose();
-        	background = null;
         }
     }
 }

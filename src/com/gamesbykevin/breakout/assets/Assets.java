@@ -71,20 +71,13 @@ public class Assets
      */
     public enum ImageMenuKey
     {
+    	Background,
     	Button, 
     	Cancel, 
     	Confirm,
     	Facebook, 
-    	Gameover,
-    	GameoverEasyEndless,
-    	GameoverEasySurvival,
-    	GameoverHardEndless,
-    	GameoverHardSurvival,
-    	GameoverNormalEndless,
-    	GameoverNormalSurvival,
     	Instructions,
     	Logo,
-    	Record,
     	Splash,
     	Twitter
     }
@@ -95,7 +88,7 @@ public class Assets
      */
     public enum ImageGameKey
     {
-    	bird1, bird2, bird3, bird4, fuel, numbers, pipe, pipe1, sheet
+    	
     }
     
     /**
@@ -113,8 +106,7 @@ public class Assets
      */
     public enum AudioMenuKey
     {
-    	Music,
-    	Selection 
+    	Selection
     }
     
     /**
@@ -123,7 +115,7 @@ public class Assets
      */
     public enum AudioGameKey
     {
-    	Dead, Fuel, Music, Score
+    	
     }
     
     /**

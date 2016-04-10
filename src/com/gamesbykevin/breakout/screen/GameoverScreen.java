@@ -13,7 +13,6 @@ import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.game.Game;
-import com.gamesbykevin.breakout.storage.score.Digits;
 
 /**
  * The game over screen
@@ -47,16 +46,6 @@ public class GameoverScreen implements Screen, Disposable
     
     //list of buttons
     private HashMap<Key, Button> buttons;
-    
-    /**
-     * x-coordinate at which to display message board
-     */
-    private static final int MESSAGE_X = 136;
-    
-    /**
-     * y-coordinate at which to display message board
-     */
-    private static final int MESSAGE_Y = 20;
     
     /**
      * Keys to access each button
@@ -285,21 +274,6 @@ public class GameoverScreen implements Screen, Disposable
 	            {
 	            	//display the menu
 	            	setDisplay(true);
-	
-	                //check the player score to see if it is a personal best
-	            	/**
-	            	 * Check the player score to see if we set a personal best
-	            	 */
-	            	final Game game = screen.getScreenGame().getGame();
-	            	
-	                //get the selected mode index
-	                final int modeIndex = screen.getScreenOptions().getIndex(OptionsScreen.Key.Mode);
-	            	
-	            	//get the current difficulty setting
-	            	final int difficultyIndex = screen.getScreenOptions().getIndex(OptionsScreen.Key.Difficulty);
-	            	
-	            	//check if we set a record
-	            	success = game.getScoreboard().updateScore(modeIndex, difficultyIndex, game.getScoreboard().getCurrentScore());
 	            }
 	        }
     	}
@@ -313,74 +287,15 @@ public class GameoverScreen implements Screen, Disposable
             //only darken the background when the menu is displayed
             ScreenManager.darkenBackground(canvas);
             
-            //get the selected difficulty index
-            final int difficultyIndex = screen.getScreenOptions().getIndex(OptionsScreen.Key.Difficulty); 
-            
-            //get the selected mode index
-            final int modeIndex = screen.getScreenOptions().getIndex(OptionsScreen.Key.Mode);
-            
-            //previous best score
-            final int best = screen.getScreenGame().getGame().getScoreboard().getHighScore(modeIndex, difficultyIndex);
-            
-            //current best score
-            final int score = screen.getScreenGame().getGame().getScoreboard().getCurrentScore();
-            
             //if endless mode
             if (screen.getScreenOptions().getIndex(OptionsScreen.Key.Mode) == 0)
             {
-	            switch (difficultyIndex)
-	            {
-	            	case 0:
-	            	default:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverNormalEndless), MESSAGE_X, MESSAGE_Y, null);
-	            		break;
-	            		
-		            case 1:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverHardEndless), MESSAGE_X, MESSAGE_Y, null);
-		            	break;
-		            	
-		            case 2:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverEasyEndless), MESSAGE_X, MESSAGE_Y, null);
-		            	break;
-	            }
+            	
             }
             else
             {
-	            switch (difficultyIndex)
-	            {
-	            	case 0:
-	            	default:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverNormalSurvival), MESSAGE_X, MESSAGE_Y, null);
-	            		break;
-	            		
-		            case 1:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverHardSurvival), MESSAGE_X, MESSAGE_Y, null);
-		            	break;
-		            	
-		            case 2:
-	            		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.GameoverEasySurvival), MESSAGE_X, MESSAGE_Y, null);
-		            	break;
-	            }
+            	
             }
-            
-            //get our digits object reference
-            final Digits digits = screen.getScreenGame().getGame().getDigits();
-            
-            //position and assign number, then render
-            digits.setNumber(score, MESSAGE_X + 210, 110, false);
-            digits.render(canvas);
-            
-            //position and assign number, then render
-            digits.setNumber(best, MESSAGE_X + 210, 200, false);
-            digits.render(canvas);
-            
-            //if new record, show image else display game over
-            	canvas.drawBitmap(
-            		(success) ? Images.getImage(Assets.ImageMenuKey.Record) : Images.getImage(Assets.ImageMenuKey.Gameover), 
-            		MESSAGE_X + 50, 
-            		MESSAGE_Y, 
-            		null
-            	);
             
             //render the buttons
             for (Key key : Key.values())
