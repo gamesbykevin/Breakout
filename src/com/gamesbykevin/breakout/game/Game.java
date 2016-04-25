@@ -9,9 +9,12 @@ import android.view.MotionEvent;
 
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.brick.Bricks;
+import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
+import com.gamesbykevin.breakout.wall.Wall;
 
 /**
  * The main game logic will happen here
@@ -42,6 +45,15 @@ public final class Game implements IGame
      */
 	public static final int VIBRATE_ENABLED = 0;
 	
+	//the collection of bricks
+	private Bricks bricks;
+	
+	//the wall around the game
+	private Wall wall;
+	
+	//the paddle in the game
+	private Paddle paddle;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -51,6 +63,42 @@ public final class Game implements IGame
     {
         //our main screen object reference
         this.screen = screen;
+        
+        //create new bricks container
+        this.bricks = new Bricks();
+        
+        //create new wall
+        this.wall = new Wall();
+        
+        //create new paddle
+        this.paddle = new Paddle();
+    }
+    
+    /**
+     * Get the bricks object
+     * @return Object containing collection of bricks
+     */
+    public Bricks getBricks()
+    {
+    	return this.bricks;
+    }
+    
+    /**
+     * Get the wall
+     * @return Object that renders the wall
+     */
+    public Wall getWall()
+    {
+    	return this.wall;
+    }
+    
+    /**
+     * Get the paddle
+     * @return The paddle object the player interacts with
+     */
+    public Paddle getPaddle()
+    {
+    	return this.paddle;
     }
     
     /**
@@ -246,7 +294,14 @@ public final class Game implements IGame
     	}
     	else
     	{
+    		//render the wall
+    		getWall().render(canvas);
     		
+    		//render the bricks
+    		getBricks().render(canvas);
+    		
+    		//render the paddle
+    		getPaddle().render(canvas);
     	}
     }
     
