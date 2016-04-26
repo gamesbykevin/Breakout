@@ -1,8 +1,11 @@
 package com.gamesbykevin.breakout.brick;
 
 import com.gamesbykevin.breakout.brick.Bricks.Key;
+import com.gamesbykevin.breakout.common.ICommon;
 
-public final class Brick 
+import android.graphics.Canvas;
+
+public final class Brick implements ICommon
 {
 	//is the brick dead?
 	private boolean dead = false;
@@ -26,6 +29,12 @@ public final class Brick
 	protected Brick(final Key key) 
 	{
 		setKey(key);
+	}
+	
+	@Override
+	public void reset() 
+	{
+		
 	}
 	
 	/**
@@ -80,5 +89,23 @@ public final class Brick
 	public boolean isSolid()
 	{
 		return this.solid;
+	}
+
+	@Override
+	public void dispose() 
+	{
+		
+	}
+
+	@Override
+	public void update() throws Exception 
+	{
+		
+	}
+
+	@Override
+	public void render(Canvas canvas) throws Exception 
+	{
+		
 	}
 }

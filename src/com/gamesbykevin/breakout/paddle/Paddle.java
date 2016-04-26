@@ -3,12 +3,13 @@ package com.gamesbykevin.breakout.paddle;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
 
-public class Paddle extends Entity 
+public class Paddle extends Entity implements ICommon
 {
 	/**
 	 * Dimensions of paddle
@@ -49,6 +50,12 @@ public class Paddle extends Entity
 	public void dispose()
 	{
 		super.dispose();
+	}
+	
+	@Override
+	public void reset() 
+	{
+		
 	}
 	
 	@Override

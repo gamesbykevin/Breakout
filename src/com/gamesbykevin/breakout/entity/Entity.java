@@ -26,7 +26,7 @@ public abstract class Entity extends com.gamesbykevin.androidframework.base.Enti
 	/**
 	 * Each child should have logic to update
 	 */
-	public abstract void update();
+	public abstract void update() throws Exception;
 	
 	@Override
 	public void dispose()

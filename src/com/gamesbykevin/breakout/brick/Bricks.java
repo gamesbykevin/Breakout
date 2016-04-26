@@ -3,19 +3,18 @@ package com.gamesbykevin.breakout.brick;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 
 import android.graphics.Canvas;
 
-public class Bricks extends Entity 
+public class Bricks extends Entity implements ICommon
 {
 	//array list of bricks
 	private Brick[][] bricks;
 	
 	/**
 	 * The different animations for each brick
-	 * @author GOD
-	 *
 	 */
 	public enum Key
 	{
@@ -102,10 +101,16 @@ public class Bricks extends Entity
 			super.getSpritesheet().add(key, animation);
 		}
 	}
+	
+	@Override
+	public void reset() 
+	{
+		
+	}
 
 	/**
-	 * 
-	 * @return
+	 * Get the bricks array
+	 * @return The array of bricks in play
 	 */
 	public Brick[][] getBricks()
 	{
