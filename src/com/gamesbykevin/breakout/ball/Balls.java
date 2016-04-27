@@ -7,6 +7,8 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
 
@@ -105,6 +107,18 @@ public class Balls extends Entity implements ICommon
 		return this.balls;
 	}
 	
+	public void add(final int x, final int y)
+	{
+		//create a new ball
+		Ball ball = new Ball(Balls.Key.Blue);
+
+		//position the ball
+		ball.setX(x);
+		ball.setY(y);
+		
+		getBalls().add(ball);
+	}
+	
 	@Override
 	public void update() throws Exception 
 	{
@@ -120,6 +134,30 @@ public class Balls extends Entity implements ICommon
 				{
 					//update ball
 					ball.update();
+					
+					//make sure the ball stays in bounds
+					if (ball.getDX() > 0)
+					{
+						if (ball.getX() + ball.getWidth() >= GamePanel.WIDTH - Wall.WIDTH)
+							ball.setDX(-ball.getDX());
+					}
+					else if (ball.getDX() < 0)
+					{
+						if (ball.getX() <= Wall.WIDTH)
+							ball.setDX(-ball.getDX());
+					}
+					
+					//make sure the ball stays in bounds
+					if (ball.getDY() > 0)
+					{
+						if (ball.getY() + ball.getHeight() >= GamePanel.HEIGHT - Wall.HEIGHT)
+							ball.setDY(-ball.getDY());
+					}
+					else if (ball.getDY() < 0)
+					{
+						if (ball.getY() <= Wall.HEIGHT)
+							ball.setDY(-ball.getDY());
+					}
 				}
 				else
 				{
@@ -148,7 +186,18 @@ public class Balls extends Entity implements ICommon
 			//render all balls
 			for (int i = 0; i < getBalls().size(); i++)
 			{
-				getBalls().get(i).render(canvas);
+				//get the current ball
+				final Ball ball = getBalls().get(i);
+
+				//assign values
+				setX(ball);
+				setY(ball);
+				setWidth(ball);
+				setHeight(ball);
+				getSpritesheet().setKey(ball.getKey());
+				
+				//render the current ball
+				render(canvas);
 			}
 		}
 	}

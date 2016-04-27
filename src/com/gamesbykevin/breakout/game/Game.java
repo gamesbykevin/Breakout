@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
@@ -54,6 +55,9 @@ public final class Game implements IGame
 	//the paddle in the game
 	private Paddle paddle;
 	
+	//the balls in the game
+	private Balls balls;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -72,6 +76,18 @@ public final class Game implements IGame
         
         //create new paddle
         this.paddle = new Paddle();
+        
+        //create the balls
+        this.balls = new Balls();
+    }
+    
+    /**
+     * Get the balls object
+     * @return The object containing all balls in the game
+     */
+    public Balls getBalls()
+    {
+    	return this.balls;
     }
     
     /**
@@ -256,7 +272,17 @@ public final class Game implements IGame
         }
         else
         {
-        	
+    		//update the wall
+    		getWall().update();
+    		
+    		//update the bricks
+    		getBricks().update();
+    		
+    		//update the balls
+    		getBalls().update();
+    		
+    		//update the paddle
+    		getPaddle().update();
         }
     }
     
@@ -299,6 +325,9 @@ public final class Game implements IGame
     		
     		//render the bricks
     		getBricks().render(canvas);
+    		
+    		//render the balls
+    		getBalls().render(canvas);
     		
     		//render the paddle
     		getPaddle().render(canvas);
