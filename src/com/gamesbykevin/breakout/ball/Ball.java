@@ -25,22 +25,22 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The maximum speed allowed
 	 */
-	private static final double SPEED_MAX = 5.0;
+	public static final double SPEED_MAX = 5.0;
 	
 	/**
 	 * The minimum speed allowed
 	 */
-	private static final double SPEED_MIN = 1.25;
+	public static final double SPEED_MIN = 1.25;
 	
 	/**
 	 * The rate at which to increase the speed
 	 */
-	private static final double SPEED_INCREASE = 1.05; 
+	public static final double SPEED_INCREASE = 1.05; 
 	
 	/**
 	 * The rate at which to decrease the speed
 	 */
-	private static final double SPEED_DECREASE = 0.95;
+	public static final double SPEED_DECREASE = 0.95;
 	
 	//assign the animation type
 	private Balls.Key key;

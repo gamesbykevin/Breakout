@@ -6,6 +6,7 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
 
@@ -62,6 +63,22 @@ public class Paddle extends Entity implements ICommon
 	public void update()
 	{
 		
+	}
+	
+	@Override
+	public void setX(final double x)
+	{
+		//calculate the new x-coordinate
+		double nx = x - (getWidth() / 2);
+		
+		//keep the paddle in bounds
+		if (nx < Wall.WIDTH)
+			nx = Wall.WIDTH;
+		if (nx > GamePanel.WIDTH - Wall.WIDTH - getWidth())
+			nx = GamePanel.WIDTH - Wall.WIDTH - getWidth();
+		
+		//update x-coordinate
+		super.setX(nx);
 	}
 	
 	@Override

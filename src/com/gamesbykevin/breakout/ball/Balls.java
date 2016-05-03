@@ -107,6 +107,11 @@ public class Balls extends Entity implements ICommon
 		return this.balls;
 	}
 	
+	/**
+	 * Add ball to collection
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 */
 	public void add(final int x, final int y)
 	{
 		//create a new ball
@@ -116,6 +121,11 @@ public class Balls extends Entity implements ICommon
 		ball.setX(x);
 		ball.setY(y);
 		
+		//choose random velocity
+		ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+		ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+		
+		//add to list
 		getBalls().add(ball);
 	}
 	

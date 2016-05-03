@@ -12,6 +12,7 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.paddle.Paddle;
+import com.gamesbykevin.breakout.panel.GamePanel;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
@@ -79,6 +80,9 @@ public final class Game implements IGame
         
         //create the balls
         this.balls = new Balls();
+        
+        //add test ball
+        this.balls.add(240, 400);
     }
     
     /**
@@ -246,15 +250,16 @@ public final class Game implements IGame
     	
     	if (action == MotionEvent.ACTION_UP)
     	{
-    		
+    		//do something here
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
-    		
+    		//do something here
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
-			
+			//update the paddle location
+			getPaddle().setX(x);
     	}
     }
     
