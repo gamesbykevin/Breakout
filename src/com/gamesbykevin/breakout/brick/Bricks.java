@@ -3,8 +3,10 @@ package com.gamesbykevin.breakout.brick;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.game.Game;
 
 import android.graphics.Canvas;
 
@@ -41,9 +43,9 @@ public class Bricks extends Entity implements ICommon
 	 */
 	public static final int START_Y = 20;
 	
-	public Bricks() throws Exception
+	public Bricks(final Game game) throws Exception
 	{
-		super(Brick.WIDTH, Brick.HEIGHT);
+		super(game, Brick.WIDTH, Brick.HEIGHT);
 		
 		//create a new array list
 		this.bricks = new Brick[ROWS][COLS];
@@ -52,7 +54,12 @@ public class Bricks extends Entity implements ICommon
 		{
 			for (int col = 0; col < getBricks()[0].length; col++)
 			{
+				//create brick
 				getBricks()[row][col] = new Brick(Key.Blue);
+				
+				//assign correct position
+				getBricks()[row][col].setX(START_X + (col * Brick.WIDTH));
+				getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
 			}
 		}
 		
@@ -135,9 +142,42 @@ public class Bricks extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update()
+	public void update() throws Exception
 	{
-		
+		//update bricks?
+		for (int row = 0; row < getBricks().length; row++)
+		{
+			for (int col = 0; col < getBricks()[0].length; col++)
+			{
+				//skip if it does not exist
+				if (getBricks()[row][col] == null)
+					continue;
+				
+				//update brick
+				getBricks()[row][col].update();
+				
+				//if the brick is not dead check it for collision
+				if (!getBricks()[row][col].isDead())
+				{
+					//check each ball for collision with a brick
+					for (Ball ball : getGame().getBalls().getBalls())
+					{
+						//if this ball has collision with the current brick
+						if (ball.hasCollision(getBricks()[row][col]))
+						{
+							//flip y-velocity
+							ball.setDY(-ball.getDY());
+							
+							//assign the brick null
+							getBricks()[row][col] = null;
+							
+							//no need to check the next ball
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -155,8 +195,8 @@ public class Bricks extends Entity implements ICommon
 				if (!getBricks()[row][col].isDead())
 				{
 					//position brick
-					super.setX(START_X + (col * Brick.WIDTH));
-					super.setY(START_Y + (row * Brick.HEIGHT));
+					super.setX(getBricks()[row][col].getX());
+					super.setY(getBricks()[row][col].getY());
 					
 					//assign the appropriate animation
 					super.getSpritesheet().setKey(getBricks()[row][col].getKey());

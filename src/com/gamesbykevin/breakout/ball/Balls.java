@@ -7,6 +7,7 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.panel.GamePanel;
 import com.gamesbykevin.breakout.wall.Wall;
 
@@ -25,10 +26,10 @@ public class Balls extends Entity implements ICommon
 		Yellow, Blue, Green, Orange, Red, White
 	}
 	
-	public Balls() throws Exception 
+	public Balls(final Game game) throws Exception 
 	{
 		//call parent constructor
-		super(Ball.WIDTH, Ball.HEIGHT);
+		super(game, Ball.WIDTH, Ball.HEIGHT);
 		
 		//create new list of balls
 		this.balls = new ArrayList<Ball>();
@@ -115,7 +116,7 @@ public class Balls extends Entity implements ICommon
 	public void add(final int x, final int y)
 	{
 		//create a new ball
-		Ball ball = new Ball(Balls.Key.Blue);
+		Ball ball = new Ball(getGame(), Balls.Key.Blue);
 
 		//position the ball
 		ball.setX(x);
@@ -200,14 +201,14 @@ public class Balls extends Entity implements ICommon
 				final Ball ball = getBalls().get(i);
 
 				//assign values
-				setX(ball);
-				setY(ball);
-				setWidth(ball);
-				setHeight(ball);
-				getSpritesheet().setKey(ball.getKey());
+				super.setX(ball);
+				super.setY(ball);
+				super.setWidth(ball);
+				super.setHeight(ball);
+				super.getSpritesheet().setKey(ball.getKey());
 				
 				//render the current ball
-				render(canvas);
+				super.render(canvas);
 			}
 		}
 	}

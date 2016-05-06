@@ -2,6 +2,7 @@ package com.gamesbykevin.breakout.ball;
 
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.game.Game;
 
 import android.graphics.Canvas;
 
@@ -25,12 +26,12 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The maximum speed allowed
 	 */
-	public static final double SPEED_MAX = 5.0;
+	public static final double SPEED_MAX = 10.0;
 	
 	/**
 	 * The minimum speed allowed
 	 */
-	public static final double SPEED_MIN = 1.25;
+	public static final double SPEED_MIN = 5.25;
 	
 	/**
 	 * The rate at which to increase the speed
@@ -45,17 +46,38 @@ public final class Ball extends Entity implements ICommon
 	//assign the animation type
 	private Balls.Key key;
 	
-	protected Ball(final Balls.Key key) 
+	//store the x-ratio for paddle collision
+	private double xratio = 1.0;
+	
+	protected Ball(final Game game, final Balls.Key key) 
 	{
-		super(WIDTH, HEIGHT);
+		super(game, WIDTH, HEIGHT);
 		
 		//assign key
 		setKey(key);
 	}
 	
 	/**
-	 * 
-	 * @param key
+	 * Assign the x-ratio
+	 * @param xratio The adjustment when calculating the x-velocity
+	 */
+	public void setXRatio(final double xratio)
+	{
+		this.xratio = xratio;
+	}
+	
+	/**
+	 * Get the x-ratio
+	 * @return The adjustment when calculating the x-velocity
+	 */
+	public double getXRatio()
+	{
+		return this.xratio;
+	}
+	
+	/**
+	 * Assign the animation key for the ball
+	 * @param key The animation key for the ball
 	 */
 	public void setKey(final Balls.Key key)
 	{
@@ -63,8 +85,8 @@ public final class Ball extends Entity implements ICommon
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get the animation key for the ball
+	 * @return The animation key for the ball
 	 */
 	public Balls.Key getKey()
 	{
@@ -72,22 +94,54 @@ public final class Ball extends Entity implements ICommon
 	}
 	
 	/**
-	 * Speed up the ball speed
+	 * Speed up the ball speed for both x, y velocity
 	 */
 	public void speedUp()
 	{
-		//increase the speed
+		//increase the speed overall
+		speedUpX();
+		speedUpY();
+	}
+	
+	/**
+	 * Increase the x-velocity based on speed increase rate
+	 */
+	public void speedUpX()
+	{
 		this.setDX(super.getX() * SPEED_INCREASE);
+	}
+	
+	/**
+	 * Increase the y-velocity based on speed increase rate
+	 */
+	public void speedUpY()
+	{
 		this.setDY(super.getY() * SPEED_INCREASE);
 	}
 	
 	/**
-	 * Speed down the ball speed
+	 * Speed down the ball speed for both x, y velocity
 	 */
 	public void speedDown()
 	{
-		//increase the speed
+		//decrease the speed
+		speedDownX();
+		speedDownY();
+	}
+	
+	/**
+	 * Decrease the x-velocity based on speed decrease rate
+	 */
+	public void speedDownX()
+	{
 		this.setDX(super.getX() * SPEED_DECREASE);
+	}
+	
+	/**
+	 * Decrease the y-velocity based on speed decrease rate
+	 */
+	public void speedDownY()
+	{
 		this.setDY(super.getY() * SPEED_DECREASE);
 	}
 	
@@ -99,10 +153,20 @@ public final class Ball extends Entity implements ICommon
 		super.setDX(dx);
 		
 		//make sure we stay within range
-		if (getDX() > SPEED_MAX)
-			super.setDX(SPEED_MAX);
-		if (getDX() < SPEED_MIN)
-			super.setDX(SPEED_MIN);
+		if (getDX() > 0)
+		{
+			if (getDX() > SPEED_MAX)
+				super.setDX(SPEED_MAX);
+			if (getDX() < SPEED_MIN)
+				super.setDX(SPEED_MIN);
+		}
+		else
+		{
+			if (-getDX() > SPEED_MAX)
+				super.setDX(-SPEED_MAX);
+			if (-getDX() < SPEED_MIN)
+				super.setDX(-SPEED_MIN);
+		}
 	}
 	
 	/**
@@ -113,10 +177,20 @@ public final class Ball extends Entity implements ICommon
 		super.setDY(dy);
 		
 		//make sure we stay within range
-		if (getDY() > SPEED_MAX)
-			super.setDY(SPEED_MAX);
-		if (getDY() < SPEED_MIN)
-			super.setDY(SPEED_MIN);
+		if  (getDY() > 0)
+		{
+			if (getDY() > SPEED_MAX)
+				super.setDY(SPEED_MAX);
+			if (getDY() < SPEED_MIN)
+				super.setDY(SPEED_MIN);
+		}
+		else
+		{
+			if (-getDY() > SPEED_MAX)
+				super.setDY(-SPEED_MAX);
+			if (-getDY() < SPEED_MIN)
+				super.setDY(-SPEED_MIN);
+		}
 	}
 	
 	@Override
@@ -135,7 +209,7 @@ public final class Ball extends Entity implements ICommon
 	public void update() 
 	{
 		//update location
-		super.setX(super.getX() + super.getDX());
+		super.setX(super.getX() + (getXRatio() * super.getDX()));
 		super.setY(super.getY() + super.getDY());
 	}
 	

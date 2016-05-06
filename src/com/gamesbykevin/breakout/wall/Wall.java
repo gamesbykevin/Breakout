@@ -4,6 +4,7 @@ import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
@@ -38,9 +39,9 @@ public class Wall extends Entity
 	/**
 	 * Default constructor
 	 */
-	public Wall() throws Exception
+	public Wall(final Game game) throws Exception
 	{
-		super(WIDTH, HEIGHT);
+		super(game, WIDTH, HEIGHT);
 		
 		//x-coordinate
 		final int x = 0;
@@ -91,7 +92,7 @@ public class Wall extends Entity
 	@Override
 	public void update()
 	{
-		
+		//nothing needed here
 	}
 	
 	@Override

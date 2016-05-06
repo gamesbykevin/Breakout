@@ -12,7 +12,6 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.paddle.Paddle;
-import com.gamesbykevin.breakout.panel.GamePanel;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
@@ -70,16 +69,16 @@ public final class Game implements IGame
         this.screen = screen;
         
         //create new bricks container
-        this.bricks = new Bricks();
+        this.bricks = new Bricks(this);
         
         //create new wall
-        this.wall = new Wall();
+        this.wall = new Wall(this);
         
         //create new paddle
-        this.paddle = new Paddle();
+        this.paddle = new Paddle(this);
         
         //create the balls
-        this.balls = new Balls();
+        this.balls = new Balls(this);
         
         //add test ball
         this.balls.add(240, 400);

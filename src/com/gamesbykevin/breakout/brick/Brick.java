@@ -2,10 +2,11 @@ package com.gamesbykevin.breakout.brick;
 
 import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.common.ICommon;
+import com.gamesbykevin.breakout.entity.Entity;
 
 import android.graphics.Canvas;
 
-public final class Brick implements ICommon
+public final class Brick extends Entity implements ICommon
 {
 	//is the brick dead?
 	private boolean dead = false;
@@ -26,8 +27,10 @@ public final class Brick implements ICommon
 	//animation for the brick
 	private Key key;
 	
-	protected Brick(final Key key) 
+	protected Brick(final Key key)
 	{
+		super(null, WIDTH, HEIGHT);
+		
 		setKey(key);
 	}
 	
