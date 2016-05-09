@@ -88,7 +88,7 @@ public class Assets
      */
     public enum ImageGameKey
     {
-    	Sheet
+    	Border, Sheet
     }
     
     /**

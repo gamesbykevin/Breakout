@@ -72,7 +72,7 @@ public final class Game implements IGame
         this.bricks = new Bricks(this);
         
         //create new wall
-        this.wall = new Wall(this);
+        this.wall = new Wall();
         
         //create new paddle
         this.paddle = new Paddle(this);
@@ -276,9 +276,6 @@ public final class Game implements IGame
         }
         else
         {
-    		//update the wall
-    		getWall().update();
-    		
     		//update the bricks
     		getBricks().update();
     		

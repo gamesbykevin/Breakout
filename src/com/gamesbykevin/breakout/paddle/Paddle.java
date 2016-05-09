@@ -32,7 +32,7 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * Default starting coordinate
 	 */
-	public static final int START_Y = GamePanel.HEIGHT - (GamePanel.HEIGHT / 8);
+	public static final int START_Y = GamePanel.HEIGHT - (GamePanel.HEIGHT / 6);
 	
 	/**
 	 * Adjust the x-velocity based on where the paddle is
@@ -89,6 +89,10 @@ public class Paddle extends Entity implements ICommon
 			//check first for collision with the ball
 			if (hasCollision(ball))
 			{
+				//if the ball has moved past the paddle
+				if (ball.getY() > getY() + (getHeight() / 2))
+					continue;
+				
 				//switch ball y-velocity
 				ball.setDY(-ball.getDY());
 				
