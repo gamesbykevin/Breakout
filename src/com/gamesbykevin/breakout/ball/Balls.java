@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.panel.GamePanel;
-import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
 
@@ -147,27 +147,44 @@ public class Balls extends Entity implements ICommon
 					ball.update();
 					
 					//make sure the ball stays in bounds
-					if (ball.getDX() > 0)
-					{
-						if (ball.getX() + ball.getWidth() >= GamePanel.WIDTH - Wall.WIDTH)
-							ball.setDX(-ball.getDX());
-					}
-					else if (ball.getDX() < 0)
-					{
-						if (ball.getX() <= Wall.WIDTH)
-							ball.setDX(-ball.getDX());
-					}
+					ball.verifyBounds();
 					
-					//make sure the ball stays in bounds
-					if (ball.getDY() > 0)
+					//set the length
+					final int rowMax = getGame().getBricks().getBricks().length;
+					final int colMax = getGame().getBricks().getBricks()[0].length;
+					
+					//check if the ball has hit any of the bricks
+					for (int row = 0; row < rowMax; row++)
 					{
-						if (ball.getY() + ball.getHeight() >= GamePanel.HEIGHT - Wall.HEIGHT)
-							ball.setDY(-ball.getDY());
-					}
-					else if (ball.getDY() < 0)
-					{
-						if (ball.getY() <= Wall.HEIGHT)
-							ball.setDY(-ball.getDY());
+						for (int col = 0; col < colMax; col++)
+						{
+							//get the current brick
+							final Brick brick = getGame().getBricks().getBricks()[row][col];
+							
+							//skip if it does not exist
+							if (brick == null)
+								continue;
+							
+							if (!brick.isDead())
+							{
+								//if this ball has collision with the current brick
+								if (ball.hasCollision(brick))
+								{
+									//flip y-velocity
+									ball.setDY(-ball.getDY());
+									
+									//flag the brick as dead
+									brick.setDead(true);
+									
+									//move to the ends
+									row = rowMax;
+									col = colMax;
+									
+									//no need to check the other bricks since the ball already hit
+									break;
+								}
+							}
+						}
 					}
 				}
 				else

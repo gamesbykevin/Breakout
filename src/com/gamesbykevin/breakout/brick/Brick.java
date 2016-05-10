@@ -1,8 +1,12 @@
 package com.gamesbykevin.breakout.brick;
 
+import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.thread.MainThread;
 
 import android.graphics.Canvas;
 
@@ -13,6 +17,24 @@ public final class Brick extends Entity implements ICommon
 	
 	//is this brick not meant to be destroyed?
 	private boolean solid = false;
+	
+	//how many frames has the brick been dead
+	private int frames = 0;
+	
+	/**
+	 * The number of frames to show the particles before we hide
+	 */
+	private static final int FRAMES_PARTICLE_LIMIT = (MainThread.FPS / 4);
+	
+	/**
+	 * The size of a single particle
+	 */
+	private static final int PARTICLE_DIMENSION = 10;
+
+	/**
+	 * How fast the particles move
+	 */
+	private static final int PARTICLE_SPEED = (PARTICLE_DIMENSION / 2);
 	
 	/**
 	 * Default width of a brick
@@ -27,6 +49,9 @@ public final class Brick extends Entity implements ICommon
 	//animation for the brick
 	private Key key;
 	
+	//animation for the particle
+	private Assets.ImageGameKey particleKey = Assets.ImageGameKey.Particle1;
+	
 	protected Brick(final Key key)
 	{
 		super(null, WIDTH, HEIGHT);
@@ -35,13 +60,64 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	@Override
-	public void reset() 
+	public final void reset() 
 	{
+		//reset frames
+		this.frames = 0;
 		
+		//flag dead false
+		setDead(false);
+		
+		//flag solid false
+		setSolid(false);
+		
+		//pick random particle key
+		assignParticleKey();
 	}
 	
 	/**
-	 * 
+	 * Assign random particle key
+	 */
+	private void assignParticleKey()
+	{
+		switch (GamePanel.RANDOM.nextInt(7))
+		{
+			case 0:
+				particleKey = Assets.ImageGameKey.Particle1;
+				break;
+			
+			case 1:
+				particleKey = Assets.ImageGameKey.Particle2;
+				break;
+				
+			case 2:
+				particleKey = Assets.ImageGameKey.Particle3;
+				break;
+				
+			case 3:
+				particleKey = Assets.ImageGameKey.Particle4;
+				break;
+				
+			case 4:
+				particleKey = Assets.ImageGameKey.Particle5;
+				break;
+				
+			case 5:
+				particleKey = Assets.ImageGameKey.Particle6;
+				break;
+				
+			case 6:
+				particleKey = Assets.ImageGameKey.Particle7;
+				break;
+				
+			default:
+				particleKey = Assets.ImageGameKey.Particle1;
+				break;
+		}
+	}
+	
+	/**
+	 * Assign the animation key
 	 * @param key
 	 */
 	protected final void setKey(final Key key)
@@ -50,8 +126,8 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get the animation key
+	 * @return The assigned animation key
 	 */
 	protected Key getKey()
 	{
@@ -65,6 +141,15 @@ public final class Brick extends Entity implements ICommon
 	public void setDead(final boolean dead)
 	{
 		this.dead = dead;
+		
+		if (isDead())
+		{
+			//reset frames
+			this.frames = 0;
+			
+			//pick random particle key
+			assignParticleKey();
+		}
 	}
 	
 	/**
@@ -97,18 +182,66 @@ public final class Brick extends Entity implements ICommon
 	@Override
 	public void dispose() 
 	{
-		
+		super.dispose();
 	}
 
 	@Override
 	public void update() throws Exception 
 	{
-		
+		//if dead keep count of frames
+		if (isDead())
+			this.frames++;
 	}
 
 	@Override
 	public void render(Canvas canvas) throws Exception 
 	{
-		
+		//if dead render particles
+		if (isDead())
+		{
+			//if the particles have been displayed for the limit, don't render
+			if (frames > FRAMES_PARTICLE_LIMIT)
+				return;
+			
+			//store values
+			final double x = getX();
+			final double y = getY();
+			final double w = getWidth();
+			final double h = getHeight();
+			
+			//the middle coordinate
+			final double mx = x + (w / 2);
+			final double my = y + (h / 2);
+			
+			//assign dimension for the particle
+			super.setWidth(PARTICLE_DIMENSION);
+			super.setHeight(PARTICLE_DIMENSION);
+			
+			//place particle and then render (nw)
+			super.setX(mx - (frames * PARTICLE_SPEED));
+			super.setY(my - (frames * PARTICLE_SPEED));
+			super.render(canvas, Images.getImage(this.particleKey));
+			
+			//place particle and then render (ne)
+			super.setX(mx + (frames * PARTICLE_SPEED));
+			super.setY(my - (frames * PARTICLE_SPEED));
+			super.render(canvas, Images.getImage(this.particleKey));
+			
+			//place particle and then render (sw)
+			super.setX(mx - (frames * PARTICLE_SPEED));
+			super.setY(my + (frames * PARTICLE_SPEED));
+			super.render(canvas, Images.getImage(this.particleKey));
+			
+			//place particle and then render (se)
+			super.setX(mx + (frames * PARTICLE_SPEED));
+			super.setY(my + (frames * PARTICLE_SPEED));
+			super.render(canvas, Images.getImage(this.particleKey));
+			
+			//restore values
+			super.setX(x);
+			super.setY(y);
+			super.setWidth(w);
+			super.setHeight(h);
+		}
 	}
 }

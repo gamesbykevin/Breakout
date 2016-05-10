@@ -1,8 +1,11 @@
 package com.gamesbykevin.breakout.ball;
 
+import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
 
@@ -26,7 +29,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The maximum speed allowed
 	 */
-	public static final double SPEED_MAX = 10.0;
+	public static final double SPEED_MAX = Brick.HEIGHT;
 	
 	/**
 	 * The minimum speed allowed
@@ -211,6 +214,36 @@ public final class Ball extends Entity implements ICommon
 		//update location
 		super.setX(super.getX() + (getXRatio() * super.getDX()));
 		super.setY(super.getY() + super.getDY());
+	}
+
+	/**
+	 * Here we make sure the ball stays within the game bounds
+	 */
+	public void verifyBounds()
+	{
+		//make sure the ball stays in bounds
+		if (getDX() > 0)
+		{
+			if (getX() + getWidth() >= GamePanel.WIDTH - Wall.WIDTH)
+				setDX(-getDX());
+		}
+		else if (getDX() < 0)
+		{
+			if (getX() <= Wall.WIDTH)
+				setDX(-getDX());
+		}
+		
+		//make sure the ball stays in bounds
+		if (getDY() > 0)
+		{
+			if (getY() + getHeight() >= GamePanel.HEIGHT - Wall.HEIGHT)
+				setDY(-getDY());
+		}
+		else if (getDY() < 0)
+		{
+			if (getY() <= Wall.HEIGHT)
+				setDY(-getDY());
+		}
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package com.gamesbykevin.breakout.brick;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
@@ -155,27 +154,6 @@ public class Bricks extends Entity implements ICommon
 				
 				//update brick
 				getBricks()[row][col].update();
-				
-				//if the brick is not dead check it for collision
-				if (!getBricks()[row][col].isDead())
-				{
-					//check each ball for collision with a brick
-					for (Ball ball : getGame().getBalls().getBalls())
-					{
-						//if this ball has collision with the current brick
-						if (ball.hasCollision(getBricks()[row][col]))
-						{
-							//flip y-velocity
-							ball.setDY(-ball.getDY());
-							
-							//assign the brick null
-							getBricks()[row][col] = null;
-							
-							//no need to check the next ball
-							break;
-						}
-					}
-				}
 			}
 		}
 	}
@@ -187,22 +165,29 @@ public class Bricks extends Entity implements ICommon
 		{
 			for (int col = 0; col < getBricks()[0].length; col++)
 			{
+				//get the current brick
+				final Brick brick = getBricks()[row][col]; 
+				
 				//skip if it does not exist
-				if (getBricks()[row][col] == null)
+				if (brick == null)
 					continue;
 				
 				//is the brick dead?
-				if (!getBricks()[row][col].isDead())
+				if (!brick.isDead())
 				{
 					//position brick
-					super.setX(getBricks()[row][col].getX());
-					super.setY(getBricks()[row][col].getY());
+					super.setX(brick.getX());
+					super.setY(brick.getY());
 					
 					//assign the appropriate animation
-					super.getSpritesheet().setKey(getBricks()[row][col].getKey());
+					super.getSpritesheet().setKey(brick.getKey());
 					
 					//render brick
 					super.render(canvas);
+				}
+				else
+				{
+					brick.render(canvas);
 				}
 			}
 		}
