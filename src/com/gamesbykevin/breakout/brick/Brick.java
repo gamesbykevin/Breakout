@@ -18,6 +18,9 @@ public final class Brick extends Entity implements ICommon
 	//is this brick not meant to be destroyed?
 	private boolean solid = false;
 	
+	//does this brick contain a powerup
+	private boolean powerup = false;
+	
 	//how many frames has the brick been dead
 	private int frames = 0;
 	
@@ -162,6 +165,24 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	/**
+	 * Flag the brick as a power up 
+	 * @param powerup true = yes, false = no
+	 */
+	public void setPowerup(final boolean powerup)
+	{
+		this.powerup = powerup;
+	}
+	
+	/**
+	 * Is this brick a power up?
+	 * @return true = yes, false = no
+	 */
+	public boolean isPowerup()
+	{
+		return this.powerup;
+	}
+	
+	/**
 	 * Flag if the brick can be broken
 	 * @param solid true if solid and can't be broken, false otherwise
 	 */
@@ -199,49 +220,58 @@ public final class Brick extends Entity implements ICommon
 		//if dead render particles
 		if (isDead())
 		{
-			//if the particles have been displayed for the limit, don't render
+			//if the particles have been displayed for the limit, don't render the particle effect
 			if (frames > FRAMES_PARTICLE_LIMIT)
-				return;
+			{
+				//if this is a power up render it
+				if (isPowerup())
+				{
+					
+				}
+			}
+			else
+			{
 			
-			//store values
-			final double x = getX();
-			final double y = getY();
-			final double w = getWidth();
-			final double h = getHeight();
-			
-			//the middle coordinate
-			final double mx = x + (w / 2);
-			final double my = y + (h / 2);
-			
-			//assign dimension for the particle
-			super.setWidth(PARTICLE_DIMENSION);
-			super.setHeight(PARTICLE_DIMENSION);
-			
-			//place particle and then render (nw)
-			super.setX(mx - (frames * PARTICLE_SPEED));
-			super.setY(my - (frames * PARTICLE_SPEED));
-			super.render(canvas, Images.getImage(this.particleKey));
-			
-			//place particle and then render (ne)
-			super.setX(mx + (frames * PARTICLE_SPEED));
-			super.setY(my - (frames * PARTICLE_SPEED));
-			super.render(canvas, Images.getImage(this.particleKey));
-			
-			//place particle and then render (sw)
-			super.setX(mx - (frames * PARTICLE_SPEED));
-			super.setY(my + (frames * PARTICLE_SPEED));
-			super.render(canvas, Images.getImage(this.particleKey));
-			
-			//place particle and then render (se)
-			super.setX(mx + (frames * PARTICLE_SPEED));
-			super.setY(my + (frames * PARTICLE_SPEED));
-			super.render(canvas, Images.getImage(this.particleKey));
-			
-			//restore values
-			super.setX(x);
-			super.setY(y);
-			super.setWidth(w);
-			super.setHeight(h);
+				//store values
+				final double x = getX();
+				final double y = getY();
+				final double w = getWidth();
+				final double h = getHeight();
+				
+				//the middle coordinate
+				final double mx = x + (w / 2);
+				final double my = y + (h / 2);
+				
+				//assign dimension for the particle
+				super.setWidth(PARTICLE_DIMENSION);
+				super.setHeight(PARTICLE_DIMENSION);
+				
+				//place particle and then render (nw)
+				super.setX(mx - (frames * PARTICLE_SPEED));
+				super.setY(my - (frames * PARTICLE_SPEED));
+				super.render(canvas, Images.getImage(this.particleKey));
+				
+				//place particle and then render (ne)
+				super.setX(mx + (frames * PARTICLE_SPEED));
+				super.setY(my - (frames * PARTICLE_SPEED));
+				super.render(canvas, Images.getImage(this.particleKey));
+				
+				//place particle and then render (sw)
+				super.setX(mx - (frames * PARTICLE_SPEED));
+				super.setY(my + (frames * PARTICLE_SPEED));
+				super.render(canvas, Images.getImage(this.particleKey));
+				
+				//place particle and then render (se)
+				super.setX(mx + (frames * PARTICLE_SPEED));
+				super.setY(my + (frames * PARTICLE_SPEED));
+				super.render(canvas, Images.getImage(this.particleKey));
+				
+				//restore values
+				super.setX(x);
+				super.setY(y);
+				super.setWidth(w);
+				super.setHeight(h);
+			}
 		}
 	}
 }
