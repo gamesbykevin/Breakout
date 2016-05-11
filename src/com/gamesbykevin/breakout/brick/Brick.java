@@ -18,8 +18,21 @@ public final class Brick extends Entity implements ICommon
 	//is this brick not meant to be destroyed?
 	private boolean solid = false;
 	
-	//does this brick contain a powerup
-	private boolean powerup = false;
+	//which power up is this?
+	private PowerupKey powerupKey;
+	
+	public enum PowerupKey
+	{
+		Magnet,
+		Expand,
+		Shrink,
+		Laser,
+		ExtraLife,
+		ExtraBalls,
+		SpeedUp,
+		SpeedDown,
+		Fireball
+	}
 	
 	//how many frames has the brick been dead
 	private int frames = 0;
@@ -165,12 +178,12 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	/**
-	 * Flag the brick as a power up 
-	 * @param powerup true = yes, false = no
+	 * Assign the power up key 
+	 * @param powerupKey Assign a key if a power up, if not a power up assign null
 	 */
-	public void setPowerup(final boolean powerup)
+	public void setPowerup(final PowerupKey powerupKey)
 	{
-		this.powerup = powerup;
+		this.powerupKey = powerupKey;
 	}
 	
 	/**
@@ -179,7 +192,7 @@ public final class Brick extends Entity implements ICommon
 	 */
 	public boolean isPowerup()
 	{
-		return this.powerup;
+		return (this.powerupKey != null);
 	}
 	
 	/**
