@@ -205,7 +205,7 @@ public final class Ball extends Entity implements ICommon
 	@Override
 	public void reset() 
 	{
-		
+		//anything here?
 	}
 	
 	@Override
