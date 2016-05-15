@@ -12,6 +12,7 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.paddle.Paddle;
+import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
@@ -58,6 +59,9 @@ public final class Game implements IGame
 	//the balls in the game
 	private Balls balls;
 	
+	//the power ups in the game
+	private Powerups powerups;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -80,8 +84,20 @@ public final class Game implements IGame
         //create the balls
         this.balls = new Balls(this);
         
+        //create the power ups
+        this.powerups = new Powerups(this);
+        
         //add test ball
         this.balls.add(240, 400);
+    }
+    
+    /**
+     * Get the power ups object
+     * @return The object containing all power ups in the game
+     */
+    public Powerups getPowerups()
+    {
+    	return this.powerups;
     }
     
     /**
@@ -284,6 +300,9 @@ public final class Game implements IGame
     		
     		//update the paddle
     		getPaddle().update();
+    		
+    		//update the power ups
+    		getPowerups().update();
         }
     }
     
@@ -326,6 +345,9 @@ public final class Game implements IGame
     		
     		//render the bricks
     		getBricks().render(canvas);
+    		
+    		//render the power ups
+    		getPowerups().render(canvas);
     		
     		//render the balls
     		getBalls().render(canvas);

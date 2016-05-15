@@ -34,7 +34,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The minimum speed allowed
 	 */
-	public static final double SPEED_MIN = 5.25;
+	public static final double SPEED_MIN = 6.15;
 	
 	/**
 	 * The rate at which to increase the speed
@@ -52,12 +52,54 @@ public final class Ball extends Entity implements ICommon
 	//store the x-ratio for paddle collision
 	private double xratio = 1.0;
 	
+	//is the ball frozen
+	private boolean frozen = false;
+	
+	//is this a fire ball
+	private boolean fire = false;
+	
 	protected Ball(final Game game, final Balls.Key key) 
 	{
 		super(game, WIDTH, HEIGHT);
 		
 		//assign key
 		setKey(key);
+	}
+	
+	/**
+	 * Flag the ball frozen
+	 * @param frozen true if you intend to pause the ball, false otherwise
+	 */
+	public void setFrozen(final boolean frozen)
+	{
+		this.frozen = frozen;
+	}
+	
+	/**
+	 * Is the ball frozen?
+	 * @return true = yes, false = no
+	 */
+	public boolean isFrozen()
+	{
+		return this.frozen;
+	}
+	
+	/**
+	 * Flag the ball on fire
+	 * @param fire true if you want the ball to fly through the bricks, false otherwise
+	 */
+	public void setFire(final boolean fire)
+	{
+		this.fire = fire;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean hasFire()
+	{
+		return this.fire;
 	}
 	
 	/**
@@ -211,9 +253,13 @@ public final class Ball extends Entity implements ICommon
 	@Override
 	public void update() 
 	{
-		//update location
-		super.setX(super.getX() + (getXRatio() * super.getDX()));
-		super.setY(super.getY() + super.getDY());
+		//if not frozen, lets move the ball
+		if (!isFrozen())
+		{
+			//update location
+			super.setX(super.getX() + (getXRatio() * super.getDX()));
+			super.setY(super.getY() + super.getDY());
+		}
 	}
 
 	/**

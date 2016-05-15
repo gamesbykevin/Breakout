@@ -6,6 +6,7 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
 
@@ -59,16 +60,18 @@ public class Bricks extends Entity implements ICommon
 				//assign correct position
 				getBricks()[row][col].setX(START_X + (col * Brick.WIDTH));
 				getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
+				
+				//decide at random if it is a power up
+				getBricks()[row][col].setPowerup(GamePanel.RANDOM.nextBoolean());
 			}
 		}
 		
 		//where animation is located
-		final int x = 40;
+		int x = 40;
+		int y = 0;
 		
 		for (Key key : Key.values())
 		{
-			int y;
-			
 			//locate y-coordinate
 			switch (key)
 			{
@@ -106,6 +109,8 @@ public class Bricks extends Entity implements ICommon
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);
 		}
+		
+
 	}
 	
 	@Override
@@ -187,6 +192,7 @@ public class Bricks extends Entity implements ICommon
 				}
 				else
 				{
+					//render brick particles (if exist)
 					brick.render(canvas);
 				}
 			}

@@ -20,6 +20,21 @@ public class Paddle extends Entity implements ICommon
 	public static final int WIDTH = 104;
 	
 	/**
+	 * The amount we can increase/decrease the size of the paddle
+	 */
+	public static final int WIDTH_CHANGE = 13;
+	
+	/**
+	 * Minimum dimensions of paddle
+	 */
+	public static final int MIN_WIDTH = 52;
+	
+	/**
+	 * Maximum dimensions of paddle
+	 */
+	public static final int MAX_WIDTH = 208;
+	
+	/**
 	 * Dimensions of paddle
 	 */
 	public static final int HEIGHT = 24;
@@ -49,6 +64,9 @@ public class Paddle extends Entity implements ICommon
 	 */
 	public static final double PADDLE_COLLISION_MIDDLE = 0.0;
 	
+	//does this paddle have magnet capabilities
+	private boolean magnet = false;
+	
 	public Paddle(final Game game)
 	{
 		super(game, WIDTH, HEIGHT);
@@ -62,6 +80,62 @@ public class Paddle extends Entity implements ICommon
 		
 		//now add animation to the sprite sheet
 		super.getSpritesheet().add(DEFAULT, animation);
+	}
+	
+	/**
+	 * Set the magnet
+	 * @param magnet true = the paddle can catch the balls, false otherwise
+	 */
+	public void setMagnet(final boolean magnet)
+	{
+		this.magnet = magnet;
+	}
+	
+	/**
+	 * Do we have a magnet?
+	 * @return true if the paddle can catch the balls, false otherwise
+	 */
+	public boolean hasMagnet()
+	{
+		return this.magnet;
+	}
+	
+	/**
+	 * Expand the size of the paddle
+	 */
+	public void expand()
+	{
+		//calculate the middle
+		final double mx = getX() + (getWidth() / 2);
+		
+		//increase width
+		super.setWidth(getWidth() + WIDTH_CHANGE);
+		
+		//make sure we don't exceed the max
+		if (super.getWidth() > MAX_WIDTH)
+			super.setWidth(MAX_WIDTH);
+		
+		//position the paddle so it is in the middle
+		this.setX(mx - (getWidth() / 2));
+	}
+	
+	/**
+	 * Shrink the size of the paddle
+	 */
+	public void shrink()
+	{
+		//calculate the middle
+		final double mx = getX() + (getWidth() / 2);
+		
+		//decrease width
+		super.setWidth(getWidth() - WIDTH_CHANGE);
+		
+		//make sure we don't exceed the min
+		if (super.getWidth() > MIN_WIDTH)
+			super.setWidth(MIN_WIDTH);
+		
+		//position the paddle so it is in the middle
+		this.setX(mx - (getWidth() / 2));
 	}
 	
 	@Override

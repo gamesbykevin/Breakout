@@ -18,21 +18,8 @@ public final class Brick extends Entity implements ICommon
 	//is this brick not meant to be destroyed?
 	private boolean solid = false;
 	
-	//which power up is this?
-	private PowerupKey powerupKey;
-	
-	public enum PowerupKey
-	{
-		Magnet,
-		Expand,
-		Shrink,
-		Laser,
-		ExtraLife,
-		ExtraBalls,
-		SpeedUp,
-		SpeedDown,
-		Fireball
-	}
+	//will this brick become a power up
+	private boolean powerup = false;
 	
 	//how many frames has the brick been dead
 	private int frames = 0;
@@ -72,6 +59,7 @@ public final class Brick extends Entity implements ICommon
 	{
 		super(null, WIDTH, HEIGHT);
 		
+		//assign animation key
 		setKey(key);
 	}
 	
@@ -134,7 +122,7 @@ public final class Brick extends Entity implements ICommon
 	
 	/**
 	 * Assign the animation key
-	 * @param key
+	 * @param key Animation key for the brick
 	 */
 	protected final void setKey(final Key key)
 	{
@@ -177,22 +165,18 @@ public final class Brick extends Entity implements ICommon
 		return this.dead;
 	}
 	
-	/**
-	 * Assign the power up key 
-	 * @param powerupKey Assign a key if a power up, if not a power up assign null
-	 */
-	public void setPowerup(final PowerupKey powerupKey)
+	public void setPowerup(final boolean powerup)
 	{
-		this.powerupKey = powerupKey;
+		this.powerup = powerup;
 	}
 	
 	/**
 	 * Is this brick a power up?
-	 * @return true = yes, false = no
+	 * @return true = yes, false = no;
 	 */
-	public boolean isPowerup()
+	public boolean hasPowerup()
 	{
-		return (this.powerupKey != null);
+		return this.powerup;
 	}
 	
 	/**
@@ -233,18 +217,9 @@ public final class Brick extends Entity implements ICommon
 		//if dead render particles
 		if (isDead())
 		{
-			//if the particles have been displayed for the limit, don't render the particle effect
-			if (frames > FRAMES_PARTICLE_LIMIT)
+			//only render the particles for a limited number of frames
+			if (frames <= FRAMES_PARTICLE_LIMIT)
 			{
-				//if this is a power up render it
-				if (isPowerup())
-				{
-					
-				}
-			}
-			else
-			{
-			
 				//store values
 				final double x = getX();
 				final double y = getY();

@@ -14,6 +14,9 @@ public abstract class Entity extends com.gamesbykevin.androidframework.base.Enti
 	//our game reference object
 	private final Game game;
 	
+	//is the power up hidden
+	private boolean hidden = false;
+	
 	/**
 	 * Default constructor
 	 */
@@ -29,6 +32,24 @@ public abstract class Entity extends com.gamesbykevin.androidframework.base.Enti
 		
 		//assign dimensions
 		super.setHeight(height);
+	}
+	
+	/**
+	 * Set the entity up as hidden
+	 * @param hidden true if you want to hide, false otherwise
+	 */
+	public final void setHidden(final boolean hidden)
+	{
+		this.hidden = hidden;
+	}
+	
+	/**
+	 * Is the entity hidden
+	 * @return true if we don't want to interact/display with this entity
+	 */
+	public final boolean isHidden()
+	{
+		return this.hidden;
 	}
 	
 	/**
