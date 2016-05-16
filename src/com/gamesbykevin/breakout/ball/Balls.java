@@ -9,7 +9,6 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
-import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
@@ -19,8 +18,8 @@ public class Balls extends Entity implements ICommon
 	//list of balls in play
 	private ArrayList<Ball> balls;
 	
-	//the list of lasers
-	private ArrayList<Laser> lasers;
+	//list of keys for the ball animations
+	private ArrayList<Key> keys;
 	
 	/**
 	 * The different animations for each ball
@@ -30,6 +29,11 @@ public class Balls extends Entity implements ICommon
 		Yellow, Blue, Green, Orange, Red, White
 	}
 	
+	/**
+	 * The number of balls allowed at once
+	 */
+	public static final int MAX_BALL_LIMIT = 5;
+	
 	public Balls(final Game game) throws Exception 
 	{
 		//call parent constructor
@@ -38,8 +42,8 @@ public class Balls extends Entity implements ICommon
 		//create new list of balls
 		this.balls = new ArrayList<Ball>();
 		
-		//create new list of lasers
-		this.lasers = new ArrayList<Laser>();
+		//create new list of keys
+		this.keys = new ArrayList<Key>();
 		
 		//where animation is located
 		final int y = 0;
@@ -105,19 +109,10 @@ public class Balls extends Entity implements ICommon
 			this.balls = null;
 		}
 		
-		if (this.lasers != null)
+		if (this.keys != null)
 		{
-			for (int i=0; i < this.lasers.size(); i++)
-			{
-				if (this.lasers.get(i) != null)
-				{
-					this.lasers.get(i).dispose();
-					this.lasers.set(i, null);
-				}
-			}
-			
-			this.lasers.clear();
-			this.lasers = null;
+			this.keys.clear();
+			this.keys = null;
 		}
 	}
 
@@ -183,9 +178,61 @@ public class Balls extends Entity implements ICommon
 		{
 			for (Ball ball : getBalls())
 			{
+				//flag fire
 				ball.setFire(fire);
 			}
 		}
+	}
+	
+	/**
+	 * Get a random key
+	 * @return A random animation key for the balls (except red)
+	 */
+	private Key getRandomKey()
+	{
+		//if empty populate list
+		if (this.keys.isEmpty())
+		{
+			for (Key key : Key.values())
+			{
+				//skip red
+				if (key == Key.Red)
+					continue;
+				
+				//add key to list
+				this.keys.add(key);
+			}
+		}
+		
+		//pick random index
+		final int index = GamePanel.RANDOM.nextInt(Key.values().length);
+		
+		//assign random chosen value
+		final Key tmp = Key.values()[index];
+		
+		//remove value from array list
+		this.keys.remove(index);
+		
+		//return random chosen value
+		return tmp;
+	}
+	
+	/**
+	 * Get the ball count
+	 * @return The total number of the balls in play (hidden balls are not counted)
+	 */
+	private int getCount()
+	{
+		int count = 0;
+		
+		for (Ball ball : getBalls())
+		{
+			if (!ball.isHidden())
+				count++;
+		}
+		
+		//return our result
+		return count;
 	}
 	
 	/**
@@ -193,10 +240,52 @@ public class Balls extends Entity implements ICommon
 	 * @param x x-coordinate
 	 * @param y y-coordinate
 	 */
-	public void add(final int x, final int y)
+	public void add()
 	{
+		//don't add any additional balls if we reached our limit
+		if (getCount() >= MAX_BALL_LIMIT)
+			return;
+		
+		//first default to the start location
+		double x = Ball.START_X;
+		double y = Ball.START_Y;
+		
+		//check every ball to see if one can be re-used
+		for (Ball ball : getBalls())
+		{
+			//if this ball is hidden it can be re-used
+			if (ball.isHidden())
+			{
+				//flag hidden false
+				ball.setHidden(false);
+				
+				//reset
+				ball.reset();
+				
+				//assign random animation key
+				ball.setKey(getRandomKey());
+				
+				//position the ball
+				ball.setX(x);
+				ball.setY(y);
+				
+				//choose random velocity
+				ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+				ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+				
+				//no need to continue
+				return;
+			}
+			else
+			{
+				//this ball is a valid location to spawn the new ball
+				x = GamePanel.RANDOM.nextBoolean() ? ball.getX() - Ball.WIDTH: ball.getX() + Ball.WIDTH;
+				y = ball.getY() - Ball.HEIGHT;
+			}
+		}
+		
 		//create a new ball
-		Ball ball = new Ball(getGame(), Balls.Key.Blue);
+		Ball ball = new Ball(getRandomKey());
 
 		//position the ball
 		ball.setX(x);
@@ -246,8 +335,9 @@ public class Balls extends Entity implements ICommon
 								//if this ball has collision with the current brick
 								if (ball.hasCollision(brick))
 								{
-									//flip y-velocity
-									ball.setDY(-ball.getDY());
+									//if the ball is not a fire ball flip the y-velocity
+									if (!ball.hasFire())
+										ball.setDY(-ball.getDY());
 									
 									//flag the brick as dead
 									brick.setDead(true);
@@ -277,77 +367,23 @@ public class Balls extends Entity implements ICommon
 				}
 			}
 		}
-		
-		if (getLasers() != null)
-		{
-			for (Laser laser : getLasers())
-			{
-				if (laser.isHidden())
-					continue;
-				
-				//update location of laser
-				laser.update();
-				
-				//check if it hit any bricks etc.....
-				for (int row = 0; row < rowMax; row++)
-				{
-					for (int col = 0; col < colMax; col++)
-					{
-						//get the current brick
-						final Brick brick = getGame().getBricks().getBricks()[row][col];
-						
-						if (!brick.isDead())
-						{
-							//if the laser hit the brick
-							if (laser.hasCollision(brick))
-							{
-								//flag laser hidden
-								laser.setHidden(true);
-								
-								//flag the brick as dead
-								brick.setDead(true);
-
-								//if the brick contains a power up we will add it
-								if (brick.hasPowerup())
-									super.getGame().getPowerups().add(brick);
-								
-								//move to the ends
-								row = rowMax;
-								col = colMax;
-								
-								//no need to check the other bricks since the ball already hit
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 	
 	@Override
 	public void reset() 
 	{
 		if (getBalls() != null)
-			getBalls().clear();
+		{
+			for (Ball ball : getBalls())
+			{
+				ball.reset();
+			}
+		}
 	}
 
 	@Override
 	public void render(Canvas canvas) throws Exception 
 	{
-		if (getLasers() != null)
-		{
-			for (Laser laser : getLasers())
-			{
-				//only render what is not hidden
-				if (laser.isHidden())
-					continue;
-				
-				//render the laser
-				laser.render(canvas);
-			}
-		}
-		
 		if (getBalls() != null)
 		{
 			//render all balls
@@ -366,100 +402,6 @@ public class Balls extends Entity implements ICommon
 				//render the current ball
 				super.render(canvas);
 			}
-		}
-	}
-	
-	/**
-	 * Add lasers to the mix
-	 * @param paddle The paddle which is the starting location of the lasers
-	 */
-	public void addLasers(final Paddle paddle)
-	{
-		//count the number of lasers re-used
-		int count = 0;
-		
-		for (Laser laser : getLasers())
-		{
-			//hidden lasers can be re-used, just make sure we didn't already re-use 2
-			if (laser.isHidden() && count < 2)
-			{
-				//increase count
-				count++;
-				
-				//flag false
-				laser.setHidden(false);
-				
-				//y-coordinate will be the same
-				laser.setY(paddle.getY());
-				
-				if (count == 1)
-				{
-					laser.setX(paddle.getX());
-				}
-				else if (count == 2)
-				{
-					laser.setX(paddle.getX() + paddle.getWidth() - Laser.WIDTH);
-				}
-			}
-		}
-		
-		//no lasers were found so let's add the lasers to the list
-		if (count < 1)
-		{
-			getLasers().add(new Laser(paddle.getX(), paddle.getY()));
-			getLasers().add(new Laser(paddle.getX() + paddle.getWidth() - Laser.WIDTH, paddle.getY()));
-		}
-		else if (count < 2)
-		{
-			getLasers().add(new Laser(paddle.getX() + paddle.getWidth() - Laser.WIDTH, paddle.getY()));
-		}
-	}
-	
-	private ArrayList<Laser> getLasers()
-	{
-		return this.lasers;
-	}
-	
-	/**
-	 * A laser in game play
-	 * @author GOD
-	 *
-	 */
-	private class Laser extends Entity
-	{
-		/**
-		 * Width of the laser
-		 */
-		private static final int WIDTH = 9;
-		
-		/**
-		 * Width of the laser
-		 */
-		private static final int HEIGHT = 54;
-
-		/**
-		 * The rate at which the laser can move
-		 */
-		private static final int Y_VELOCITY = (HEIGHT / 2); 
-		
-		public Laser(final double x, final double y) 
-		{
-			super(null, WIDTH, HEIGHT);
-			
-			super.setX(x);
-			super.setY(y);
-		}
-
-		@Override
-		public void update() throws Exception 
-		{
-			super.setY(super.getY() - Y_VELOCITY);
-		}
-		
-		@Override
-		public void render(final Canvas canvas) throws Exception
-		{
-			super.render(canvas, Images.getImage(Assets.ImageGameKey.LaserRed));
 		}
 	}
 }

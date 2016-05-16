@@ -6,7 +6,6 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
-import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
 
@@ -62,7 +61,7 @@ public class Bricks extends Entity implements ICommon
 				getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
 				
 				//decide at random if it is a power up
-				getBricks()[row][col].setPowerup(GamePanel.RANDOM.nextBoolean());
+				getBricks()[row][col].setPowerup(true);//GamePanel.RANDOM.nextBoolean());
 			}
 		}
 		

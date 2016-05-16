@@ -62,6 +62,9 @@ public final class Game implements IGame
 	//the power ups in the game
 	private Powerups powerups;
 	
+	//did we press the screen
+	private boolean press = false;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -88,7 +91,7 @@ public final class Game implements IGame
         this.powerups = new Powerups(this);
         
         //add test ball
-        this.balls.add(240, 400);
+        this.balls.add();
     }
     
     /**
@@ -265,16 +268,27 @@ public final class Game implements IGame
     	
     	if (action == MotionEvent.ACTION_UP)
     	{
-    		//do something here
+    		if (this.press)
+    		{
+	    		//un-freeze any frozen balls here
+	    		getBalls().setFrozen(false);
+    		}
+    		
+    		//un-flag press
+    		this.press = false;
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
-    		//do something here
+    		//flag that we pressed down
+    		this.press = true;
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
 			//update the paddle location
 			getPaddle().setX(x);
+			
+    		//un-flag press
+    		this.press = false;
     	}
     }
     

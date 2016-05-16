@@ -96,6 +96,10 @@ public abstract class Entity extends com.gamesbykevin.androidframework.base.Enti
 	@Override
 	public void render(final Canvas canvas) throws Exception
 	{
+		//don't render if hidden
+		if (isHidden())
+			return;
+		
 		super.render(canvas);
 	}
 }

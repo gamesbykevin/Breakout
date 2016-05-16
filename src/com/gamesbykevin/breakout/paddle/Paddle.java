@@ -7,7 +7,9 @@ import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.laser.Lasers;
 import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.thread.MainThread;
 import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
@@ -64,12 +66,49 @@ public class Paddle extends Entity implements ICommon
 	 */
 	public static final double PADDLE_COLLISION_MIDDLE = 0.0;
 	
+	//our lasers object
+	private Lasers lasers;
+	
 	//does this paddle have magnet capabilities
 	private boolean magnet = false;
 	
+	//does this paddle have the ability to fire lasers
+	private boolean laser = false;
+	
+	//how many frames have elapsed total
+	private int framesLaser = 0;
+	
+	//how many frames have elapsed since last laser fire
+	private int framesLaserCurrent = 0;
+	
+	/**
+	 * The delay between each laser fire
+	 */
+	private static final int FRAMES_LASER_DELAY = (MainThread.FPS / 2);
+	
+	/**
+	 * How long we can shoot lasers for
+	 */
+	private static final int FRAMES_LASER_LIMIT = (MainThread.FPS * 4);
+	
+	//how many frames have elapsed total
+	private int framesMagnet = 0;
+	
+	/**
+	 * How long do we have magnetism for?
+	 */
+	private static final int FRAMES_MAGNET_LIMIT = (MainThread.FPS * 30);
+	
+	/**
+	 * Constructor
+	 * @param game
+	 */
 	public Paddle(final Game game)
 	{
 		super(game, WIDTH, HEIGHT);
+		
+		//create new lasers object
+		this.lasers = new Lasers(game);
 		
 		//set start location
 		super.setX(START_X);
@@ -83,12 +122,51 @@ public class Paddle extends Entity implements ICommon
 	}
 	
 	/**
+	 * Get the lasers object
+	 * @return Lasers object for this paddle that contains all lasers it has fired
+	 */
+	public Lasers getLasers()
+	{
+		return this.lasers;
+	}
+	
+	/**
+	 * Flag the laser capability
+	 * @param laser True if we want the paddle to fire lasers, false otherwise
+	 */
+	public void setLaser(final boolean laser)
+	{
+		this.laser = laser;
+		
+		//if lasers are enabled, reset frames
+		if (hasLaser())
+		{
+			//reset laser frame counts
+			this.framesLaser = 0;
+			this.framesLaserCurrent = FRAMES_LASER_DELAY;
+		}
+	}
+	
+	/**
+	 * Does this paddle have laser firing capability?
+	 * @return true if the paddle can fire lasers, false otherwise
+	 */
+	public boolean hasLaser()
+	{
+		return this.laser;
+	}
+	
+	/**
 	 * Set the magnet
 	 * @param magnet true = the paddle can catch the balls, false otherwise
 	 */
 	public void setMagnet(final boolean magnet)
 	{
 		this.magnet = magnet;
+		
+		//if we have magnet, reset frame count
+		if (hasMagnet())
+			this.framesMagnet = 0;
 	}
 	
 	/**
@@ -105,18 +183,12 @@ public class Paddle extends Entity implements ICommon
 	 */
 	public void expand()
 	{
-		//calculate the middle
-		final double mx = getX() + (getWidth() / 2);
-		
 		//increase width
-		super.setWidth(getWidth() + WIDTH_CHANGE);
+		super.setWidth(super.getWidth() + WIDTH_CHANGE);
 		
 		//make sure we don't exceed the max
 		if (super.getWidth() > MAX_WIDTH)
 			super.setWidth(MAX_WIDTH);
-		
-		//position the paddle so it is in the middle
-		this.setX(mx - (getWidth() / 2));
 	}
 	
 	/**
@@ -124,40 +196,44 @@ public class Paddle extends Entity implements ICommon
 	 */
 	public void shrink()
 	{
-		//calculate the middle
-		final double mx = getX() + (getWidth() / 2);
-		
 		//decrease width
-		super.setWidth(getWidth() - WIDTH_CHANGE);
+		super.setWidth(super.getWidth() - WIDTH_CHANGE);
 		
-		//make sure we don't exceed the min
-		if (super.getWidth() > MIN_WIDTH)
+		//make sure we don't exceed the minimum
+		if (super.getWidth() < MIN_WIDTH)
 			super.setWidth(MIN_WIDTH);
-		
-		//position the paddle so it is in the middle
-		this.setX(mx - (getWidth() / 2));
 	}
 	
 	@Override
 	public void dispose()
 	{
 		super.dispose();
+		
+		if (this.lasers != null)
+		{
+			this.lasers.dispose();
+			this.lasers = null;
+		}
 	}
 	
 	@Override
 	public void reset() 
 	{
-		
+		getLasers().reset();
 	}
 	
 	@Override
-	public void update()
+	public void update() throws Exception
 	{
 		//check each ball for paddle collision
 		for (Ball ball : getGame().getBalls().getBalls())
 		{
 			//only check balls that are moving south
 			if (ball.getDY() < 0)
+				continue;
+			
+			//don't check balls that are frozen
+			if (ball.isFrozen())
 				continue;
 			
 			//check first for collision with the ball
@@ -215,6 +291,58 @@ public class Paddle extends Entity implements ICommon
 					if (ball.getDX() > 0)
 						ball.setDX(-ball.getDX());
 				}
+				
+				//if the paddle is a magnet then we freeze the ball
+				if (hasMagnet())
+				{
+					//freeze the ball
+					ball.setFrozen(true);
+					
+					//set x-offset
+					ball.setOffsetX(ball.getX() - this.getX());
+				}
+			}
+		}
+		
+		//update the lasers object
+		getLasers().update();
+		
+		//track how long we have magnetism
+		if (hasMagnet())
+		{
+			//increase frames
+			this.framesMagnet++;
+			
+			//if we reached the limit, time over
+			if (this.framesMagnet > FRAMES_MAGNET_LIMIT)
+				setMagnet(false);
+		}
+		
+		//if we have the capability to fire
+		if (hasLaser())
+		{
+			//increase frames
+			this.framesLaser++;
+			
+			//increase frames since last laser fire
+			this.framesLaserCurrent++;
+			
+			//if we have exceeded the limit stop firing lasers
+			if (this.framesLaser > FRAMES_LASER_LIMIT)
+			{
+				this.setLaser(false);
+			}
+			else
+			{
+				//if enough time has lapsed fire more lasers
+				if (this.framesLaserCurrent >= FRAMES_LASER_DELAY)
+				{
+					//reset current count
+					this.framesLaserCurrent = 0;
+					
+					//fire more lasers
+					getLasers().addLasers(this);
+				}
 			}
 		}
 	}
@@ -233,11 +361,23 @@ public class Paddle extends Entity implements ICommon
 		
 		//update x-coordinate
 		super.setX(nx);
+		
+		//check if we need to update any frozen balls
+		for (Ball ball : getGame().getBalls().getBalls())
+		{
+			//if the ball is frozen we will update the x-coordinate
+			if (ball.isFrozen())
+				ball.setX(this.getX() + ball.getOffsetX());
+		}
 	}
 	
 	@Override
 	public void render(final Canvas canvas) throws Exception
 	{
+		//render the paddle
 		super.render(canvas);
+		
+		//render any lasers
+		getLasers().render(canvas);
 	}
 }

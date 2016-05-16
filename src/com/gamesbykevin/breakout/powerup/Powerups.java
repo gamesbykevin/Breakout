@@ -2,14 +2,10 @@ package com.gamesbykevin.breakout.powerup;
 
 import java.util.ArrayList;
 
-import com.gamesbykevin.androidframework.anim.Animation;
-import com.gamesbykevin.androidframework.resources.Images;
-import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
-import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
 
@@ -17,37 +13,6 @@ public class Powerups extends Entity implements ICommon
 {
 	//list of power ups in the game
 	private ArrayList<Powerup> powerups;
-	
-	//different animations for the power ups
-	public enum Key
-	{
-		Magnet, Expand, Shrink, Laser, ExtraLife, ExtraBalls, SpeedUp, SpeedDown, Fireball
-	}
-	
-	/**
-	 * Default width of a power up animation
-	 */
-	public static final int ANIMATION_WIDTH = 44;
-	
-	/**
-	 * Default height of a power up animation
-	 */
-	public static final int ANIMATION_HEIGHT = 22;
-
-	/**
-	 * The number of columns we need to map the animation
-	 */
-	private static final int ANIMATION_COLS = 8;
-	
-	/**
-	 * The number of rows we need to map the animation
-	 */
-	private static final int ANIMATION_ROWS = 1;
-	
-	/**
-	 * The animation delay
-	 */
-	private static final long ANIMATION_DELAY = 75L;
 	
 	/**
 	 * Constructor
@@ -60,77 +25,6 @@ public class Powerups extends Entity implements ICommon
 
 		//create list of power ups
 		this.powerups = new ArrayList<Powerup>();
-		
-		//set animation coordinates
-		final int x = 0;
-		int y = 0;
-		
-		//map the power up animations
-		for (Key key : Key.values())
-		{
-			switch (key)
-			{
-				case Magnet:
-					y = 404;
-					break;
-					
-				case Expand:
-					y = 316;
-					break;
-					
-				case Shrink:
-					y = 338;
-					break;
-					
-				case Laser:
-					y = 448;
-					break;
-					
-				case ExtraLife:
-					y = 426;
-					break;
-					
-				case ExtraBalls:
-					y = 360;
-					break;
-					
-				case SpeedUp:
-					y = 294;
-					break;
-					
-				case SpeedDown:
-					y = 272;
-					break;
-					
-				case Fireball:
-					y = 250;
-					break;
-					
-				default:
-					throw new Exception("Key not found: " + key.toString());
-			}
-			
-			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, ANIMATION_WIDTH, ANIMATION_HEIGHT, ANIMATION_COLS, ANIMATION_ROWS, ANIMATION_COLS * ANIMATION_ROWS);
-			
-			//the animation will always loop
-			animation.setLoop(true);
-			
-			//assign the animation delay
-			animation.setDelay(ANIMATION_DELAY);
-			
-			//now add animation to the sprite sheet
-			super.getSpritesheet().add(key, animation);
-		}
-	}
-	
-	/**
-	 * Get a random key
-	 * @return pick a random power up
-	 */
-	private Key getRandomKey()
-	{
-		return (Key.values()[GamePanel.RANDOM.nextInt(Key.values().length)]);
 	}
 	
 	/**
@@ -146,7 +40,7 @@ public class Powerups extends Entity implements ICommon
 	 * Add power up
 	 * @param brick The brick whose location we want to place the power up
 	 */
-	public void add(final Brick brick)
+	public void add(final Brick brick) throws Exception
 	{
 		//lets see if we can re-use an existing power up
 		for (Powerup powerup : getPowerups())
@@ -154,6 +48,9 @@ public class Powerups extends Entity implements ICommon
 			//if this is hidden we can re-use
 			if (powerup.isHidden())
 			{
+				//reset
+				powerup.reset();
+				
 				//assign dimensions
 				powerup.setWidth(Powerup.WIDTH);
 				powerup.setHeight(Powerup.HEIGHT);
@@ -162,16 +59,13 @@ public class Powerups extends Entity implements ICommon
 				powerup.setX(brick.getX() + (brick.getWidth() / 2) - (powerup.getWidth() / 2));
 				powerup.setY(brick.getY());
 				
-				//stop hiding it so we can interact/display
-				powerup.setHidden(false);
-				
 				//no need to continue
 				return;
 			}
 		}
 		
 		//we weren't able to re-use a power up so let's add one
-		Powerup powerup = new Powerup(getRandomKey());
+		Powerup powerup = new Powerup();
 		
 		//assign position at the brick
 		powerup.setX(brick.getX() + (brick.getWidth() / 2) - (powerup.getWidth() / 2));
@@ -197,7 +91,8 @@ public class Powerups extends Entity implements ICommon
 				//flag the power up as hidden
 				powerup.setHidden(true);
 				
-				switch (powerup.getKey())
+				//determine which power up to apply
+				switch ((Powerup.Key)powerup.getSpritesheet().getKey())
 				{
 					case Magnet: 
 						getGame().getPaddle().setMagnet(true);
@@ -212,15 +107,16 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case Laser:
-						flag lasers for a few seconds and then paddle will add them etc..Powerups.Key.
+						getGame().getPaddle().setLaser(true);
 						break;
 						
 					case ExtraLife:
-						
+						//add extra life here
 						break;
 						
 					case ExtraBalls:
-						
+						getGame().getBalls().add();
+						getGame().getBalls().add();
 						break;
 						
 					case SpeedUp:
@@ -236,16 +132,13 @@ public class Powerups extends Entity implements ICommon
 						break;
 				
 					default:
-						throw new Exception("Key not found here: " + powerup.getKey().toString());
+						throw new Exception("Key not found here: " + powerup.getSpritesheet().getKey().toString());
 				}
 			}
 			
 			//update power up location etc...
 			powerup.update();
 		}
-		
-		//update the animation
-		super.getSpritesheet().update();
 	}
 
 	@Override
@@ -255,7 +148,7 @@ public class Powerups extends Entity implements ICommon
 		for (Powerup powerup : getPowerups())
 		{
 			//hide all power ups
-			powerup.setHidden(true);
+			powerup.reset();
 		}
 	}
 	
@@ -265,23 +158,7 @@ public class Powerups extends Entity implements ICommon
 		//render all power ups
 		for (Powerup powerup : getPowerups())
 		{
-			//skip the power up if it is hidden
-			if (powerup.isHidden())
-				continue;
-			
-			//assign coordinates
-			super.setX(powerup.getX());
-			super.setY(powerup.getY());
-			
-			//assign dimensions
-			super.setWidth(powerup.getWidth());
-			super.setHeight(powerup.getHeight());
-			
-			//assign animation
-			super.getSpritesheet().setKey(powerup.getKey());
-			
-			//render the power up
-			super.render(canvas);
+			powerup.render(canvas);
 		}
 	}
 }

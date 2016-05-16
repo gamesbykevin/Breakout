@@ -1,16 +1,25 @@
 package com.gamesbykevin.breakout.ball;
 
+import com.gamesbykevin.breakout.ball.Balls.Key;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.thread.MainThread;
 import com.gamesbykevin.breakout.wall.Wall;
-
-import android.graphics.Canvas;
 
 public final class Ball extends Entity implements ICommon 
 {
+	/**
+	 * The starting x-coordinate for the ball
+	 */
+	public static final int START_X = (GamePanel.WIDTH / 2);
+	
+	/**
+	 * The starting y-coordinate for the ball
+	 */
+	public static final int START_Y = (GamePanel.HEIGHT / 2);
+	
 	/**
 	 * Dimensions of ball
 	 */
@@ -58,12 +67,41 @@ public final class Ball extends Entity implements ICommon
 	//is this a fire ball
 	private boolean fire = false;
 	
-	protected Ball(final Game game, final Balls.Key key) 
+	//store the x-offset
+	private int offsetX;
+	
+	//the frame count that the ball has been on fire
+	private int frames = 0;
+	
+	/**
+	 * The number of frames to keep the ball on fire
+	 */
+	private static final int FIRE_FRAME_LIMIT = (MainThread.FPS * 3);
+	
+	protected Ball(final Balls.Key key) 
 	{
-		super(game, WIDTH, HEIGHT);
+		super(null, WIDTH, HEIGHT);
 		
 		//assign key
 		setKey(key);
+	}
+	
+	/**
+	 * Assign the x-offset
+	 * @param offsetX The amount of pixels from the x-coordinate for the paddle
+	 */
+	public void setOffsetX(final double offsetX)
+	{
+		this.offsetX = (int)offsetX;
+	}
+	
+	/**
+	 * Get the x-offset
+	 * @return The amount of pixels from the x-coordinate for the paddle
+	 */
+	public int getOffsetX()
+	{
+		return this.offsetX;
 	}
 	
 	/**
@@ -91,11 +129,15 @@ public final class Ball extends Entity implements ICommon
 	public void setFire(final boolean fire)
 	{
 		this.fire = fire;
+		
+		//if fire is enabled reset frame count
+		if (hasFire())
+			this.frames = 0;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Does the ball have fire?
+	 * @return true = yes, false = no
 	 */
 	public boolean hasFire()
 	{
@@ -131,10 +173,14 @@ public final class Ball extends Entity implements ICommon
 	
 	/**
 	 * Get the animation key for the ball
-	 * @return The animation key for the ball
+	 * @return The animation key for the ball, if hasFire() returns true Key.Red will always returned
 	 */
 	public Balls.Key getKey()
 	{
+		//if fire is enabled return specific animation
+		if (hasFire())
+			return Key.Red;
+		
 		return this.key;
 	}
 	
@@ -153,7 +199,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedUpX()
 	{
-		this.setDX(super.getX() * SPEED_INCREASE);
+		this.setDX(super.getDX() * SPEED_INCREASE);
 	}
 	
 	/**
@@ -161,7 +207,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedUpY()
 	{
-		this.setDY(super.getY() * SPEED_INCREASE);
+		this.setDY(super.getDY() * SPEED_INCREASE);
 	}
 	
 	/**
@@ -179,7 +225,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedDownX()
 	{
-		this.setDX(super.getX() * SPEED_DECREASE);
+		this.setDX(super.getDX() * SPEED_DECREASE);
 	}
 	
 	/**
@@ -187,7 +233,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedDownY()
 	{
-		this.setDY(super.getY() * SPEED_DECREASE);
+		this.setDY(super.getDY() * SPEED_DECREASE);
 	}
 	
 	/**
@@ -247,7 +293,11 @@ public final class Ball extends Entity implements ICommon
 	@Override
 	public void reset() 
 	{
-		//anything here?
+		//flag frozen false
+		setFrozen(false);
+		
+		//flag fire false
+		setFire(false);
 	}
 	
 	@Override
@@ -259,7 +309,22 @@ public final class Ball extends Entity implements ICommon
 			//update location
 			super.setX(super.getX() + (getXRatio() * super.getDX()));
 			super.setY(super.getY() + super.getDY());
+			
+			//only count frames if not frozen
+			if (hasFire())
+			{
+				//increase frames
+				frames++;
+				
+				//if we have reached the limit
+				if (frames > FIRE_FRAME_LIMIT)
+					setFire(false);
+			}
 		}
+		
+		//if the ball goes off the screen let's flag it hidden etc....
+		if (super.getY() > GamePanel.HEIGHT)
+			super.setHidden(true);
 	}
 
 	/**
@@ -280,21 +345,10 @@ public final class Ball extends Entity implements ICommon
 		}
 		
 		//make sure the ball stays in bounds
-		if (getDY() > 0)
+		if (getDY() < 0)
 		{
-			if (getY() + getHeight() >= GamePanel.HEIGHT - Wall.HEIGHT)
+			if (getY() < Wall.HEIGHT)
 				setDY(-getDY());
 		}
-		else if (getDY() < 0)
-		{
-			if (getY() <= Wall.HEIGHT)
-				setDY(-getDY());
-		}
-	}
-	
-	@Override
-	public void render(final Canvas canvas) throws Exception
-	{
-		super.render(canvas);
 	}
 }
