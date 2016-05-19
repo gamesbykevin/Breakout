@@ -12,7 +12,6 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.game.Game;
 
 /**
  * The game over screen
@@ -59,9 +58,6 @@ public class GameoverScreen implements Screen, Disposable
     
     //the menu selection made
     private Key selection = null;
-    
-    //did we set a new record
-    private boolean success = false;
     
     /**
      * Create the game over screen

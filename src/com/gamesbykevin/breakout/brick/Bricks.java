@@ -6,7 +6,6 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
-import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
 
@@ -26,12 +25,12 @@ public class Bricks extends Entity implements ICommon
 	/**
 	 * Dimensions of bricks board
 	 */
-	private static final int COLS = 11;
+	public static final int COLS = 11;
 	
 	/**
 	 * Dimensions of bricks board
 	 */
-	private static final int ROWS = 14;
+	public static final int ROWS = 18;
 
 	/**
 	 * The starting x-coordinate
@@ -47,24 +46,11 @@ public class Bricks extends Entity implements ICommon
 	{
 		super(game, Brick.WIDTH, Brick.HEIGHT);
 		
-		//create a new array list
+		//create a new array list for the bricks
 		this.bricks = new Brick[ROWS][COLS];
 		
-		for (int row = 0; row < getBricks().length; row++)
-		{
-			for (int col = 0; col < getBricks()[0].length; col++)
-			{
-				//create brick
-				getBricks()[row][col] = new Brick(Key.Blue);
-				
-				//assign correct position
-				getBricks()[row][col].setX(START_X + (col * Brick.WIDTH));
-				getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
-				
-				//decide at random if it is a power up
-				getBricks()[row][col].setPowerup(GamePanel.RANDOM.nextBoolean());
-			}
-		}
+		//reset all bricks
+		reset();
 		
 		//where animation is located
 		int x = 40;
@@ -114,9 +100,28 @@ public class Bricks extends Entity implements ICommon
 	}
 	
 	@Override
-	public void reset() 
+	public final void reset() 
 	{
-		
+		//create a brick at every position and mark dead (to start)
+		for (int row = 0; row < getBricks().length; row++)
+		{
+			for (int col = 0; col < getBricks()[0].length; col++)
+			{
+				//if a brick does not exist we will create it
+				if (getBricks()[row][col] == null)
+				{
+					//create brick
+					getBricks()[row][col] = new Brick(Key.Blue);
+					
+					//assign correct position
+					getBricks()[row][col].setX(START_X + (col * Brick.WIDTH));
+					getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
+				}
+				
+				//flag every brick as dead to start
+				getBricks()[row][col].setDead(true);
+			}
+		}
 	}
 
 	/**
