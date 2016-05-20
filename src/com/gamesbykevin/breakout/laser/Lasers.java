@@ -89,7 +89,10 @@ public class Lasers extends Entity implements ICommon
 								
 								//flag the brick as dead
 								brick.setDead(true);
-
+								
+								//add particles
+								brick.addParticles();
+								
 								//if the brick contains a power up we will add it
 								if (brick.hasPowerup())
 									super.getGame().getPowerups().add(brick);

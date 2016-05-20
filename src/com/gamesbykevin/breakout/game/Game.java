@@ -11,6 +11,7 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
+import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
@@ -62,6 +63,9 @@ public final class Game implements IGame
 	//the power ups in the game
 	private Powerups powerups;
 	
+	//the object containing the levels
+	private Levels levels;
+	
 	//did we press the screen
 	private boolean press = false;
 	
@@ -89,6 +93,12 @@ public final class Game implements IGame
         
         //create the power ups
         this.powerups = new Powerups(this);
+        
+        //create and load the levels
+        this.levels = new Levels();
+        
+        //populate the bricks accordingly
+        this.levels.populate(getBricks());
         
         //add test ball
         this.balls.add();

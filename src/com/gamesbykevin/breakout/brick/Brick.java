@@ -66,17 +66,14 @@ public final class Brick extends Entity implements ICommon
 	@Override
 	public final void reset() 
 	{
-		//reset frames
-		this.frames = 0;
-		
 		//flag dead false
 		setDead(false);
 		
 		//flag solid false
 		setSolid(false);
 		
-		//pick random particle key
-		assignParticleKey();
+		//add particles
+		addParticles();
 	}
 	
 	/**
@@ -124,7 +121,7 @@ public final class Brick extends Entity implements ICommon
 	 * Assign the animation key
 	 * @param key Animation key for the brick
 	 */
-	protected final void setKey(final Key key)
+	public final void setKey(final Key key)
 	{
 		this.key = key;
 	}
@@ -133,7 +130,7 @@ public final class Brick extends Entity implements ICommon
 	 * Get the animation key
 	 * @return The assigned animation key
 	 */
-	protected Key getKey()
+	public Key getKey()
 	{
 		return this.key;
 	}
@@ -145,15 +142,26 @@ public final class Brick extends Entity implements ICommon
 	public void setDead(final boolean dead)
 	{
 		this.dead = dead;
+	}
+	
+	/**
+	 * Hide the particles so it will not be displayed
+	 */
+	public void removeParticles()
+	{
+		this.frames = FRAMES_PARTICLE_LIMIT + 1;
+	}
+	
+	/**
+	 * Add particle effects
+	 */
+	public void addParticles()
+	{
+		//reset frame count
+		this.frames = 0;
 		
-		if (isDead())
-		{
-			//reset frames
-			this.frames = 0;
-			
-			//pick random particle key
-			assignParticleKey();
-		}
+		//pick random particle key
+		assignParticleKey();
 	}
 	
 	/**

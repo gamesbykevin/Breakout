@@ -95,8 +95,6 @@ public class Bricks extends Entity implements ICommon
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);
 		}
-		
-
 	}
 	
 	@Override
