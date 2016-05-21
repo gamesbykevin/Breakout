@@ -22,7 +22,7 @@ public final class Brick extends Entity implements ICommon
 	private boolean powerup = false;
 	
 	//how many frames has the brick been dead
-	private int frames = 0;
+	private int frames = FRAMES_PARTICLE_LIMIT + 1;
 	
 	/**
 	 * The number of frames to show the particles before we hide
@@ -136,23 +136,6 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	/**
-	 * Flag the brick dead
-	 * @param dead true if dead, false otherwise
-	 */
-	public void setDead(final boolean dead)
-	{
-		this.dead = dead;
-	}
-	
-	/**
-	 * Hide the particles so it will not be displayed
-	 */
-	public void removeParticles()
-	{
-		this.frames = FRAMES_PARTICLE_LIMIT + 1;
-	}
-	
-	/**
 	 * Add particle effects
 	 */
 	public void addParticles()
@@ -162,6 +145,15 @@ public final class Brick extends Entity implements ICommon
 		
 		//pick random particle key
 		assignParticleKey();
+	}
+	
+	/**
+	 * Flag the brick dead
+	 * @param dead true if dead, false otherwise
+	 */
+	public void setDead(final boolean dead)
+	{
+		this.dead = dead;
 	}
 	
 	/**

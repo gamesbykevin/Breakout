@@ -131,6 +131,32 @@ public class Bricks extends Entity implements ICommon
 		return this.bricks;
 	}
 	
+	/**
+	 * Count the number of bricks
+	 * @return The total number of breakable bricks that are not flagged dead
+	 */
+	public int getCount()
+	{
+		//track the count
+		int count = 0;
+		
+		for (int row = 0; row < getBricks().length; row++)
+		{
+			for (int col = 0;  col < getBricks()[0].length; col++)
+			{
+				if (getBricks()[row][col] != null)
+				{
+					//if the brick is not dead and not solid, add to the count
+					if (!getBricks()[row][col].isDead() && !getBricks()[row][col].isSolid())
+						count++;
+				}
+			}
+		}
+		
+		//return our result
+		return count;
+	}
+	
 	@Override
 	public void dispose()
 	{

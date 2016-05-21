@@ -335,21 +335,30 @@ public class Balls extends Entity implements ICommon
 								//if this ball has collision with the current brick
 								if (ball.hasCollision(brick))
 								{
-									//if the ball is not a fire ball flip the y-velocity
-									if (!ball.hasFire())
+									//if the brick is solid just bounce the ball off it
+									if (brick.isSolid())
+									{
+										//flip y-velocity
 										ball.setDY(-ball.getDY());
-									
-									//flag the brick as dead
-									brick.setDead(true);
-
-									//add particles
-									brick.addParticles();
-									
-									//if the brick contains a power up we will add it
-									if (brick.hasPowerup())
-										super.getGame().getPowerups().add(brick);
-									
-									//move to the ends
+									}
+									else
+									{
+										//if the ball is not a fire ball flip the y-velocity
+										if (!ball.hasFire())
+											ball.setDY(-ball.getDY());
+										
+										//flag the brick as dead
+										brick.setDead(true);
+	
+										//add particles
+										brick.addParticles();
+										
+										//if the brick contains a power up we will add it
+										if (brick.hasPowerup())
+											super.getGame().getPowerups().add(brick);
+									}
+										
+									//move to the end
 									row = rowMax;
 									col = colMax;
 									
