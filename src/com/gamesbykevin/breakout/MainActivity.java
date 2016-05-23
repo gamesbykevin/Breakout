@@ -4,6 +4,7 @@ import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
@@ -105,6 +106,10 @@ public class MainActivity extends Activity
     @Override
     public void onStop()
     {
+        //unregister listener
+        if (getGamePanel() != null)
+        	getGamePanel().getSensorManager().unregisterListener(getGamePanel());
+        
         //call parent
         super.onStop();
     }
@@ -115,6 +120,10 @@ public class MainActivity extends Activity
     @Override
     public void onDestroy()
     {
+        //unregister listener
+        if (getGamePanel() != null)
+        	getGamePanel().getSensorManager().unregisterListener(getGamePanel());
+    	
         //finish the activity
         this.finish();
         
@@ -130,6 +139,10 @@ public class MainActivity extends Activity
     {
     	//call parent
         super.onPause();
+        
+        //unregister listener
+        if (getGamePanel() != null)
+        	getGamePanel().getSensorManager().unregisterListener(getGamePanel());
     }
     
     /**
@@ -150,6 +163,10 @@ public class MainActivity extends Activity
     {
     	//call parent
     	super.onResume();
+    	
+    	//if the sensor exists make sure it is registered
+    	if (getGamePanel().getSensor() != null)
+    		getGamePanel().getSensorManager().registerListener(getGamePanel(), getGamePanel().getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
     }
     
     /**

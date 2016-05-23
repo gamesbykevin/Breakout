@@ -9,6 +9,7 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import android.graphics.Canvas;
@@ -236,19 +237,49 @@ public class Balls extends Entity implements ICommon
 	}
 	
 	/**
-	 * Add ball to collection
+	 * Add ball to collection and freeze all existing balls<br>
+	 * By default we want to place the ball in the center of the paddle.<br>
+	 * If there are other existing balls currently in play we will choose one of those ball locations.
+	 * @param paddle The paddle where we want to spawn the ball
+	 */
+	public void add(final Paddle paddle)
+	{
+		//pick x-coordinate
+		final double x = paddle.getX() + (paddle.getWidth() / 2) - (Ball.WIDTH / 2); 
+		
+		add(x, paddle.getY() - Ball.HEIGHT);
+		
+		//freeze all existing balls
+		for (Ball ball : getBalls())
+		{
+			//flag frozen true
+			ball.setFrozen(true);
+			
+			//assign x offset
+			ball.setOffsetX(x - paddle.getX());
+		}
+	}
+	
+	/**
+	 * Add a ball at the default starting location.<br>
+	 * If there are other balls currently in play a new ball will be spawned at one of those locations
+	 */
+	public void add()
+	{
+		add(Ball.START_X, Ball.START_Y);
+	}
+	
+	/**
+	 * Add a ball at the specified starting location
+	 * If there are other balls currently in play a new ball will be spawned at one of those locations
 	 * @param x x-coordinate
 	 * @param y y-coordinate
 	 */
-	public void add()
+	public void add(double x, double y)
 	{
 		//don't add any additional balls if we reached our limit
 		if (getCount() >= MAX_BALL_LIMIT)
 			return;
-		
-		//first default to the start location
-		double x = Ball.START_X;
-		double y = Ball.START_Y;
 		
 		//check every ball to see if one can be re-used
 		for (Ball ball : getBalls())

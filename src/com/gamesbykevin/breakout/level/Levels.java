@@ -95,7 +95,8 @@ public class Levels implements Disposable
 			if (line.contains(LEVEL_SEPARATOR))
 			{
 				//add level to array list
-				this.levels.add(level);
+				if (!level.getKey().isEmpty() && level.getKey().size() > 1)
+					this.levels.add(level);
 				
 				//now create a new object
 				level = new Level();
@@ -106,7 +107,8 @@ public class Levels implements Disposable
 					level = new Level();
 				
 				//add line to level
-				level.getKey().add(line);
+				if (line.length() > 0)
+					level.getKey().add(line);
 			}
 		}
 		

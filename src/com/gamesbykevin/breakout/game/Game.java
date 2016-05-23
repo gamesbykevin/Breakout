@@ -69,6 +69,9 @@ public final class Game implements IGame
 	//did we press the screen
 	private boolean press = false;
 	
+	//track the touch coordinates
+	private float touchX, touchY;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -101,7 +104,7 @@ public final class Game implements IGame
         this.levels.populate(getBricks());
         
         //add test ball
-        this.balls.add();
+        this.balls.add(getPaddle());
     }
     
     /**
@@ -280,25 +283,57 @@ public final class Game implements IGame
     	{
     		if (this.press)
     		{
-	    		//un-freeze any frozen balls here
+	    		//un freeze any frozen balls here
 	    		getBalls().setFrozen(false);
     		}
     		
-    		//un-flag press
+    		//un flag press
     		this.press = false;
+    		
+    		//stop paddle from moving
+    		getPaddle().setLeft(false);
+    		getPaddle().setRight(false);
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
     		//flag that we pressed down
     		this.press = true;
+    		
+    		//store as the previous coordinate
+    		this.touchX = x;
+    		this.touchY = y;
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
+			//determine where to move
+			if (x < this.touchX)
+			{
+				getPaddle().setLeft(true);
+				getPaddle().setRight(false);
+			}
+			else if (x > this.touchX)
+			{
+				getPaddle().setLeft(false);
+				getPaddle().setRight(true);
+			}
+			else
+			{
+				getPaddle().setLeft(false);
+				getPaddle().setRight(false);
+			}
+			
+    		System.out.println("left = " + getPaddle().hasLeft());
+    		System.out.println("right = " + getPaddle().hasRight());
+    		
 			//update the paddle location
-			getPaddle().setX(x);
+			//getPaddle().setX(x);
 			
     		//un-flag press
     		this.press = false;
+    		
+    		//store as the previous coordinate
+    		this.touchX = x;
+    		this.touchY = y;
     	}
     }
     

@@ -99,9 +99,20 @@ public class Paddle extends Entity implements ICommon
 	 */
 	private static final int FRAMES_MAGNET_LIMIT = (MainThread.FPS * 30);
 	
+	//is the paddle moving left
+	private boolean left = false;
+	
+	//is the paddle moving right
+	private boolean right = false;
+	
 	/**
-	 * Constructor
-	 * @param game
+	 * The speed at which the paddle can move
+	 */
+	private static final double MOVE_VELOCITY = 7.5;
+	
+	/**
+	 * Default Constructor
+	 * @param game Game reference object
 	 */
 	public Paddle(final Game game)
 	{
@@ -220,11 +231,56 @@ public class Paddle extends Entity implements ICommon
 	public void reset() 
 	{
 		getLasers().reset();
+		
+		//stop the paddle from moving
+		setLeft(false);
+		setRight(false);
+	}
+	
+	/**
+	 * Flag the paddle to move left
+	 * @param left true = yes, false = otherwise
+	 */
+	public void setLeft(final boolean left)
+	{
+		this.left = left;
+	}
+	
+	/**
+	 * Flag the paddle to move right
+	 * @param right true = yes, false = otherwise
+	 */
+	public void setRight(final boolean right)
+	{
+		this.right = right;
+	}
+	
+	/**
+	 * Is the paddle flagged to move left?
+	 * @return true = yes, false = no
+	 */
+	public boolean hasLeft()
+	{
+		return this.left;
+	}
+	
+	/**
+	 * Is the paddle flagged to move right?
+	 * @return true = yes, false = no
+	 */
+	public boolean hasRight()
+	{
+		return this.right;
 	}
 	
 	@Override
 	public void update() throws Exception
 	{
+		if (hasLeft())
+			this.setX(getX() - MOVE_VELOCITY);
+		if (hasRight())
+			this.setX(getX() + MOVE_VELOCITY);
+		
 		//check each ball for paddle collision
 		for (Ball ball : getGame().getBalls().getBalls())
 		{
@@ -351,7 +407,7 @@ public class Paddle extends Entity implements ICommon
 	public void setX(final double x)
 	{
 		//calculate the new x-coordinate
-		double nx = x - (getWidth() / 2);
+		double nx = x; //- (getWidth() / 2);
 		
 		//keep the paddle in bounds
 		if (nx < Wall.WIDTH)

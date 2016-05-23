@@ -1,6 +1,10 @@
 package com.gamesbykevin.breakout.panel;
 
 import android.graphics.Canvas;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,7 +23,7 @@ import java.util.Random;
  * Game Panel class
  * @author GOD
  */
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Disposable
+public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Disposable, SensorEventListener
 {
     /**
      * Our random object used to make random decisions
@@ -51,6 +55,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
     //did we calculate the screen ratio yet?
     private boolean ratio = false;
     
+    //the object to interact with the sensors
+    private SensorManager manager;
+    
+    //the sensor we are going to focus on
+	private Sensor accelerometer;
+	
     /**
      * Create a new game panel
      * @param activity Our main activity reference
@@ -59,6 +69,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
     {
         //call to parent constructor
         super(activity);
+        
+        //get the sensor manager
+        this.manager = (SensorManager)activity.getSystemService(MainActivity.SENSOR_SERVICE);
+        
+        //get the accelerometer sensor
+        this.accelerometer = getSensorManager().getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        
+        //if not null the sensor exists and register the listener
+        if (getSensor() != null)
+        	getSensorManager().registerListener(this, getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
         
         //store context
         this.activity = activity;
@@ -89,6 +109,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
     @Override
     public void dispose()
     {
+    	//unregister the sensor listener
+    	getSensorManager().unregisterListener(this);
+    	
         //it could take several attempts to stop the thread
         boolean retry = true;
         
@@ -147,6 +170,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
     public final MainActivity getActivity()
     {
         return this.activity;
+    }
+    
+    /**
+     * Get the sensor manager
+     * @return The object managing all available sensors
+     */
+    public SensorManager getSensorManager()
+    {
+    	return this.manager;
+    }
+    
+    /**
+     * Get the sensor
+     * @return The sensor we are using to track movement
+     */
+    public Sensor getSensor()
+    {
+    	return this.accelerometer;
     }
     
     /**
@@ -228,7 +269,61 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
         //return true because we want all motion events
         return true;
     }
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) 
+	{
+		//do anything here?
+	}
     
+	@Override
+	public void onSensorChanged(SensorEvent event)
+	{
+		try
+		{
+			//manage each sensor appropriately
+			switch (event.sensor.getType())
+			{
+				case Sensor.TYPE_ACCELEROMETER:
+					
+					//get the sensor coordinates
+					final float x = event.values[0];
+					//final float y = event.values[1];
+					//final float z = event.values[2];
+					
+					//check the x-coordinate (anything between -1 and 1 is neutral)
+					if (x > 1)
+					{
+						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(true);
+						this.getScreen().getScreenGame().getGame().getPaddle().setRight(false);
+					}
+					else if (x < -1)
+					{
+						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(false);
+						this.getScreen().getScreenGame().getGame().getPaddle().setRight(true);
+					}
+					else
+					{
+						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(false);
+						this.getScreen().getScreenGame().getGame().getPaddle().setRight(false);
+					}
+					
+					if (MainThread.DEBUG)
+						System.out.println("x" + event.values[0] + ", y=" + event.values[1] + ", z=" + event.values[2]);
+					break;
+					
+				//if we forget to manage the sensor we need to know
+				default:
+					throw new Exception();
+			}
+		}
+		catch (Exception e)
+		{
+			if (MainThread.DEBUG)
+				e.printStackTrace();
+		}
+	}
+	
     /**
      * Now that the surface has been created we can create our game objects
      * @param holder Object used to track events
