@@ -108,7 +108,7 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * The speed at which the paddle can move
 	 */
-	private static final double MOVE_VELOCITY = 7.5;
+	private static final double MOVE_VELOCITY = 8.5;
 	
 	/**
 	 * Default Constructor
