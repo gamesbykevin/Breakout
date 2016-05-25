@@ -110,6 +110,12 @@ public class Paddle extends Entity implements ICommon
 	 */
 	private static final double MOVE_VELOCITY = 8.5;
 	
+	//did we touch the screen to move the paddle
+	private boolean touch = false;
+	
+	//the x-coordinate touched
+	private float touchX = 0;
+	
 	/**
 	 * Default Constructor
 	 * @param game Game reference object
@@ -273,9 +279,48 @@ public class Paddle extends Entity implements ICommon
 		return this.right;
 	}
 	
+    /**
+     * Flag the user touching the screen.<br>
+     * If touch is false the touchX is not stored
+     * @param touchX Where did the user touch
+     * @param touch Did the user touch?
+     */
+    public void touch(final float touchX, final boolean touch)
+    {
+    	this.touch = touch;
+    	
+    	if (this.touch)
+    		this.touchX = touchX;
+    }
+	
 	@Override
 	public void update() throws Exception
 	{
+		
+		//if we touched
+		if (this.touch)
+		{
+			//get middle x-coordinate of the paddle
+			final double mx = getX() + (getWidth() / 2);
+			
+			//determine which direction we move
+			if (this.touchX < mx)
+			{
+				setLeft(true);
+				setRight(false);
+			}
+			else if (this.touchX > mx)
+			{
+				setLeft(false);
+				setRight(true);
+			}
+		}
+		else
+		{
+			setLeft(false);
+			setRight(false);
+		}
+		
 		if (hasLeft())
 			this.setX(getX() - MOVE_VELOCITY);
 		if (hasRight())

@@ -283,16 +283,6 @@ public class GameoverScreen implements Screen, Disposable
             //only darken the background when the menu is displayed
             ScreenManager.darkenBackground(canvas);
             
-            //if endless mode
-            if (screen.getScreenOptions().getIndex(OptionsScreen.Key.Mode) == 0)
-            {
-            	
-            }
-            else
-            {
-            	
-            }
-            
             //render the buttons
             for (Key key : Key.values())
             {

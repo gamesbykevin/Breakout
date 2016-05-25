@@ -275,52 +275,18 @@ public class Balls extends Entity implements ICommon
 	 * @param x x-coordinate
 	 * @param y y-coordinate
 	 */
-	public void add(double x, double y)
+	private void add(double x, double y)
 	{
 		//don't add any additional balls if we reached our limit
 		if (getCount() >= MAX_BALL_LIMIT)
 			return;
 		
-		//check every ball to see if one can be re-used
-		for (Ball ball : getBalls())
-		{
-			//if this ball is hidden it can be re-used
-			if (ball.isHidden())
-			{
-				//flag hidden false
-				ball.setHidden(false);
-				
-				//reset
-				ball.reset();
-				
-				//assign random animation key
-				ball.setKey(getRandomKey());
-				
-				//position the ball
-				ball.setX(x);
-				ball.setY(y);
-				
-				//choose random velocity
-				ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
-				ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
-				
-				//no need to continue
-				return;
-			}
-			else
-			{
-				//this ball is a valid location to spawn the new ball
-				x = GamePanel.RANDOM.nextBoolean() ? ball.getX() - Ball.WIDTH: ball.getX() + Ball.WIDTH;
-				y = ball.getY() - Ball.HEIGHT;
-			}
-		}
-		
 		//create a new ball
 		Ball ball = new Ball(getRandomKey());
 
 		//position the ball
-		ball.setX(x);
-		ball.setY(y);
+		ball.setX(GamePanel.RANDOM.nextBoolean() ? x - (Ball.WIDTH * .5) : x + (Ball.WIDTH * .5));
+		ball.setY(GamePanel.RANDOM.nextBoolean() ? y - (Ball.HEIGHT * .5) : y + (Ball.HEIGHT * .5));
 		
 		//choose random velocity
 		ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
@@ -345,70 +311,112 @@ public class Balls extends Entity implements ICommon
 				//get the current ball
 				Ball ball = getBalls().get(i);
 				
-				if (ball != null)
+				//if the ball is hidden remove it
+				if (ball.isHidden())
 				{
-					//update ball
-					ball.update();
+					//remove from list
+					getBalls().remove(i);
 					
-					//make sure the ball stays in bounds
-					ball.verifyBounds();
+					//move index back
+					i--;
 					
-					//check if the ball has hit any of the bricks
-					for (int row = 0; row < rowMax; row++)
+					//skip to the next ball
+					continue;
+				}
+				
+				//update ball
+				ball.update();
+				
+				//check if the ball has hit any of the bricks
+				for (int row = 0; row < rowMax; row++)
+				{
+					for (int col = 0; col < colMax; col++)
 					{
-						for (int col = 0; col < colMax; col++)
+						//if there was ball/brick collision no need to check the other bricks
+						if (checkBrickCollision(ball, getGame().getBricks().getBricks()[row][col]))
 						{
-							//get the current brick
-							final Brick brick = getGame().getBricks().getBricks()[row][col];
+							//move to the end
+							row = rowMax;
+							col = colMax;
 							
-							if (!brick.isDead())
-							{
-								//if this ball has collision with the current brick
-								if (ball.hasCollision(brick))
-								{
-									//if the brick is solid just bounce the ball off it
-									if (brick.isSolid())
-									{
-										//flip y-velocity
-										ball.setDY(-ball.getDY());
-									}
-									else
-									{
-										//if the ball is not a fire ball flip the y-velocity
-										if (!ball.hasFire())
-											ball.setDY(-ball.getDY());
-										
-										//flag the brick as dead
-										brick.setDead(true);
-	
-										//add particles
-										brick.addParticles();
-										
-										//if the brick contains a power up we will add it
-										if (brick.hasPowerup())
-											super.getGame().getPowerups().add(brick);
-									}
-										
-									//move to the end
-									row = rowMax;
-									col = colMax;
-									
-									//no need to check the other bricks since the ball already hit
-									break;
-								}
-							}
+							//no need to check the other bricks since the ball already hit
+							break;
 						}
+					}
+				}
+				
+				//make sure the ball stays in bounds
+				ball.verifyBounds();
+			}
+		}
+	}
+	
+	/**
+	 * Check the ball and brick to see if we have collision
+	 * @param ball The ball we want to check
+	 * @param brick The brick we want to check
+	 * @return true if collision, false otherwise
+	 */
+	private boolean checkBrickCollision(final Ball ball, final Brick brick) throws Exception
+	{
+		if (!brick.isDead())
+		{
+			//if this ball has collision with the current brick
+			if (ball.hasCollision(brick))
+			{
+				//if the brick is solid just bounce the ball off it
+				if (brick.isSolid())
+				{
+					//flip y-velocity
+					ball.setDY(-ball.getDY());
+					
+					//calculate the middle coordinate of the ball
+					final double mx = ball.getX() + (ball.getWidth() / 2);
+					
+					//get the end points of the brick
+					final double bl = brick.getX();
+					final double br = brick.getX() + brick.getWidth();
+					
+					//depending on x-coordinate may want to change x-velocity
+					if (mx >= br)
+					{
+						ball.setDX(-ball.getDX());
+					}
+					else if (mx <= bl)
+					{
+						ball.setDX(-ball.getDX());
 					}
 				}
 				else
 				{
-					//remove the ball since it is null
-					getBalls().remove(i);
+					//if the ball is not a fire ball flip the y-velocity
+					if (!ball.hasFire())
+						ball.setDY(-ball.getDY());
 					
-					//decrease index
-					i--;
+					//flag the brick as dead
+					brick.setDead(true);
+	
+					//add particles
+					brick.addParticles();
+					
+					//if the brick contains a power up we will add it
+					if (brick.hasPowerup())
+						super.getGame().getPowerups().add(brick);
 				}
+					
+				//we have collision
+				return true;
 			}
+			else
+			{
+				//no collision
+				return false;
+			}
+		}
+		else
+		{
+			//no collision
+			return false;
 		}
 	}
 	

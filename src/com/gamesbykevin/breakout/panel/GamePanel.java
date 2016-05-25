@@ -13,6 +13,7 @@ import com.gamesbykevin.androidframework.resources.Audio;
 import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
 import com.gamesbykevin.breakout.thread.MainThread;
@@ -291,21 +292,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
 					//final float y = event.values[1];
 					//final float z = event.values[2];
 					
-					//check the x-coordinate (anything between -1 and 1 is neutral)
-					if (x > 1)
+					//make sure the screens exist before we access
+					if (getScreen() != null && getScreen().getScreenOptions() != null && getScreen().getScreenGame() != null)
 					{
-						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(true);
-						this.getScreen().getScreenGame().getGame().getPaddle().setRight(false);
-					}
-					else if (x < -1)
-					{
-						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(false);
-						this.getScreen().getScreenGame().getGame().getPaddle().setRight(true);
-					}
-					else
-					{
-						this.getScreen().getScreenGame().getGame().getPaddle().setLeft(false);
-						this.getScreen().getScreenGame().getGame().getPaddle().setRight(false);
+						//make sure we are playing the tilt controls before proceeding
+						if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Controls) == 0)
+						{
+							if (getScreen().getScreenGame().getGame() != null)
+							{
+								//check the x-coordinate (anything between -1 and 1 is neutral)
+								if (x > .75)
+								{
+									//move left
+									this.getScreen().getScreenGame().getGame().getPaddle().touch(0, true);
+								}
+								else if (x < -.75)
+								{
+									//move right
+									this.getScreen().getScreenGame().getGame().getPaddle().touch(WIDTH, true);
+								}
+								else
+								{
+									//stop moving
+									this.getScreen().getScreenGame().getGame().getPaddle().touch(0, false);
+								}
+							}
+						}
 					}
 					
 					if (MainThread.DEBUG)

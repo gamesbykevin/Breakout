@@ -69,8 +69,13 @@ public final class Game implements IGame
 	//did we press the screen
 	private boolean press = false;
 	
-	//track the touch coordinates
-	private float touchX, touchY;
+	/**
+	 * The default starting # of lives
+	 */
+	public static final int DEFAULT_LIVES = 5;
+	
+	//default # of lives
+	private int lives;
 	
     /**
      * Create our game object
@@ -105,6 +110,27 @@ public final class Game implements IGame
         
         //add test ball
         this.balls.add(getPaddle());
+        
+        //set default # of lives
+        setLives(DEFAULT_LIVES);
+    }
+    
+    /**
+     * Set the number of lives
+     * @param lives The desired # of lives
+     */
+    public void setLives(final int lives)
+    {
+    	this.lives = lives;
+    }
+    
+    /**
+     * Get the number of lives
+     * @return The desired # of lives
+     */
+    public int getLives()
+    {
+    	return this.lives;
     }
     
     /**
@@ -278,65 +304,40 @@ public final class Game implements IGame
     	//if the game is over, we can't continue
     	if (hasGameover())
     		return;
-    	
-    	if (action == MotionEvent.ACTION_UP)
+		
+		if (action == MotionEvent.ACTION_UP)
     	{
+    		//un freeze any frozen balls here
     		if (this.press)
-    		{
-	    		//un freeze any frozen balls here
 	    		getBalls().setFrozen(false);
-    		}
     		
     		//un flag press
     		this.press = false;
     		
-    		//stop paddle from moving
-    		getPaddle().setLeft(false);
-    		getPaddle().setRight(false);
+    		//flag touch false, depending on controls setting
+    		if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Controls) == 1 || getScreen().getPanel().getSensor() == null)
+    			getPaddle().touch(x, false);
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
     		//flag that we pressed down
     		this.press = true;
     		
-    		//store as the previous coordinate
-    		this.touchX = x;
-    		this.touchY = y;
+    		//flag touch true, depending on controls setting
+    		if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Controls) == 1 || getScreen().getPanel().getSensor() == null)
+    			getPaddle().touch(x, true);
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
-			//determine where to move
-			if (x < this.touchX)
-			{
-				getPaddle().setLeft(true);
-				getPaddle().setRight(false);
-			}
-			else if (x > this.touchX)
-			{
-				getPaddle().setLeft(false);
-				getPaddle().setRight(true);
-			}
-			else
-			{
-				getPaddle().setLeft(false);
-				getPaddle().setRight(false);
-			}
-			
-    		System.out.println("left = " + getPaddle().hasLeft());
-    		System.out.println("right = " + getPaddle().hasRight());
-    		
-			//update the paddle location
-			//getPaddle().setX(x);
-			
     		//un-flag press
     		this.press = false;
     		
-    		//store as the previous coordinate
-    		this.touchX = x;
-    		this.touchY = y;
+    		//flag touch true, depending on controls setting
+    		if (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Controls) == 1 || getScreen().getPanel().getSensor() == null)
+    			getPaddle().touch(x, true);
     	}
     }
-    
+
     /**
      * Update game
      * @throws Exception 
@@ -413,6 +414,8 @@ public final class Game implements IGame
     		
     		//render the paddle
     		getPaddle().render(canvas);
+    		
+    		canvas.drawText(getLives() + "", 50, 75, getPaint());
     	}
     }
     

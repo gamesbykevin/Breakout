@@ -321,10 +321,6 @@ public final class Ball extends Entity implements ICommon
 					setFire(false);
 			}
 		}
-		
-		//if the ball goes off the screen let's flag it hidden etc....
-		if (super.getY() > GamePanel.HEIGHT)
-			super.setHidden(true);
 	}
 
 	/**
@@ -349,6 +345,14 @@ public final class Ball extends Entity implements ICommon
 		{
 			if (getY() < Wall.HEIGHT)
 				setDY(-getDY());
+		}
+		
+		//if the ball is not hidden lets check if it flew off the screen
+		if (!isHidden())
+		{
+			//if the ball goes off the screen let's flag it hidden etc....
+			if (getY() >= GamePanel.HEIGHT)
+				setHidden(true);
 		}
 	}
 }

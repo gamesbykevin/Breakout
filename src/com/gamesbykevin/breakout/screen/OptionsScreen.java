@@ -36,7 +36,7 @@ public class OptionsScreen implements Screen, Disposable
     //buttons to access each button in the list
     public enum Key
     {
-    	Back, Sound, Vibrate, Mode, Instructions, Facebook, Twitter
+    	Back, Sound, Vibrate, Controls, Instructions, Facebook, Twitter
     }
     
     //the user selection
@@ -64,9 +64,9 @@ public class OptionsScreen implements Screen, Disposable
         y += ScreenManager.BUTTON_Y_INCREMENT;
         addButtonVibrate(x, y);
         
-        //add game mode
+        //add game controls
         y += ScreenManager.BUTTON_Y_INCREMENT;
-        addButtonMode(x, y);
+        addButtonControls(x, y);
         
         //the back button
         y += ScreenManager.BUTTON_Y_INCREMENT;
@@ -158,14 +158,14 @@ public class OptionsScreen implements Screen, Disposable
         this.buttons.put(Key.Sound, button);
     }
 
-    private void addButtonMode(final int x, final int y)
+    private void addButtonControls(final int x, final int y)
     {
         Button button = new Button(Images.getImage(Assets.ImageMenuKey.Button));
-        button.addDescription("Mode: Endless");
-        button.addDescription("Mode: Survival");
+        button.addDescription("Control: Tilt");
+        button.addDescription("Control: Finger");
         button.setX(x);
         button.setY(y);
-    	this.buttons.put(Key.Mode, button);
+    	this.buttons.put(Key.Controls, button);
     }
     
     private void addButtonVibrate(final int x, final int y)
@@ -239,7 +239,7 @@ public class OptionsScreen implements Screen, Disposable
 						case Back:
 						case Sound:
 						case Vibrate:
-						case Mode:
+						case Controls:
 							button.positionText(getScreen().getPaint());
 							break;
 							
@@ -327,7 +327,7 @@ public class OptionsScreen implements Screen, Disposable
 	                break;
 	                
 				case Vibrate:
-				case Mode:
+				case Controls:
 					
 					//change index
 					button.setIndex(button.getIndex() + 1);
@@ -420,7 +420,7 @@ public class OptionsScreen implements Screen, Disposable
 	    			case Back:
 	    			case Sound:
 	    			case Vibrate:
-	    			case Mode:
+	    			case Controls:
 	    				buttons.get(key).render(canvas, getScreen().getPaint());
 	    				break;
 	    				
