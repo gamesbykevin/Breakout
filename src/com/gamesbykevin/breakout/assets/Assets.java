@@ -89,8 +89,11 @@ public class Assets
     public enum ImageGameKey
     {
     	Border, 
+    	GameOver,
     	LaserBlue, LaserGreen, LaserRed, 
+    	LevelComplete,
     	Particle1, Particle2, Particle3, Particle4, Particle5, Particle6, Particle7, 
+    	GetReady,
     	Sheet
     }
     

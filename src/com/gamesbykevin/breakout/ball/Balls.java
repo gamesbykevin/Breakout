@@ -219,24 +219,6 @@ public class Balls extends Entity implements ICommon
 	}
 	
 	/**
-	 * Get the ball count
-	 * @return The total number of the balls in play (hidden balls are not counted)
-	 */
-	private int getCount()
-	{
-		int count = 0;
-		
-		for (Ball ball : getBalls())
-		{
-			if (!ball.isHidden())
-				count++;
-		}
-		
-		//return our result
-		return count;
-	}
-	
-	/**
 	 * Add ball to collection and freeze all existing balls<br>
 	 * By default we want to place the ball in the center of the paddle.<br>
 	 * If there are other existing balls currently in play we will choose one of those ball locations.
@@ -278,7 +260,7 @@ public class Balls extends Entity implements ICommon
 	private void add(double x, double y)
 	{
 		//don't add any additional balls if we reached our limit
-		if (getCount() >= MAX_BALL_LIMIT)
+		if (getBalls().size() >= MAX_BALL_LIMIT)
 			return;
 		
 		//create a new ball
@@ -305,6 +287,19 @@ public class Balls extends Entity implements ICommon
 		
 		if (getBalls() != null)
 		{
+			//if there are no more balls, reset
+			if (getBalls().isEmpty())
+			{
+				//flag reset
+				getGame().setReset(true);
+				
+				//take a life away
+				getGame().setLives(getGame().getLives() - 1);
+				
+				//no need to continue
+				return;
+			}
+			
 			//update all balls
 			for (int i = 0; i < getBalls().size(); i++)
 			{

@@ -127,15 +127,14 @@ public class Paddle extends Entity implements ICommon
 		//create new lasers object
 		this.lasers = new Lasers(game);
 		
-		//set start location
-		super.setX(START_X);
-		super.setY(START_Y);
-		
 		//create animation
 		Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), 80, 64, WIDTH, HEIGHT);
 		
 		//now add animation to the sprite sheet
 		super.getSpritesheet().add(DEFAULT, animation);
+		
+		//reset paddle
+		reset();
 	}
 	
 	/**
@@ -236,11 +235,19 @@ public class Paddle extends Entity implements ICommon
 	@Override
 	public void reset() 
 	{
+		//remove any lasers
 		getLasers().reset();
 		
 		//stop the paddle from moving
 		setLeft(false);
 		setRight(false);
+		
+		//assign width
+		super.setWidth(WIDTH);
+		
+		//set start location
+		super.setX(START_X);
+		super.setY(START_Y);
 	}
 	
 	/**

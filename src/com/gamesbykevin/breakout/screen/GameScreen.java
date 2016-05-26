@@ -38,6 +38,9 @@ public class GameScreen implements Screen, Disposable
         
         //reset the game level
         getGame().setReset(true);
+        
+        //reset loading notification
+        getGame().setNotify(false);
     }
     
     /**

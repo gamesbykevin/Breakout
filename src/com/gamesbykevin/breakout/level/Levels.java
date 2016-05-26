@@ -117,12 +117,17 @@ public class Levels implements Disposable
 	}
 	
 	/**
-	 * Set the level index
+	 * Set the level index<br>
+	 * If an invalid value is assigned the level index will be 0
 	 * @param levelIndex The desired level of play
 	 */
 	public void setLevelIndex(final int levelIndex)
 	{
 		this.levelIndex = levelIndex;
+		
+		//stay within range
+		if (getLevelIndex() >= this.levels.size() || getLevelIndex() < 0)
+			setLevelIndex(0);
 	}
 	
 	/**

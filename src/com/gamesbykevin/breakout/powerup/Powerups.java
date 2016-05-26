@@ -148,8 +148,8 @@ public class Powerups extends Entity implements ICommon
 		//reset all power ups
 		for (Powerup powerup : getPowerups())
 		{
-			//hide all power ups
-			powerup.reset();
+			//hide any existing power ups
+			powerup.setHidden(true);
 		}
 	}
 	

@@ -17,6 +17,7 @@ import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
+import com.gamesbykevin.breakout.thread.MainThread;
 import com.gamesbykevin.breakout.wall.Wall;
 
 /**
@@ -77,6 +78,24 @@ public final class Game implements IGame
 	//default # of lives
 	private int lives;
 	
+	//the number of elapsed frames
+	private int frames = 0;
+	
+	/**
+	 * The number of frames to display get ready text
+	 */
+	private static final int GET_READY_FRAMES_LIMIT = MainThread.FPS;
+	
+	/**
+	 * The number of frames to display win text
+	 */
+	private static final int WIN_FRAMES_LIMIT = MainThread.FPS;
+	
+	/**
+	 * Darken the background accordingly
+	 */
+	private static final int TRANSITION_ALPHA_TRANSPARENCY = 95;
+	
     /**
      * Create our game object
      * @param screen The main screen
@@ -105,14 +124,11 @@ public final class Game implements IGame
         //create and load the levels
         this.levels = new Levels();
         
-        //populate the bricks accordingly
-        this.levels.populate(getBricks());
-        
-        //add test ball
-        this.balls.add(getPaddle());
-        
         //set default # of lives
         setLives(DEFAULT_LIVES);
+        
+        //populate the bricks accordingly
+        getLevels().populate(getBricks());
     }
     
     /**
@@ -131,6 +147,15 @@ public final class Game implements IGame
     public int getLives()
     {
     	return this.lives;
+    }
+    
+    /**
+     * Get the levels object
+     * @return The object containing every level layout in the game
+     */
+    public Levels getLevels()
+    {
+    	return this.levels;
     }
     
     /**
@@ -217,12 +242,27 @@ public final class Game implements IGame
     	//make sure we have notified first
     	if (hasNotify())
     	{
+    		//reset the frames count
+    		setFrames(0);
+    		
         	//flag reset false
         	setReset(false);
         	
         	//flag game over false
         	setGameover(false);
+            
+        	//reset paddle back to middle etc...
+        	getPaddle().reset();
         	
+        	//remove all existing balls
+        	getBalls().getBalls().clear();
+        	
+            //add default ball
+            getBalls().add(getPaddle());
+        	
+            //reset power ups
+            getPowerups().reset();
+            
         	/*
     		switch (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Difficulty))
     		{
@@ -234,6 +274,22 @@ public final class Game implements IGame
     }
     
     /**
+     * Is the game ready?
+     * @return true if the number of frames elapsed the limit
+     */
+    private boolean isReady()
+    {
+    	if (getBricks().hasWin())
+    	{
+    		return (this.frames > WIN_FRAMES_LIMIT);
+    	}
+    	else
+    	{
+    		return (this.frames > GET_READY_FRAMES_LIMIT);
+    	}
+    }
+    
+    /**
      * Flag reset, we also will flag notify to false if reset is true
      * @param reset true to reset the game, false otherwise
      */
@@ -241,10 +297,6 @@ public final class Game implements IGame
     public void setReset(final boolean reset)
     {
     	this.reset = reset;
-    	
-    	//flag that the user has not been notified, since we are resetting
-    	if (hasReset())
-    		setNotify(false);
     }
     
     /**
@@ -256,11 +308,16 @@ public final class Game implements IGame
     	return this.reset;
     }
     
+    public void setFrames(final int frames)
+    {
+    	this.frames = frames;
+    }
+    
     /**
      * Flag notify
      * @param notify True if we notified the user, false otherwise
      */
-    private void setNotify(final boolean notify)
+    public void setNotify(final boolean notify)
     {
     	this.notify = notify;
     }
@@ -305,6 +362,10 @@ public final class Game implements IGame
     	if (hasGameover())
     		return;
 		
+    	//if the game is not ready don't continue
+    	if (!isReady())
+    		return;
+    	
 		if (action == MotionEvent.ACTION_UP)
     	{
     		//un freeze any frozen balls here
@@ -352,17 +413,42 @@ public final class Game implements IGame
         }
         else
         {
-    		//update the bricks
-    		getBricks().update();
-    		
-    		//update the balls
-    		getBalls().update();
-    		
-    		//update the paddle
-    		getPaddle().update();
-    		
-    		//update the power ups
-    		getPowerups().update();
+        	if (isReady())
+        	{
+        		if (getBricks().hasWin())
+        		{
+    				//move to the next level
+    				getLevels().setLevelIndex(getLevels().getLevelIndex() + 1);
+    				
+    		        //flag win false
+    		        getBricks().setWin(false);
+    		        
+    		        //populate the bricks accordingly
+    		        getLevels().populate(getBricks());
+    		        
+    		        //reset
+    		        setReset(true);
+        		}
+        		else
+        		{
+		    		//update the bricks
+		    		getBricks().update();
+		    		
+		    		//update the balls
+		    		getBalls().update();
+		    		
+		    		//update the paddle
+		    		getPaddle().update();
+		    		
+		    		//update the power ups
+		    		getPowerups().update();
+        		}
+        	}
+        	else
+        	{
+        		//keep track of the frames count
+        		setFrames(this.frames + 1);
+        	}
         }
     }
     
@@ -390,7 +476,7 @@ public final class Game implements IGame
     @Override
     public void render(final Canvas canvas) throws Exception
     {
-    	if (hasReset())
+    	if (!hasNotify())
     	{
 			//render loading screen
 			canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.Splash), 0, 0, null);
@@ -415,7 +501,25 @@ public final class Game implements IGame
     		//render the paddle
     		getPaddle().render(canvas);
     		
+    		//
     		canvas.drawText(getLives() + "", 50, 75, getPaint());
+    		
+    		//if not ready yet
+    		if (!isReady())
+    		{
+    			//darken background
+    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
+    			
+    			//render image
+    			if (getBricks().hasWin())
+    			{
+	    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.LevelComplete), 70, 364, null);
+    			}
+    			else
+    			{
+	    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
+    			}
+    		}
     	}
     }
     
@@ -423,5 +527,44 @@ public final class Game implements IGame
     public void dispose()
     {
         this.paint = null;
+        
+        if (levels != null)
+        {
+        	levels.dispose();
+        	levels = null;
+        }
+        
+        if (bricks != null)
+        {
+        	bricks.dispose();
+        	bricks = null;
+        }
+        
+    	if (wall != null)
+    		wall = null;
+    	
+    	if (paddle != null)
+    	{
+    		paddle.dispose();
+    		paddle = null;
+    	}
+    	
+    	if (balls != null)
+    	{
+    		balls.dispose();
+    		balls = null;
+    	}
+    	
+    	if (powerups != null)
+    	{
+    		powerups.dispose();
+    		powerups = null;
+    	}
+    	
+    	if (bricks != null)
+    	{
+    		bricks.dispose();
+    		bricks = null;
+    	}
     }
 }

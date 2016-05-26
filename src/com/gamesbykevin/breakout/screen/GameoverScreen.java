@@ -219,6 +219,9 @@ public class GameoverScreen implements Screen, Disposable
 	                //reset with the same settings
 	                screen.getScreenGame().getGame().setReset(true);
 	                
+	                //reset loading notification
+	                screen.getScreenGame().getGame().setNotify(false);
+	                
 	                //move back to the game
 	                screen.setState(ScreenManager.State.Running);
 	                
