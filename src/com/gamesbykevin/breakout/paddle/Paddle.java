@@ -303,6 +303,8 @@ public class Paddle extends Entity implements ICommon
 	@Override
 	public void update() throws Exception
 	{
+		//difference between location and touchX
+		double xdiff = 0;
 		
 		//if we touched
 		if (this.touch)
@@ -313,11 +315,19 @@ public class Paddle extends Entity implements ICommon
 			//determine which direction we move
 			if (this.touchX < mx)
 			{
+				//calculate difference
+				xdiff = mx - this.touchX;
+				
+				//assign moving direction
 				setLeft(true);
 				setRight(false);
 			}
 			else if (this.touchX > mx)
 			{
+				//calculate difference
+				xdiff = this.touchX - mx;
+
+				//assign moving direction
 				setLeft(false);
 				setRight(true);
 			}
@@ -328,10 +338,23 @@ public class Paddle extends Entity implements ICommon
 			setRight(false);
 		}
 		
-		if (hasLeft())
-			this.setX(getX() - MOVE_VELOCITY);
-		if (hasRight())
-			this.setX(getX() + MOVE_VELOCITY);
+		//if moving and close enough to the destination we can place at the location
+		if ((hasRight() || hasLeft()) && xdiff < MOVE_VELOCITY)
+		{
+			//place at coordinate
+			this.setX(touchX - (getWidth() / 2));
+			
+			//stop moving
+			setLeft(false);
+			setRight(false);
+		}
+		else
+		{
+			if (hasLeft())
+				this.setX(getX() - MOVE_VELOCITY);
+			if (hasRight())
+				this.setX(getX() + MOVE_VELOCITY);
+		}
 		
 		//check each ball for paddle collision
 		for (Ball ball : getGame().getBalls().getBalls())

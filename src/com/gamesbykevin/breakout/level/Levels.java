@@ -117,6 +117,14 @@ public class Levels implements Disposable
 	}
 	
 	/**
+	 * Advance to the next level
+	 */
+	public void setLevelIndex()
+	{
+		setLevelIndex(getLevelIndex() + 1);
+	}
+	
+	/**
 	 * Set the level index<br>
 	 * If an invalid value is assigned the level index will be 0
 	 * @param levelIndex The desired level of play
@@ -145,6 +153,9 @@ public class Levels implements Disposable
 	 */
 	public void populate(final Bricks bricks)
 	{
+		//reset
+		bricks.reset();
+		
 		//get the current level
 		Level level = get();
 		

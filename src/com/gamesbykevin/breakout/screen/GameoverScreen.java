@@ -12,6 +12,9 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.game.GameHelper;
+import com.gamesbykevin.breakout.panel.GamePanel;
 
 /**
  * The game over screen
@@ -28,7 +31,7 @@ public class GameoverScreen implements Screen, Disposable
     /**
      * The amount of time to wait until we render the game over menu
      */
-    private static final long DELAY_MENU_DISPLAY = 1250L;
+    private static final long DELAY_MENU_DISPLAY = 2000L;
     
     //do we display the menu
     private boolean display = false;
@@ -36,7 +39,12 @@ public class GameoverScreen implements Screen, Disposable
     /**
      * The text to display for the new game
      */
-    private static final String BUTTON_TEXT_NEW_GAME = "Retry";
+    private static final String BUTTON_TEXT_RETRY = "Retry";
+    
+    /**
+     * The text to display when playing next level
+     */
+    private static final String BUTTON_TEXT_NEXT = "Next";
     
     /**
      * The text to display for the menu
@@ -53,7 +61,7 @@ public class GameoverScreen implements Screen, Disposable
      */
     public enum Key
     {
-    	Restart, Menu, Rate
+    	Next, Menu, Rate
     }
     
     //the menu selection made
@@ -72,17 +80,22 @@ public class GameoverScreen implements Screen, Disposable
         this.buttons = new HashMap<Key, Button>();
         
         //the start location of the button
-        int y = ScreenManager.BUTTON_Y + ScreenManager.BUTTON_Y_INCREMENT;
-        int x = 138;
-
-        //create our buttons
-        addButton(x, y, Key.Restart, BUTTON_TEXT_NEW_GAME);
+        int y = ScreenManager.BUTTON_Y;
+        int x = (GamePanel.WIDTH / 2) - (MenuScreen.BUTTON_WIDTH / 2);
         
-        x += ScreenManager.BUTTON_X_INCREMENT;
+        //create our buttons
+        addButton(x, y, Key.Next, BUTTON_TEXT_NEXT);
+        
+        y += ScreenManager.BUTTON_Y_INCREMENT;
         addButton(x, y, Key.Menu, BUTTON_TEXT_MENU);
         
-        x += ScreenManager.BUTTON_X_INCREMENT;
+        y += ScreenManager.BUTTON_Y_INCREMENT;
         addButton(x, y, Key.Rate, MenuScreen.BUTTON_TEXT_RATE_APP);
+    }
+    
+    private ScreenManager getScreen()
+    {
+    	return this.screen;
     }
     
     /**
@@ -214,16 +227,39 @@ public class GameoverScreen implements Screen, Disposable
 			//handle each button different
 			switch (getSelection())
 			{
-				case Restart:
+				case Next:
 				
-	                //reset with the same settings
-	                screen.getScreenGame().getGame().setReset(true);
-	                
-	                //reset loading notification
-	                screen.getScreenGame().getGame().setNotify(false);
+					//get game reference object
+					final Game game = getScreen().getScreenGame().getGame();
+					
+					if (GameHelper.WIN)
+					{
+						//move to the next level
+						game.getLevels().setLevelIndex();
+	
+						//no longer winning
+						GameHelper.WIN = false;
+						
+		                //reset with the same settings
+						GameHelper.RESET = true;
+		                
+		                //reset loading notification
+						GameHelper.NOTIFY = false;
+					}
+					else
+					{
+						//flag lose false
+						GameHelper.LOSE = false;
+						
+		                //reset with the same settings
+						GameHelper.RESET = true;
+		                
+		                //reset loading notification
+						GameHelper.NOTIFY = false;
+					}
 	                
 	                //move back to the game
-	                screen.setState(ScreenManager.State.Running);
+					getScreen().setState(ScreenManager.State.Running);
 	                
 	                //play sound effect
 	                Audio.play(Assets.AudioMenuKey.Selection);
@@ -271,6 +307,16 @@ public class GameoverScreen implements Screen, Disposable
 	            //if time has passed display menu
 	            if (System.currentTimeMillis() - time >= DELAY_MENU_DISPLAY)
 	            {
+	            	//determine what button text is displayed
+	            	if (GameHelper.LIVES <= 0)
+	            	{
+		            	buttons.get(Key.Next).setDescription(0, BUTTON_TEXT_RETRY);
+	            	}
+	            	else
+	            	{
+		            	buttons.get(Key.Next).setDescription(0, BUTTON_TEXT_NEXT);
+	            	}
+	            	
 	            	//display the menu
 	            	setDisplay(true);
 	            }

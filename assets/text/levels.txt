@@ -18,17 +18,17 @@ aaaaaaaaaaa
 #########################Level 1
 ___________
 ___________
-a
-aa
-aaa
-aaaa
-aaaaa
-aaaaaa
-aaaaaaa
-aaaaaaaa
-aaaaaaaaa
-aaaaaaaaaa
-bbbbbbbbbba
+a__________
+aa_________
+aaa________
+aaaa_______
+aaaaa______
+aaaaaa_____
+aaaaaaa____
+aaaaaaaa___
+aaaaaaaaa__
+aaaaaaaaaa_
+bbbbbbbbaaa
 #########################Level 2
 ___________
 ___________

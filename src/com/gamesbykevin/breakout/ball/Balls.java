@@ -267,8 +267,8 @@ public class Balls extends Entity implements ICommon
 		Ball ball = new Ball(getRandomKey());
 
 		//position the ball
-		ball.setX(GamePanel.RANDOM.nextBoolean() ? x - (Ball.WIDTH * .5) : x + (Ball.WIDTH * .5));
-		ball.setY(GamePanel.RANDOM.nextBoolean() ? y - (Ball.HEIGHT * .5) : y + (Ball.HEIGHT * .5));
+		ball.setX(x);
+		ball.setY(y);
 		
 		//choose random velocity
 		ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
@@ -287,19 +287,6 @@ public class Balls extends Entity implements ICommon
 		
 		if (getBalls() != null)
 		{
-			//if there are no more balls, reset
-			if (getBalls().isEmpty())
-			{
-				//flag reset
-				getGame().setReset(true);
-				
-				//take a life away
-				getGame().setLives(getGame().getLives() - 1);
-				
-				//no need to continue
-				return;
-			}
-			
 			//update all balls
 			for (int i = 0; i < getBalls().size(); i++)
 			{
@@ -366,20 +353,24 @@ public class Balls extends Entity implements ICommon
 					ball.setDY(-ball.getDY());
 					
 					//calculate the middle coordinate of the ball
-					final double mx = ball.getX() + (ball.getWidth() / 2);
+					final double my = ball.getY() + (ball.getHeight() / 2);
 					
 					//get the end points of the brick
 					final double bl = brick.getX();
 					final double br = brick.getX() + brick.getWidth();
 					
-					//depending on x-coordinate may want to change x-velocity
-					if (mx >= br)
+					//make sure close enough
+					if (my > brick.getY() && my < brick.getY() + brick.getHeight())
 					{
-						ball.setDX(-ball.getDX());
-					}
-					else if (mx <= bl)
-					{
-						ball.setDX(-ball.getDX());
+						//depending on x-coordinate may want to change x-velocity
+						if (ball.getX() + ball.getWidth() >= br)
+						{
+							ball.setDX(-ball.getDX());
+						}
+						else if (ball.getX() <= bl)
+						{
+							ball.setDX(-ball.getDX());
+						}
 					}
 				}
 				else
@@ -398,7 +389,7 @@ public class Balls extends Entity implements ICommon
 					if (brick.hasPowerup())
 						super.getGame().getPowerups().add(brick);
 				}
-					
+				
 				//we have collision
 				return true;
 			}

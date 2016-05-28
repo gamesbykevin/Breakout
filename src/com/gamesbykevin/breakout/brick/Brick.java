@@ -71,9 +71,9 @@ public final class Brick extends Entity implements ICommon
 		
 		//flag solid false
 		setSolid(false);
-		
-		//add particles
-		addParticles();
+
+		//make sure it doesn't have any particles (yet :))
+		removeParticles();
 	}
 	
 	/**
@@ -148,6 +148,18 @@ public final class Brick extends Entity implements ICommon
 	}
 	
 	/**
+	 * Remove the particles for this brick
+	 */
+	public void removeParticles()
+	{
+		//exceed frame limit
+		this.frames = FRAMES_PARTICLE_LIMIT;
+		
+		//remove particle animation key
+		this.particleKey = null;
+	}
+	
+	/**
 	 * Flag the brick dead
 	 * @param dead true if dead, false otherwise
 	 */
@@ -218,7 +230,7 @@ public final class Brick extends Entity implements ICommon
 		if (isDead())
 		{
 			//only render the particles for a limited number of frames
-			if (frames <= FRAMES_PARTICLE_LIMIT)
+			if (frames <= FRAMES_PARTICLE_LIMIT && this.particleKey != null)
 			{
 				//store values
 				final double x = getX();

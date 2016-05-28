@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.game.GameHelper;
 
 /**
  * The game screen that contains the game
@@ -22,6 +23,11 @@ public class GameScreen implements Screen, Disposable
         this.screen = screen;
     }
     
+    private ScreenManager getScreen()
+    {
+    	return this.screen;
+    }
+    
     public Game getGame()
     {
         return this.game;
@@ -34,13 +40,16 @@ public class GameScreen implements Screen, Disposable
     public void createGame() throws Exception
     {
         if (getGame() == null)
-            this.game = new Game(screen);
-        
-        //reset the game level
-        getGame().setReset(true);
+            this.game = new Game(getScreen());
         
         //reset loading notification
-        getGame().setNotify(false);
+        GameHelper.NOTIFY = false;
+        
+        //set default # of lives
+        GameHelper.LIVES = GameHelper.DEFAULT_LIVES;
+        
+        //reset game
+        GameHelper.resetLevel(getGame());
     }
     
     /**

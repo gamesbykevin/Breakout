@@ -42,9 +42,6 @@ public class Bricks extends Entity implements ICommon
 	 */
 	public static final int START_Y = 20;
 	
-	//did the player eliminate the bricks in play
-	private boolean win = false;
-	
 	public Bricks(final Game game) throws Exception
 	{
 		super(game, Brick.WIDTH, Brick.HEIGHT);
@@ -121,6 +118,9 @@ public class Bricks extends Entity implements ICommon
 				
 				//flag every brick as dead to start
 				getBricks()[row][col].setDead(true);
+				
+				//make sure there are no particles as well
+				getBricks()[row][col].removeParticles();
 			}
 		}
 	}
@@ -160,24 +160,6 @@ public class Bricks extends Entity implements ICommon
 		return count;
 	}
 	
-    /**
-     * Flag if the player won the level
-     * @param win true = yes, false = no
-     */
-    public void setWin(final boolean win)
-    {
-    	this.win = win;
-    }
-    
-    /**
-     * Has the player won?
-     * @return true if the bricks were eliminated, false otherwise
-     */
-    public boolean hasWin()
-    {
-    	return this.win;
-    }
-    
 	@Override
 	public void dispose()
 	{
@@ -198,19 +180,6 @@ public class Bricks extends Entity implements ICommon
 	@Override
 	public void update() throws Exception
 	{
-		//if there are no more bricks to be broken
-		if (getCount() <= 0)
-		{
-			//flag win true
-			setWin(true);
-			
-			//reset frames count
-			getGame().setFrames(0);
-			
-			//no need to continue
-			return;
-		}
-		
 		//update bricks?
 		for (int row = 0; row < getBricks().length; row++)
 		{

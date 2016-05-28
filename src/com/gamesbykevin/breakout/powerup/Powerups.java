@@ -6,6 +6,7 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.game.GameHelper;
 
 import android.graphics.Canvas;
 
@@ -112,7 +113,7 @@ public class Powerups extends Entity implements ICommon
 						
 					case ExtraLife:
 						//add extra life here
-						getGame().setLives(getGame().getLives() + 1);
+						GameHelper.LIVES++;
 						break;
 						
 					case ExtraBalls:
