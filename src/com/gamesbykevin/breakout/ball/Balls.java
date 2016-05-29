@@ -127,6 +127,27 @@ public class Balls extends Entity implements ICommon
 	}
 	
 	/**
+	 * Get the ball count
+	 * @return The total number of balls currently in play (hidden = false)
+	 */
+	public int getCount()
+	{
+		//keep track of count
+		int count = 0;
+		
+		//check every ball in array
+		for (int i = 0; i < getBalls().size(); i++)
+		{
+			//if the ball is not hidden lets count it
+			if (!getBalls().get(i).isHidden())
+				count++;
+		}
+		
+		//return our result
+		return count;
+	}
+	
+	/**
 	 * Speed up all balls
 	 */
 	public void speedUp()
@@ -206,10 +227,10 @@ public class Balls extends Entity implements ICommon
 		}
 		
 		//pick random index
-		final int index = GamePanel.RANDOM.nextInt(Key.values().length);
+		final int index = GamePanel.RANDOM.nextInt(this.keys.size());
 		
 		//assign random chosen value
-		final Key tmp = Key.values()[index];
+		final Key tmp = this.keys.get(index);
 		
 		//remove value from array list
 		this.keys.remove(index);
@@ -266,6 +287,34 @@ public class Balls extends Entity implements ICommon
 		if (getBalls().size() >= MAX_BALL_LIMIT)
 			return;
 		
+		//first see if we can reuse an existing ball
+		for (Ball ball : getBalls())
+		{
+			//we can't re-use a ball already in play
+			if (!ball.isHidden())
+				continue;
+			
+			//pick random animation
+			ball.setKey(getRandomKey());
+			
+			//reset ball
+			ball.reset();
+			
+			//place ball accordingly
+			ball.setX(x);
+			ball.setY(y);
+			
+			//choose random velocity
+			ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+			ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+			
+			//make sure ball is no longer hidden
+			ball.setHidden(false);
+			
+			//no need to continue
+			return;
+		}
+		
 		//create a new ball
 		Ball ball = new Ball(getRandomKey());
 
@@ -296,18 +345,9 @@ public class Balls extends Entity implements ICommon
 				//get the current ball
 				Ball ball = getBalls().get(i);
 				
-				//if the ball is hidden remove it
+				//if the ball is hidden skip it
 				if (ball.isHidden())
-				{
-					//remove from list
-					getBalls().remove(i);
-					
-					//move index back
-					i--;
-					
-					//skip to the next ball
 					continue;
-				}
 				
 				//update ball
 				ball.update();

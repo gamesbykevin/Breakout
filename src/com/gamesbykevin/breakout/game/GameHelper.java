@@ -122,7 +122,7 @@ public final class GameHelper
 			//go to the game over screen
 			game.getScreen().setState(ScreenManager.State.GameOver);
 		}
-		else if (game.getBalls().getBalls().isEmpty())
+		else if (game.getBalls().getCount() < 1)
 		{
 			//reset frames
 			FRAMES = 0;

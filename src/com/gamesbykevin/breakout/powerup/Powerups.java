@@ -7,6 +7,7 @@ import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.game.GameHelper;
+import com.gamesbykevin.breakout.thread.MainThread;
 
 import android.graphics.Canvas;
 
@@ -112,6 +113,9 @@ public class Powerups extends Entity implements ICommon
 			{
 				//flag the power up as hidden
 				powerup.setHidden(true);
+				
+				if (MainThread.DEBUG)
+					System.out.println("Key + " + powerup.getKey().toString());
 				
 				//determine which power up to apply
 				switch (powerup.getKey())
