@@ -238,6 +238,9 @@ public class Paddle extends Entity implements ICommon
 		//remove any lasers
 		getLasers().reset();
 		
+		//expire laser time
+		this.framesLaser = FRAMES_LASER_LIMIT;
+		
 		//stop the paddle from moving
 		setLeft(false);
 		setRight(false);

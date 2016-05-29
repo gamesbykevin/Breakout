@@ -28,6 +28,27 @@ public class Powerups extends Entity implements ICommon
 		this.powerups = new ArrayList<Powerup>();
 	}
 	
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		
+		if (this.powerups != null)
+		{
+			for (int i = 0; i < this.powerups.size(); i++)
+			{
+				if (this.powerups.get(i) != null)
+				{
+					this.powerups.get(i).dispose();
+					this.powerups.set(i, null);
+				}
+			}
+			
+			this.powerups.clear();
+			this.powerups = null;
+		}
+	}
+	
 	/**
 	 * Get the list of power ups
 	 * @return The list of power ups that exist
@@ -93,7 +114,7 @@ public class Powerups extends Entity implements ICommon
 				powerup.setHidden(true);
 				
 				//determine which power up to apply
-				switch ((Powerup.Key)powerup.getSpritesheet().getKey())
+				switch (powerup.getKey())
 				{
 					case Magnet: 
 						getGame().getPaddle().setMagnet(true);
@@ -112,7 +133,6 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case ExtraLife:
-						//add extra life here
 						GameHelper.LIVES++;
 						break;
 						
@@ -137,9 +157,11 @@ public class Powerups extends Entity implements ICommon
 						throw new Exception("Key not found here: " + powerup.getSpritesheet().getKey().toString());
 				}
 			}
-			
-			//update power up location etc...
-			powerup.update();
+			else
+			{
+				//update power up location etc...
+				powerup.update();
+			}
 		}
 	}
 

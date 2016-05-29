@@ -132,8 +132,8 @@ public class MainThread extends Thread
                 if (waitTime < 1)
                 {
                     //if debugging alert this update took longer than expected
-                    if (DEBUG)
-                    	System.out.println("Thread update took longer than expected: " + waitTime);
+                    if (DEBUG);
+                    	//System.out.println("Thread update took longer than expected: " + waitTime);
                     
                     //make sure we sleep at least 1 millisecond
                     waitTime = 1;

@@ -320,8 +320,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
 						}
 					}
 					
-					if (MainThread.DEBUG)
-						System.out.println("x" + event.values[0] + ", y=" + event.values[1] + ", z=" + event.values[2]);
+					if (MainThread.DEBUG);
+						//System.out.println("x" + event.values[0] + ", y=" + event.values[1] + ", z=" + event.values[2]);
 					break;
 					
 				//if we forget to manage the sensor we need to know

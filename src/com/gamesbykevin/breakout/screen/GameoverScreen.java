@@ -12,7 +12,6 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.game.GameHelper;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
@@ -228,36 +227,23 @@ public class GameoverScreen implements Screen, Disposable
 			switch (getSelection())
 			{
 				case Next:
-				
-					//get game reference object
-					final Game game = getScreen().getScreenGame().getGame();
 					
+					//if we won, move to the next level
 					if (GameHelper.WIN)
-					{
-						//move to the next level
-						game.getLevels().setLevelIndex();
-	
-						//no longer winning
-						GameHelper.WIN = false;
-						
-		                //reset with the same settings
-						GameHelper.RESET = true;
-		                
-		                //reset loading notification
-						GameHelper.NOTIFY = false;
-					}
-					else
-					{
-						//flag lose false
-						GameHelper.LOSE = false;
-						
-		                //reset with the same settings
-						GameHelper.RESET = true;
-		                
-		                //reset loading notification
-						GameHelper.NOTIFY = false;
-					}
+						getScreen().getScreenGame().getGame().getLevels().setLevelIndex();
+					
+					//no longer winning
+					GameHelper.WIN = false;
+					
+					//flag lose false
+					GameHelper.LOSE = false;
+					
+	                //reset with the same settings
+					GameHelper.RESET = true;
 	                
+	                //reset loading notification
+					GameHelper.NOTIFY = false;
+					
 	                //move back to the game
 					getScreen().setState(ScreenManager.State.Running);
 	                
@@ -298,9 +284,6 @@ public class GameoverScreen implements Screen, Disposable
     	}
     	else
     	{
-	    	//we still want to update the game to continue showing the balls in motion
-	    	this.screen.getScreenGame().update();
-	    	
 	        //if not displaying the menu, track timer
 	        if (!hasDisplay())
 	        {

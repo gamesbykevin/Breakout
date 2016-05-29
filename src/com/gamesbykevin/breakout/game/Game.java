@@ -14,7 +14,6 @@ import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
-import com.gamesbykevin.breakout.screen.ScreenManager.State;
 import com.gamesbykevin.breakout.wall.Wall;
 
 /**
@@ -162,7 +161,6 @@ public final class Game implements IGame
     		GameHelper.RESET = false;
     		GameHelper.WIN = false;
     		GameHelper.LOSE = false;
-    		GameHelper.GAMEOVER = false;
     		
     		//reset level
     		GameHelper.resetLevel(this);
@@ -244,15 +242,7 @@ public final class Game implements IGame
     public void update() throws Exception
     {
     	//if the game is over
-    	if (GameHelper.GAMEOVER)
-    	{
-    		//switch to a different screen
-    		getScreen().setState(State.GameOver);
-    		
-    		//no need to continue
-    		return;
-    	}
-    	else if (GameHelper.RESET)
+    	if (GameHelper.RESET)
         {
         	//reset the game
         	reset();

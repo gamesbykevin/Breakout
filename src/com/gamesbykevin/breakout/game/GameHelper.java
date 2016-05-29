@@ -83,16 +83,10 @@ public final class GameHelper
 		//reset frames count
 		GameHelper.FRAMES = 0;
     	
-    	//reset paddle back to middle etc...
-		game.getPaddle().reset();
-    	
-    	//remove all existing balls
-		game.getBalls().getBalls().clear();
-    	
-        //add default ball
+        //reset paddle and ball(s)
 		game.getBalls().add(game.getPaddle());
     	
-        //reset power ups
+        //hide power ups
 		game.getPowerups().reset();
 		
         //populate the bricks accordingly
@@ -105,13 +99,7 @@ public final class GameHelper
      */
     protected final static void restartLevel(final Game game)
     {
-    	//reset paddle back to middle etc...
-		game.getPaddle().reset();
-    	
-    	//remove all existing balls
-		game.getBalls().getBalls().clear();
-    	
-        //add default ball
+        //reset paddle and ball(s)
 		game.getBalls().add(game.getPaddle());
     }
     
@@ -200,11 +188,11 @@ public final class GameHelper
     /**
      * Can the user interact with the game?<br>
      * The user will not if game over, reset, win/lose, etc....
-     * @return true if game over = false, reset = false, notify = true, win = false, lose = false, isReady() = true
+     * @return true if reset = false, notify = true, win = false, lose = false, isReady() = true
      */
     public static final boolean canInteract()
     {
-    	return (!GAMEOVER && !RESET && NOTIFY && !WIN && !LOSE && isReady());
+    	return (!RESET && NOTIFY && !WIN && !LOSE && isReady());
     }
     
     /**

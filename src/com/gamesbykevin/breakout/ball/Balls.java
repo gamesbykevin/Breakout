@@ -219,27 +219,30 @@ public class Balls extends Entity implements ICommon
 	}
 	
 	/**
-	 * Add ball to collection and freeze all existing balls<br>
-	 * By default we want to place the ball in the center of the paddle.<br>
-	 * If there are other existing balls currently in play we will choose one of those ball locations.
+	 * Remove any existing balls and add a default ball<br>
+	 * We also reset the paddle location and place the ball there.<br>
+	 * This is when starting/restarting a new level
 	 * @param paddle The paddle where we want to spawn the ball
 	 */
 	public void add(final Paddle paddle)
 	{
+		//remove all existing balls
+		getBalls().clear();
+		
+		//reset paddle
+		paddle.reset();
+		
 		//pick x-coordinate
 		final double x = paddle.getX() + (paddle.getWidth() / 2) - (Ball.WIDTH / 2); 
 		
+		//add ball at paddle location
 		add(x, paddle.getY() - Ball.HEIGHT);
 		
-		//freeze all existing balls
-		for (Ball ball : getBalls())
-		{
-			//flag frozen true
-			ball.setFrozen(true);
+		//freeze existing ball
+		getBalls().get(0).setFrozen(true);
 			
-			//assign x offset
-			ball.setOffsetX(x - paddle.getX());
-		}
+		//assign x-offset
+		getBalls().get(0).setOffsetX(x - paddle.getX());
 	}
 	
 	/**
@@ -409,13 +412,9 @@ public class Balls extends Entity implements ICommon
 	@Override
 	public void reset() 
 	{
+		//remove all balls
 		if (getBalls() != null)
-		{
-			for (Ball ball : getBalls())
-			{
-				ball.reset();
-			}
-		}
+			getBalls().clear();
 	}
 
 	@Override

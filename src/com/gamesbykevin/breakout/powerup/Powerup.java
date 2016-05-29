@@ -58,6 +58,9 @@ public class Powerup extends Entity implements ICommon
 	 */
 	public static final double Y_VELOCITY = (Ball.SPEED_MAX * .15);
 	
+	//the animation key of the power up
+	private Key key;
+	
 	/**
 	 * Constructor
 	 * @param key Animation key for the power up
@@ -144,6 +147,27 @@ public class Powerup extends Entity implements ICommon
 		return (Key.values()[GamePanel.RANDOM.nextInt(Key.values().length)]);
 	}
 	
+	/**
+	 * Assign the key
+	 * @param key The desired animation key
+	 */
+	public void setKey(final Key key)
+	{
+		this.key = key;
+		
+		//assign the proper animation key
+		super.getSpritesheet().setKey(getKey());
+	}
+	
+	/**
+	 * Get the key
+	 * @return The current assigned animation key
+	 */
+	public Key getKey()
+	{
+		return this.key;
+	}
+	
 	@Override
 	public void update() throws Exception 
 	{
@@ -165,16 +189,12 @@ public class Powerup extends Entity implements ICommon
 		setHidden(false);
 		
 		//assign random animation
-		super.getSpritesheet().setKey(getRandomKey());
+		this.setKey(getRandomKey());
 	}
 	
 	@Override
 	public void render(final Canvas canvas) throws Exception
 	{
-		//don't render if hidden
-		if (isHidden())
-			return;
-		
 		//render power up
 		super.render(canvas);
 	}
