@@ -7,14 +7,20 @@ import android.graphics.Paint;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 
+import com.gamesbykevin.androidframework.awt.Button;
+import com.gamesbykevin.androidframework.level.Select;
+import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.paddle.Paddle;
+import com.gamesbykevin.breakout.panel.GamePanel;
 import com.gamesbykevin.breakout.powerup.Powerups;
+import com.gamesbykevin.breakout.score.Score;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.wall.Wall;
+import com.gamesbykevin.breakout.assets.Assets;
 
 /**
  * The main game logic will happen here
@@ -57,6 +63,57 @@ public final class Game implements IGame
 	//did we press the screen
 	private boolean press = false;
 	
+    //our level select object
+    private Select select;
+	
+    //the game score card
+    private Score score;
+    
+    /**
+     * The number of columns for our level select options on a single page
+     */
+    private static final int SELECT_COLS = 4;
+    
+    /**
+     * The number of rows for our level select options on a single page
+     */
+    private static final int SELECT_ROWS = 6;
+    
+    /**
+     * The size of each level select button
+     */
+    private static final int SELECT_DIMENSION = 100;
+    
+    /**
+     * The pixel space between each level select button
+     */
+    private static final int SELECT_PADDING = (GamePanel.WIDTH - (SELECT_COLS * SELECT_DIMENSION)) / (SELECT_COLS + 1);
+    
+    /**
+     * The x-coordinate where we start displaying the level select buttons
+     */
+    private static final int SELECT_START_X = SELECT_PADDING;
+    
+    /**
+     * The y-coordinate where we start displaying the level select buttons
+     */
+    private static final int SELECT_START_Y = 50;
+    
+    /**
+     * The level select description
+     */
+    private static final String SELECT_DESCRIPTION = "Select Level";
+    
+    /**
+     * The x-coordinate where we draw our description
+     */
+    private static final int SELECT_DESCRIPTION_X = (int)(GamePanel.WIDTH * .25);
+    
+    /**
+     * The y-coordinate where we draw our description
+     */
+    private static final int SELECT_DESCRIPTION_Y = GamePanel.HEIGHT - (int)(GamePanel.HEIGHT * .2);
+    
     /**
      * Create our game object
      * @param screen The main screen
@@ -84,6 +141,46 @@ public final class Game implements IGame
         
         //create and load the levels
         this.levels = new Levels();
+        
+        //create the level select screen
+        this.select = new Select();
+        this.select.setButtonNext(new Button(Images.getImage(Assets.ImageGameKey.PageNext)));
+        this.select.setButtonOpen(new Button(Images.getImage(Assets.ImageGameKey.LevelOpen)));
+        this.select.setButtonLocked(new Button(Images.getImage(Assets.ImageGameKey.LevelLocked)));
+        this.select.setButtonPrevious(new Button(Images.getImage(Assets.ImageGameKey.PagePrevious)));
+        this.select.setButtonSolved(new Button(Images.getImage(Assets.ImageGameKey.LevelCompleted)));
+        this.select.setDescription(SELECT_DESCRIPTION, SELECT_DESCRIPTION_X, SELECT_DESCRIPTION_Y);
+        this.select.setCols(SELECT_COLS);
+        this.select.setRows(SELECT_ROWS);
+        this.select.setDimension(SELECT_DIMENSION);
+        this.select.setPadding(SELECT_PADDING);
+        this.select.setStartX(SELECT_START_X);
+        this.select.setStartY(SELECT_START_Y);
+        this.select.setTotal(getLevels().getSize());
+        
+        //create our score card
+        this.score = new Score(screen.getPanel().getActivity());
+        
+        //update level select screens
+        GameHelper.updateSelect(this);
+    }
+    
+    /**
+     * Get our score card
+     * @return Our score reference object to track completed levels
+     */
+    public Score getScore()
+    {
+    	return this.score;
+    }
+    
+    /**
+     * Get the level select object
+     * @return The level select object reference
+     */
+    public Select getSelect()
+    {
+    	return this.select;
     }
     
     /**
@@ -198,6 +295,20 @@ public final class Game implements IGame
     @Override
     public void update(final int action, final float x, final float y) throws Exception
     {
+    	if (GameHelper.NOTIFY)
+    	{
+	    	//if we don't have a level selection, check for it here
+	    	if (!getSelect().hasSelection())
+	    	{
+	    		//if action up, check the location
+	    		if (action == MotionEvent.ACTION_UP)
+	    			getSelect().setCheck((int)x, (int)y);
+	    		
+	    		//don't continue
+	    		return;
+	    	}
+    	}
+    	
     	//if we can't interact, we can't continue
     	if (!GameHelper.canInteract())
     		return;
@@ -249,7 +360,7 @@ public final class Game implements IGame
         }
         else
         {
-        	GameHelper.update(this);
+    		GameHelper.update(this);
         }
     }
     
@@ -331,6 +442,12 @@ public final class Game implements IGame
     	{
     		bricks.dispose();
     		bricks = null;
+    	}
+    	
+    	if (select != null)
+    	{
+    		select.dispose();
+    		select = null;
     	}
     }
 }

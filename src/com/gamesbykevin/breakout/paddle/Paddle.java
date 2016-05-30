@@ -52,19 +52,14 @@ public class Paddle extends Entity implements ICommon
 	public static final int START_Y = GamePanel.HEIGHT - (GamePanel.HEIGHT / 6);
 	
 	/**
-	 * Adjust the x-velocity based on where the paddle is
+	 * The different ratios to adjust each ball velocity
 	 */
-	public static final double PADDLE_COLLISION_FAR = 1.25;
+	private static final float[] PADDLE_COLLISION_RATIOS = {.1f, .2f, .3f, .4f, .5f};
 	
 	/**
-	 * Adjust the x-velocity based on where the paddle is
+	 * The velocity adjustment when paddle collision occurs
 	 */
-	public static final double PADDLE_COLLISION_CLOSE = 0.75;
-	
-	/**
-	 * Adjust the x-velocity based on where the paddle is
-	 */
-	public static final double PADDLE_COLLISION_MIDDLE = 0.0;
+	private static final float[] PADDLE_COLLISION_VELOCITY = { 1.35f, 1.15f, 0.75f, 0.5f, 0.0f };
 	
 	//our lasers object
 	private Lasers lasers;
@@ -115,6 +110,11 @@ public class Paddle extends Entity implements ICommon
 	
 	//the x-coordinate touched
 	private float touchX = 0;
+	
+	/**
+	 * The duration to vibrate when the ball hits the paddle
+	 */
+	private static final long VIBRATE_BALL_COLLISION = 125L;
 	
 	/**
 	 * Default Constructor
@@ -383,47 +383,34 @@ public class Paddle extends Entity implements ICommon
 				//the middle x-coordinate
 				double x = ball.getX() + (ball.getWidth() * .5);
 				
-				//now check where the collision occurred
-				if (x < getX() + (getWidth() * .2))
+				//determine how to adjust the ball velocity
+				for (int i = 0; i < PADDLE_COLLISION_RATIOS.length; i++)
 				{
-					//move max west
-					ball.setXRatio(PADDLE_COLLISION_FAR);
-					
-					//make sure correct direction
-					if (ball.getDX() > 0)
-						ball.setDX(-ball.getDX());
-				}
-				else if (x >= getX() + (getWidth() * .8))
-				{
-					//move max east
-					ball.setXRatio(PADDLE_COLLISION_FAR);
-					
-					//make sure correct direction
-					if (ball.getDX() < 0)
-						ball.setDX(-ball.getDX());
-				}
-				else if (x >= getX() + (getWidth() * .6))
-				{
-					//move slightly east
-					ball.setXRatio(PADDLE_COLLISION_CLOSE);
-					
-					//make sure correct direction
-					if (ball.getDX() < 0)
-						ball.setDX(-ball.getDX());
-				}
-				else if (x >= getX() + (getWidth() * .4))
-				{
-					//move straight
-					ball.setXRatio(PADDLE_COLLISION_MIDDLE);
-				}
-				else if (x >= getX() + (getWidth() * .2))
-				{
-					//move slightly west
-					ball.setXRatio(PADDLE_COLLISION_CLOSE);
-					
-					//make sure correct direction
-					if (ball.getDX() > 0)
-						ball.setDX(-ball.getDX());
+					//check if these edges where part of collision
+					if (x <= getX() + (getWidth() * PADDLE_COLLISION_RATIOS[i]))
+					{
+						//set the velocity adjustment accordingly
+						ball.setXRatio(PADDLE_COLLISION_VELOCITY[i]);
+						
+						//if heading east, switch directions
+						if (ball.getDX() > 0)
+							ball.setDX(-ball.getDX());
+						
+						//no need to continue, since there was collision
+						break;
+					}
+					else if (x >= getX() + (getWidth() * (1.0f - PADDLE_COLLISION_RATIOS[i])))
+					{
+						//set the velocity adjustment accordingly
+						ball.setXRatio(PADDLE_COLLISION_VELOCITY[i]);
+						
+						//if heading west, switch directions
+						if (ball.getDX() < 0)
+							ball.setDX(-ball.getDX());
+						
+						//no need to continue, since there was collision
+						break;
+					}
 				}
 				
 				//if the paddle is a magnet then we freeze the ball
@@ -434,6 +421,11 @@ public class Paddle extends Entity implements ICommon
 					
 					//set x-offset
 					ball.setOffsetX(ball.getX() - this.getX());
+				}
+				else
+				{
+					//vibrate when a ball hits the paddle
+					super.getGame().vibrate(VIBRATE_BALL_COLLISION);
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package com.gamesbykevin.breakout.game;
 
+import com.gamesbykevin.androidframework.resources.Audio;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
@@ -103,6 +104,41 @@ public final class GameHelper
 		game.getBalls().add(game.getPaddle());
     }
     
+    /**
+     * Update our level select screens
+     * @param game Our game reference object
+     */
+    protected final static void updateSelect(final Game game)
+    {
+        //load the saved data checking every level
+        for (int levelIndex = game.getSelect().getTotal() - 1; levelIndex >= 0; levelIndex--)
+        {
+        	//if the level exists then we already completed it
+        	if (game.getScore().hasLevel(levelIndex))
+        	{
+        		//mark this level as completed
+        		game.getSelect().setCompleted(levelIndex, true);
+        		
+        		//mark this level as not locked
+        		game.getSelect().setLocked(levelIndex, false);
+        		
+        		//also make sure the next level is not locked as well
+        		if (levelIndex < game.getSelect().getTotal() - 1)
+        			game.getSelect().setLocked(levelIndex + 1, false);
+        	}
+        	else
+        	{
+        		//mark this level as locked
+        		game.getSelect().setLocked(levelIndex, true);
+        		
+        		//mark this level as not completed
+        		game.getSelect().setCompleted(levelIndex, false);
+        	}
+        }
+        
+    	//the first level can never be locked
+    	game.getSelect().setLocked(0, false);
+    }
 	
     /**
      * Check if the player lost a life or if the level has been completed
@@ -118,6 +154,12 @@ public final class GameHelper
 			
 			//flag that we won
 			WIN = true;
+			
+			//save the index of the level completed
+			game.getScore().update(game.getLevels().getLevelIndex());
+			
+			//update the select screen
+			updateSelect(game);
 			
 			//go to the game over screen
 			game.getScreen().setState(ScreenManager.State.GameOver);
@@ -141,6 +183,37 @@ public final class GameHelper
      */
     public static final void update(final Game game) throws Exception
     {
+    	if (!game.getSelect().hasSelection())
+    	{
+    		//update the object
+    		game.getSelect().update();
+    		
+    		//if we have a selection now, reset the board
+    		if (game.getSelect().hasSelection())
+    		{
+    			//make sure the level is not locked, if it is locked play sound effect
+    			if (game.getSelect().isLocked(game.getSelect().getLevelIndex()))
+    			{
+    				//flag selection as false
+    				game.getSelect().setSelection(false);
+    				
+    				//play sound effect
+    				//Audio.play(Assets.AudioGameKey.InvalidLevelSelect);
+    			}
+    			else
+    			{
+    				//assign the appropriate level
+    				game.getLevels().setLevelIndex(game.getSelect().getLevelIndex());
+    				
+    				//reset the board for the next level
+    				RESET = true;
+    			}
+    		}
+    		
+    		//no need to continue
+    		return;
+    	}
+    	
     	if (isReady())
     	{
     		if (GameHelper.LOSE)
@@ -213,6 +286,21 @@ public final class GameHelper
     	}
     	else
     	{
+        	if (!game.getSelect().hasSelection())
+        	{
+        		//darken background
+        		//ScreenManager.darkenBackground(canvas);
+        		
+        		//draw background
+        		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.Background), 0, 0, null);
+        		
+        		//render level select screen
+        		game.getSelect().render(canvas, game.getPaint());
+        		
+        		//no need to continue
+        		return;
+        	}
+    		
     		//render the wall
     		game.getWall().render(canvas);
     		
@@ -238,7 +326,7 @@ public final class GameHelper
     			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
 				
 				//render image
-    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.LevelComplete), 70, 364, null);
+    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.LevelCompleteText), 70, 364, null);
 			}
 			else if (LOSE || !isReady())
 			{

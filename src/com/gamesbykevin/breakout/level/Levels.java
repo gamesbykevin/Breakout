@@ -96,7 +96,7 @@ public class Levels implements Disposable
 			{
 				//add level to array list
 				if (!level.getKey().isEmpty() && level.getKey().size() > 1)
-					this.levels.add(level);
+					getLevels().add(level);
 				
 				//now create a new object
 				level = new Level();
@@ -113,7 +113,7 @@ public class Levels implements Disposable
 		}
 		
 		if (level != null && !level.getKey().isEmpty())
-			this.levels.add(level);
+			getLevels().add(level);
 	}
 	
 	/**
@@ -134,8 +134,22 @@ public class Levels implements Disposable
 		this.levelIndex = levelIndex;
 		
 		//stay within range
-		if (getLevelIndex() >= this.levels.size() || getLevelIndex() < 0)
+		if (getLevelIndex() >= getSize() || getLevelIndex() < 0)
 			setLevelIndex(0);
+	}
+	
+	/**
+	 * Get the size
+	 * @return The number of levels that can be played
+	 */
+	public int getSize()
+	{
+		return getLevels().size();
+	}
+	
+	protected ArrayList<Level> getLevels()
+	{
+		return this.levels;
 	}
 	
 	/**
@@ -263,7 +277,7 @@ public class Levels implements Disposable
 	 */
 	private Level get()
 	{
-		return this.levels.get(getLevelIndex());
+		return getLevels().get(getLevelIndex());
 	}
 	
 	private class Level implements Disposable
@@ -290,9 +304,12 @@ public class Levels implements Disposable
 		}
 	}
 	
+	/**
+	 * Location class, used to pick random locations for the bonuses
+	 */
 	private class Location
 	{
-		//the location of the location, lol
+		//the location of our location :)
 		private int col, row;
 		
 		private Location(final int col, final int row)

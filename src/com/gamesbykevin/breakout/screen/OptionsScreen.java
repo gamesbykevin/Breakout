@@ -398,10 +398,6 @@ public class OptionsScreen implements Screen, Disposable
     		//remove selection
     		setSelection(null);
     	}
-    	
-    	//if the game object exists, update it
-    	if (getScreen().getScreenGame().getGame() != null)
-    		getScreen().getScreenGame().getGame().update();
     }
     
     @Override

@@ -120,7 +120,7 @@ public class GameoverScreen implements Screen, Disposable
     	
     	//add the text description
     	button.addDescription(description);
-    	button.positionText(screen.getPaint());
+    	button.positionText(getScreen().getPaint());
     	
     	//add button to the list
     	this.buttons.put(key, button);
@@ -254,9 +254,9 @@ public class GameoverScreen implements Screen, Disposable
 	                break;
 	
 	    		case Menu:
-	                
+	    			
 	                //move to the main menu
-	                screen.setState(ScreenManager.State.Ready);
+	                getScreen().setState(ScreenManager.State.Ready);
 	                
 	                //play sound effect
 	                Audio.play(Assets.AudioMenuKey.Selection);
@@ -270,7 +270,7 @@ public class GameoverScreen implements Screen, Disposable
 	                Audio.play(Assets.AudioMenuKey.Selection);
 	                
 	                //go to rate game page
-	                screen.getPanel().getActivity().openWebpage(MainActivity.WEBPAGE_RATE_URL);
+	                getScreen().getPanel().getActivity().openWebpage(MainActivity.WEBPAGE_RATE_URL);
 	                
 	                //end of case
 	                break;
@@ -318,7 +318,7 @@ public class GameoverScreen implements Screen, Disposable
             //render the buttons
             for (Key key : Key.values())
             {
-            	buttons.get(key).render(canvas, screen.getPaint());
+            	buttons.get(key).render(canvas, getScreen().getPaint());
             }
         }
     }
