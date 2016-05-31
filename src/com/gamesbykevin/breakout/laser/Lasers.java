@@ -87,26 +87,19 @@ public class Lasers extends Entity implements ICommon
 								//flag laser hidden
 								laser.setHidden(true);
 								
-								//lasers can't break solid bricks
-								if (!brick.isSolid())
-								{
-									//flag the brick as dead
-									brick.setDead(true);
+								//mark the collision
+								brick.markCollision();
+								
+								//if the brick contains a power up we will add it
+								if (brick.hasPowerup())
+									super.getGame().getPowerups().add(brick);
+								
+								//move to the end
+								row = rowMax;
+								col = colMax;
 									
-									//add particles
-									brick.addParticles();
-									
-									//if the brick contains a power up we will add it
-									if (brick.hasPowerup())
-										super.getGame().getPowerups().add(brick);
-									
-									//move to the ends
-									row = rowMax;
-									col = colMax;
-									
-									//no need to check the other bricks since the ball already hit
-									break;
-								}
+								//no need to check the other bricks since the ball already hit
+								break;
 							}
 						}
 					}

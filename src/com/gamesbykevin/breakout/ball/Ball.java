@@ -48,7 +48,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The rate at which to increase the speed
 	 */
-	public static final double SPEED_INCREASE = 1.05; 
+	public static final double SPEED_INCREASE = 1.08; 
 	
 	/**
 	 * The rate at which to decrease the speed

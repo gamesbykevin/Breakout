@@ -8,6 +8,7 @@ import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 public class Bricks extends Entity implements ICommon
 {
@@ -41,6 +42,9 @@ public class Bricks extends Entity implements ICommon
 	 * The starting y-coordinate
 	 */
 	public static final int START_Y = 20;
+	
+	//the paint object to render transparency
+	private Paint paint;
 	
 	public Bricks(final Game game) throws Exception
 	{
@@ -95,6 +99,9 @@ public class Bricks extends Entity implements ICommon
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);
 		}
+		
+		//create a new paint object
+		this.paint = new Paint();
 	}
 	
 	@Override
@@ -116,11 +123,11 @@ public class Bricks extends Entity implements ICommon
 					getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
 				}
 				
-				//flag every brick as dead to start
-				getBricks()[row][col].setDead(true);
+				//reset brick
+				getBricks()[row][col].reset();
 				
-				//make sure there are no particles as well
-				getBricks()[row][col].removeParticles();
+				//make sure all bricks are dead
+				getBricks()[row][col].setDead(true);
 			}
 		}
 	}
@@ -219,8 +226,20 @@ public class Bricks extends Entity implements ICommon
 					//assign the appropriate animation
 					super.getSpritesheet().setKey(brick.getKey());
 					
-					//render brick
-					super.render(canvas);
+					//if the brick is solid apply transparency
+					if (brick.isSolid())
+					{
+						//assign the correct transparency
+						this.paint.setAlpha(brick.getTransparency());
+						
+						//render the brick
+						super.render(canvas, this.paint);
+					}
+					else
+					{
+						//render brick
+						super.render(canvas);
+					}
 				}
 				else
 				{

@@ -422,6 +422,9 @@ public class Balls extends Entity implements ICommon
 			//if this ball has collision with the current brick
 			if (ball.hasCollision(brick))
 			{
+				//mark the collision
+				brick.markCollision();
+				
 				//if the brick is solid just bounce the ball off it
 				if (brick.isSolid())
 				{
@@ -455,12 +458,6 @@ public class Balls extends Entity implements ICommon
 					if (!ball.hasFire())
 						ball.setDY(-ball.getDY());
 					
-					//flag the brick as dead
-					brick.setDead(true);
-	
-					//add particles
-					brick.addParticles();
-					
 					//if the brick contains a power up we will add it
 					if (brick.hasPowerup())
 						super.getGame().getPowerups().add(brick);
@@ -469,17 +466,10 @@ public class Balls extends Entity implements ICommon
 				//we have collision
 				return true;
 			}
-			else
-			{
-				//no collision
-				return false;
-			}
 		}
-		else
-		{
-			//no collision
-			return false;
-		}
+		
+		//either the brick was dead or no collision so return false
+		return false;
 	}
 	
 	@Override

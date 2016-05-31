@@ -55,6 +55,29 @@ public final class Brick extends Entity implements ICommon
 	//animation for the particle
 	private Assets.ImageGameKey particleKey = Assets.ImageGameKey.Particle1;
 	
+	/**
+	 * The number of times a solid brick can be hit before it is dead
+	 */
+	private static final int COLLISIONS_LIMIT_SOLID = 4;
+	
+	/**
+	 * The number of times a non-solid brick can be hit before it is dead
+	 */
+	private static final int COLLISIONS_LIMIT = 1;
+	
+	
+	//the number of collisions required before the brick is dead
+	private int collisions;
+	
+	/**
+	 * 100% transparency
+	 */
+	private static final int FULL_TRANSPARENCY = 255;
+	
+	/**
+	 * Default Constructor
+	 * @param key The animation key for the brick
+	 */
 	protected Brick(final Key key)
 	{
 		super(null, WIDTH, HEIGHT);
@@ -72,6 +95,9 @@ public final class Brick extends Entity implements ICommon
 		//flag solid false
 		setSolid(false);
 
+		//flag power up false
+		setPowerup(false);
+		
 		//make sure it doesn't have any particles (yet :))
 		removeParticles();
 	}
@@ -198,6 +224,16 @@ public final class Brick extends Entity implements ICommon
 	public void setSolid(final boolean solid)
 	{
 		this.solid = solid;
+		
+		//if the brick is solid assign the collisions
+		if (isSolid())
+		{
+			setCollisions(COLLISIONS_LIMIT_SOLID);
+		}
+		else
+		{
+			setCollisions(COLLISIONS_LIMIT);
+		}
 	}
 	
 	/**
@@ -209,6 +245,71 @@ public final class Brick extends Entity implements ICommon
 		return this.solid;
 	}
 
+	/**
+	 * Assign the collisions
+	 * @param collisions The number of collisions remaining before the brick is dead
+	 */
+	public void setCollisions(final int collisions)
+	{
+		this.collisions = collisions; 
+	}
+	
+	/**
+	 * Get the collisions
+	 * @return The number of collisions remaining
+	 */
+	public int getCollisions()
+	{
+		return this.collisions;
+	}
+	
+	/**
+	 * Mark collision for the ball
+	 */
+	public void markCollision()
+	{
+		setCollisions(getCollisions() - 1);
+		
+		//if there are no more collisions remaining
+		if (getCollisions() <= 0)
+		{
+			//flag dead
+			setDead(true);
+			
+			//add particles
+			addParticles();
+		}
+	}
+	
+	/**
+	 * Get the transparency of the brick
+	 * @return The transparency will be between 0 - 255 (no transparency - full transparency)
+	 */
+	public int getTransparency()
+	{
+		//calculate the transparency
+		int alpha = 0;
+		
+		//if the brick is solid calculate differently
+		if (isSolid())
+		{
+			alpha = (int)(FULL_TRANSPARENCY * ((float)this.collisions / (float)COLLISIONS_LIMIT_SOLID));
+		}
+		else
+		{
+			alpha = (int)(FULL_TRANSPARENCY * ((float)this.collisions / (float)COLLISIONS_LIMIT));
+		}
+		
+		//make sure the alpha has a valid value
+		if (alpha < 0)
+			alpha = 0;
+		if (alpha > FULL_TRANSPARENCY)
+			alpha = FULL_TRANSPARENCY;
+		
+		//return result
+		return alpha;
+	}
+	
 	@Override
 	public void dispose() 
 	{
