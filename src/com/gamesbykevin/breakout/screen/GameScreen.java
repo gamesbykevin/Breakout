@@ -46,7 +46,7 @@ public class GameScreen implements Screen, Disposable
         GameHelper.NOTIFY = false;
         
         //set default # of lives
-        GameHelper.LIVES = GameHelper.DEFAULT_LIVES;
+        GameHelper.resetLives(getGame());
         
         //reset game
         GameHelper.resetLevel(getGame());

@@ -241,6 +241,9 @@ public class Paddle extends Entity implements ICommon
 		//expire laser time
 		this.framesLaser = FRAMES_LASER_LIMIT;
 		
+		//expire magnet time
+		this.framesMagnet = FRAMES_MAGNET_LIMIT;
+		
 		//stop the paddle from moving
 		setLeft(false);
 		setRight(false);

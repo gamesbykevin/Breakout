@@ -11,6 +11,7 @@ import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.thread.MainThread;
 
 import android.graphics.Canvas;
 
@@ -34,6 +35,14 @@ public class Balls extends Entity implements ICommon
 	 * The number of balls allowed at once
 	 */
 	public static final int MAX_BALL_LIMIT = 5;
+	
+	//keep track of the frames to determine when to increase the speed of the balls
+	private int frames = 0;
+	
+	/**
+	 * The number of frames to wait until speeding up all existing balls
+	 */
+	private static final int SPEED_UP_BALLS_DELAY = (MainThread.FPS * 45);
 	
 	public Balls(final Game game) throws Exception 
 	{
@@ -248,7 +257,7 @@ public class Balls extends Entity implements ICommon
 	public void add(final Paddle paddle)
 	{
 		//remove all existing balls
-		getBalls().clear();
+		reset();
 		
 		//reset paddle
 		paddle.reset();
@@ -349,6 +358,10 @@ public class Balls extends Entity implements ICommon
 				if (ball.isHidden())
 					continue;
 				
+				//store the original position
+				final double x = ball.getX();
+				final double y = ball.getY();
+				
 				//update ball
 				ball.update();
 				
@@ -364,6 +377,10 @@ public class Balls extends Entity implements ICommon
 							row = rowMax;
 							col = colMax;
 							
+							//since there was collision, move the ball back
+							ball.setX(x);
+							ball.setY(y);
+							
 							//no need to check the other bricks since the ball already hit
 							break;
 						}
@@ -372,6 +389,22 @@ public class Balls extends Entity implements ICommon
 				
 				//make sure the ball stays in bounds
 				ball.verifyBounds();
+			}
+			
+			//keep track of the elapsed frames
+			this.frames++;
+			
+			//if enough time has elapsed, increase the speed of all balls
+			if (this.frames >= SPEED_UP_BALLS_DELAY)
+			{
+				//reset frame count
+				this.frames = 0;
+				
+				//speed up every ball
+				for (Ball ball : getBalls())
+				{
+					ball.speedUp();
+				}
 			}
 		}
 	}
@@ -455,6 +488,9 @@ public class Balls extends Entity implements ICommon
 		//remove all balls
 		if (getBalls() != null)
 			getBalls().clear();
+		
+		//reset frames count
+		frames = 0;
 	}
 
 	@Override

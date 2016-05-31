@@ -137,7 +137,7 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case ExtraLife:
-						GameHelper.LIVES++;
+						GameHelper.addLife(getGame());
 						break;
 						
 					case ExtraBalls:

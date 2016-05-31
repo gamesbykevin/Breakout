@@ -71,15 +71,8 @@ public class Assets
      */
     public enum ImageMenuKey
     {
-    	Background,
-    	Button, 
-    	Cancel, 
-    	Confirm,
-    	Facebook, 
-    	Instructions,
-    	Logo,
-    	Splash,
-    	Twitter
+    	Background, Button, Cancel, Confirm, Facebook, Instructions,
+    	Logo, Gameover, Splash, Twitter, Winner
     }
     
     /**
@@ -88,18 +81,10 @@ public class Assets
      */
     public enum ImageGameKey
     {
-    	Border, 
-    	LevelCompleted,
-    	GameOver,
-    	LaserBlue, LaserGreen, LaserRed, 
-    	LevelCompleteText,
-    	LevelLocked,
-    	PageNext,
+    	Border, LevelCompleted, GameOver, LaserBlue, LaserGreen, LaserRed, 
+    	LevelCompleteText, Lives, LevelLocked, PageNext, Numbers,
     	Particle1, Particle2, Particle3, Particle4, Particle5, Particle6, Particle7, 
-    	PagePrevious,
-    	GetReady,
-    	Sheet,
-    	LevelOpen
+    	PagePrevious, GetReady, Sheet, LevelOpen
     }
     
     /**

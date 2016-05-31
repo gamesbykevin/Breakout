@@ -76,7 +76,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The number of frames to keep the ball on fire
 	 */
-	private static final int FIRE_FRAME_LIMIT = (MainThread.FPS * 10);
+	private static final int FIRE_FRAME_LIMIT = (MainThread.FPS * 20);
 	
 	protected Ball(final Balls.Key key) 
 	{

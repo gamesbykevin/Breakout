@@ -173,7 +173,17 @@ public final class GameHelper
 			LOSE = true;
 			
 			//take a life away
-			LIVES--;
+			deductLife(game);
+			
+			//if no more lives, the game is over
+    		if (LIVES <= 0)
+    		{
+				//flag game over true
+				GAMEOVER = true;
+				
+				//go to the game over screen
+				game.getScreen().setState(ScreenManager.State.GameOver);
+    		}
 		}
 	}
     
@@ -216,10 +226,10 @@ public final class GameHelper
     	
     	if (isReady())
     	{
-    		if (GameHelper.LOSE)
+    		if (LOSE)
     		{
     			//do we need to do anything here
-    			GameHelper.LOSE = false;
+    			LOSE = false;
     			
     			//reset level again
     			restartLevel(game);
@@ -268,6 +278,33 @@ public final class GameHelper
     	return (!RESET && NOTIFY && !WIN && !LOSE && isReady());
     }
     
+    public static final void resetLives(final Game game)
+    {
+    	//reset the number of lives
+    	LIVES = DEFAULT_LIVES;
+    	
+    	//update number object
+    	game.getNumber().setNumber(LIVES);
+    }
+    
+    public static final void addLife(final Game game)
+    {
+    	//increase lives
+    	LIVES++;
+    	
+    	//update number object
+    	game.getNumber().setNumber(LIVES);
+    }
+    
+    public static final void deductLife(final Game game)
+    {
+    	//decrease lives
+    	LIVES--;
+    	
+    	//update number object
+    	game.getNumber().setNumber(LIVES);
+    }
+    
     /**
      * Render the game accordingly
      * @param canvas Place to write pixel data
@@ -288,11 +325,8 @@ public final class GameHelper
     	{
         	if (!game.getSelect().hasSelection())
         	{
-        		//darken background
-        		//ScreenManager.darkenBackground(canvas);
-        		
         		//draw background
-        		canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.Background), 0, 0, null);
+        		canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.Border), 0, 0, null);
         		
         		//render level select screen
         		game.getSelect().render(canvas, game.getPaint());
@@ -316,8 +350,8 @@ public final class GameHelper
     		//render the paddle
     		game.getPaddle().render(canvas);
     		
-    		//render lives here for now
-    		canvas.drawText(LIVES + "", 50, 75, game.getPaint());
+			//render number of lives
+			game.getNumber().render(canvas);
     		
 			//render image
 			if (WIN)
@@ -327,6 +361,14 @@ public final class GameHelper
 				
 				//render image
     			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.LevelCompleteText), 70, 364, null);
+			}
+			else if (GAMEOVER)
+			{
+    			//darken background
+    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
+				
+				//render image
+    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GameOver), 120, 446, null);
 			}
 			else if (LOSE || !isReady())
 			{

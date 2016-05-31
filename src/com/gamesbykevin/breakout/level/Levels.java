@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.androidframework.resources.Files;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
@@ -44,6 +45,12 @@ public class Levels implements Disposable
 	 */
 	private static final float BONUS_RATIO = .3f;
 	
+	//list to choose random keys from
+	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();
+	
+	/**
+	 * Default Constructor
+	 */
 	public Levels() 
 	{
 		//create list of levels
@@ -167,7 +174,7 @@ public class Levels implements Disposable
 	 */
 	public void populate(final Bricks bricks)
 	{
-		//reset
+		//reset bricks
 		bricks.reset();
 		
 		//get the current level
@@ -224,8 +231,150 @@ public class Levels implements Disposable
 			}
 		}
 		
+		//assign different colors to the bricks
+		colorizeBricks(bricks);
+		
 		//add random bonuses to the bricks
 		populateBonuses(bricks);
+	}
+	
+	/**
+	 * Populate the list of brick keys (not including "Silver")
+	 */
+	private void populateKeys()
+	{
+		keys.clear();
+		
+		for (Bricks.Key key : Bricks.Key.values())
+		{
+			if (key == Bricks.Key.Silver)
+				continue;
+			
+			keys.add(key);
+		}
+	}
+	
+	/**
+	 * Get the key
+	 * @return A randomly chosen brick animation key from the remaining keys list
+	 */
+	private Bricks.Key getKey()
+	{
+		//if our keys list is empty, populate it
+		if (this.keys.isEmpty())
+			populateKeys();
+		
+		//pick random index
+		final int index = GamePanel.RANDOM.nextInt(this.keys.size());
+		
+		//pick random animation key
+		Bricks.Key tmp = this.keys.get(index);
+		
+		//remove from list
+		this.keys.remove(index);
+		
+		//return our result
+		return tmp;
+	}
+	
+	/**
+	 * Change the color of the bricks to make the board more diverse
+	 * @param bricks Object containing bricks in play
+	 */
+	private void colorizeBricks(final Bricks bricks)
+	{
+		//our key reference
+		Bricks.Key key = null;
+		
+		//pick a random pattern to color the bricks
+		switch (GamePanel.RANDOM.nextInt(4))
+		{
+			//each row is a different color
+			case 0:
+				//check every row in the level
+				for (int row = 0; row < bricks.getBricks().length; row++)
+				{
+					//check every column in the row
+					for (int col = 0; col < bricks.getBricks()[0].length; col++)
+					{
+						if (key == null)
+							key = getKey();
+						
+						//get the current brick
+						Brick brick = bricks.getBricks()[row][col];
+						
+						//if the brick is not dead or hidden or solid, assign the key
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setKey(key);
+					}
+					
+					key = null;
+				}
+				break;
+				
+			//each column is a different color
+			case 1:
+				//check every column in the row
+				for (int col = 0; col < bricks.getBricks()[0].length; col++)
+				{
+					//check every row in the level
+					for (int row = 0; row < bricks.getBricks().length; row++)
+					{
+						if (key == null)
+							key = getKey();
+						
+						//get the current brick
+						Brick brick = bricks.getBricks()[row][col];
+						
+						//if the brick is not dead or hidden or solid, assign the key
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setKey(key);
+					}
+					
+					key = null;
+				}
+				break;
+			
+			//every brick is random
+			case 2:
+				//check every column in the row
+				for (int col = 0; col < bricks.getBricks()[0].length; col++)
+				{
+					//check every row in the level
+					for (int row = 0; row < bricks.getBricks().length; row++)
+					{
+						//get the current brick
+						Brick brick = bricks.getBricks()[row][col];
+						
+						//if the brick is not dead or hidden or solid, assign the key
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setKey(getKey());
+					}
+				}
+				break;
+				
+			//all bricks are the same
+			case 3:
+			default:
+				//get animation key
+				key = getKey();
+				
+				//check every column in the row
+				for (int col = 0; col < bricks.getBricks()[0].length; col++)
+				{
+					//check every row in the level
+					for (int row = 0; row < bricks.getBricks().length; row++)
+					{
+						//get the current brick
+						Brick brick = bricks.getBricks()[row][col];
+						
+						//if the brick is not dead or hidden or solid, assign the key
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setKey(key);
+					}
+				}
+				break;
+		}
 	}
 	
 	/**

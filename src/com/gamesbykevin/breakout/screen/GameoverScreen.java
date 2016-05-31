@@ -13,7 +13,6 @@ import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.game.GameHelper;
-import com.gamesbykevin.breakout.panel.GamePanel;
 
 /**
  * The game over screen
@@ -50,6 +49,11 @@ public class GameoverScreen implements Screen, Disposable
      */
     private static final String BUTTON_TEXT_MENU = "Menu";
     
+    /**
+     * The text to display for the menu
+     */
+    private static final String BUTTON_TEXT_LEVEL = "Level";
+    
     //list of buttons
     private HashMap<Key, Button> buttons;
     
@@ -60,12 +64,22 @@ public class GameoverScreen implements Screen, Disposable
      */
     public enum Key
     {
-    	Next, Menu, Rate
+    	Next, Menu, Rate, Level
     }
     
     //the menu selection made
     private Key selection = null;
     
+    /**
+     * The x-coordinate for the text
+     */
+    public static final int TEXT_X = 40;
+    
+    /**
+     * The y-coordinate for the text
+     */
+    public static final int TEXT_Y = 0;
+
     /**
      * Create the game over screen
      * @param screen Parent screen manager object
@@ -80,10 +94,13 @@ public class GameoverScreen implements Screen, Disposable
         
         //the start location of the button
         int y = ScreenManager.BUTTON_Y;
-        int x = (GamePanel.WIDTH / 2) - (MenuScreen.BUTTON_WIDTH / 2);
+        int x = ScreenManager.BUTTON_X;
         
         //create our buttons
         addButton(x, y, Key.Next, BUTTON_TEXT_NEXT);
+        
+        y += ScreenManager.BUTTON_Y_INCREMENT;
+        addButton(x, y, Key.Level, BUTTON_TEXT_LEVEL);
         
         y += ScreenManager.BUTTON_Y_INCREMENT;
         addButton(x, y, Key.Menu, BUTTON_TEXT_MENU);
@@ -223,9 +240,32 @@ public class GameoverScreen implements Screen, Disposable
     {
     	if (getSelection() != null)
     	{
+			//flag game over false
+			GameHelper.GAMEOVER = false;
+    		
+	        //reset default # of lives
+	        GameHelper.resetLives(getScreen().getScreenGame().getGame());
+			
 			//handle each button different
 			switch (getSelection())
 			{
+				case Level:
+					//no longer winning
+					GameHelper.WIN = false;
+					
+					//flag lose false
+					GameHelper.LOSE = false;
+					
+					//we will need to choose another level
+					getScreen().getScreenGame().getGame().getSelect().setSelection(false);
+					
+	                //move back to the game
+					getScreen().setState(ScreenManager.State.Running);
+					
+	                //play sound effect
+	                Audio.play(Assets.AudioMenuKey.Selection);
+					break;
+			
 				case Next:
 					
 					//if we won, move to the next level
@@ -291,14 +331,7 @@ public class GameoverScreen implements Screen, Disposable
 	            if (System.currentTimeMillis() - time >= DELAY_MENU_DISPLAY)
 	            {
 	            	//determine what button text is displayed
-	            	if (GameHelper.LIVES <= 0)
-	            	{
-		            	buttons.get(Key.Next).setDescription(0, BUTTON_TEXT_RETRY);
-	            	}
-	            	else
-	            	{
-		            	buttons.get(Key.Next).setDescription(0, BUTTON_TEXT_NEXT);
-	            	}
+	            	buttons.get(Key.Next).setDescription(0, (GameHelper.LIVES <= 0) ? BUTTON_TEXT_RETRY : BUTTON_TEXT_NEXT);
 	            	
 	            	//display the menu
 	            	setDisplay(true);
@@ -320,6 +353,15 @@ public class GameoverScreen implements Screen, Disposable
             {
             	buttons.get(key).render(canvas, getScreen().getPaint());
             }
+            
+        	canvas.drawBitmap(
+        		Images.getImage(
+        			GameHelper.LIVES <= 0 ? Assets.ImageMenuKey.Gameover : Assets.ImageMenuKey.Winner 
+        		), 
+        		TEXT_X, 
+        		TEXT_Y, 
+        		null
+        	);
         }
     }
     

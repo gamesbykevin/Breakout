@@ -13,6 +13,7 @@ import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.level.Levels;
+import com.gamesbykevin.breakout.number.Number;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.panel.GamePanel;
 import com.gamesbykevin.breakout.powerup.Powerups;
@@ -69,6 +70,9 @@ public final class Game implements IGame
     //the game score card
     private Score score;
     
+    //object for rendering a number
+    private Number number;
+    
     /**
      * The number of columns for our level select options on a single page
      */
@@ -77,12 +81,12 @@ public final class Game implements IGame
     /**
      * The number of rows for our level select options on a single page
      */
-    private static final int SELECT_ROWS = 6;
+    private static final int SELECT_ROWS = 5;
     
     /**
      * The size of each level select button
      */
-    private static final int SELECT_DIMENSION = 100;
+    private static final int SELECT_DIMENSION = 96;
     
     /**
      * The pixel space between each level select button
@@ -98,21 +102,6 @@ public final class Game implements IGame
      * The y-coordinate where we start displaying the level select buttons
      */
     private static final int SELECT_START_Y = 50;
-    
-    /**
-     * The level select description
-     */
-    private static final String SELECT_DESCRIPTION = "Select Level";
-    
-    /**
-     * The x-coordinate where we draw our description
-     */
-    private static final int SELECT_DESCRIPTION_X = (int)(GamePanel.WIDTH * .25);
-    
-    /**
-     * The y-coordinate where we draw our description
-     */
-    private static final int SELECT_DESCRIPTION_Y = GamePanel.HEIGHT - (int)(GamePanel.HEIGHT * .2);
     
     /**
      * Create our game object
@@ -142,6 +131,9 @@ public final class Game implements IGame
         //create and load the levels
         this.levels = new Levels();
         
+        //create new number object
+        this.number = new Number();
+        
         //create the level select screen
         this.select = new Select();
         this.select.setButtonNext(new Button(Images.getImage(Assets.ImageGameKey.PageNext)));
@@ -149,7 +141,6 @@ public final class Game implements IGame
         this.select.setButtonLocked(new Button(Images.getImage(Assets.ImageGameKey.LevelLocked)));
         this.select.setButtonPrevious(new Button(Images.getImage(Assets.ImageGameKey.PagePrevious)));
         this.select.setButtonSolved(new Button(Images.getImage(Assets.ImageGameKey.LevelCompleted)));
-        this.select.setDescription(SELECT_DESCRIPTION, SELECT_DESCRIPTION_X, SELECT_DESCRIPTION_Y);
         this.select.setCols(SELECT_COLS);
         this.select.setRows(SELECT_ROWS);
         this.select.setDimension(SELECT_DIMENSION);
@@ -163,6 +154,15 @@ public final class Game implements IGame
         
         //update level select screens
         GameHelper.updateSelect(this);
+    }
+    
+    /**
+     * Get the number object
+     * @return Our number object reference for rendering lives
+     */
+    public Number getNumber()
+    {
+    	return this.number;
     }
     
     /**
@@ -449,5 +449,8 @@ public final class Game implements IGame
     		select.dispose();
     		select = null;
     	}
+    	
+    	if (number != null)
+    		number = null;
     }
 }
