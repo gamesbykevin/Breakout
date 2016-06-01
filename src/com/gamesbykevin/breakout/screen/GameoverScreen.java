@@ -297,7 +297,7 @@ public class GameoverScreen implements Screen, Disposable
 	    			
 	                //move to the main menu
 	                getScreen().setState(ScreenManager.State.Ready);
-	                
+					
 	                //play sound effect
 	                Audio.play(Assets.AudioMenuKey.Selection);
 	                

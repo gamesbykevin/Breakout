@@ -163,6 +163,12 @@ public final class GameHelper
 			
 			//go to the game over screen
 			game.getScreen().setState(ScreenManager.State.GameOver);
+			
+			//stop all previously playing sound
+			Audio.stop();
+			
+			//play sound effect
+			Audio.play(Assets.AudioMenuKey.LevelComplete, true);
 		}
 		else if (game.getBalls().getCount() < 1)
 		{
@@ -183,6 +189,12 @@ public final class GameHelper
 				
 				//go to the game over screen
 				game.getScreen().setState(ScreenManager.State.GameOver);
+				
+				//stop all previously playing sound
+				Audio.stop();
+				
+				//play sound effect
+				Audio.play(Assets.AudioMenuKey.Gameover);
     		}
 		}
 	}
@@ -208,7 +220,7 @@ public final class GameHelper
     				game.getSelect().setSelection(false);
     				
     				//play sound effect
-    				//Audio.play(Assets.AudioGameKey.InvalidLevelSelect);
+    				Audio.play(Assets.AudioGameKey.Invalid);
     			}
     			else
     			{
@@ -256,6 +268,10 @@ public final class GameHelper
     	{
     		//keep track of the frames count
     		FRAMES++;
+    		
+    		//if we are now ready, start playing the theme
+    		if (isReady())
+    			Audio.play(Assets.AudioMenuKey.Theme, true);
     	}
     }
     
@@ -263,7 +279,7 @@ public final class GameHelper
      * Is the game ready?
      * @return true if the number of frames elapsed the limit
      */
-    protected static boolean isReady()
+    public static boolean isReady()
     {
 		return (FRAMES > GET_READY_FRAMES_LIMIT);
     }

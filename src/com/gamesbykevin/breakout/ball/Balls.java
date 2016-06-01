@@ -3,6 +3,7 @@ package com.gamesbykevin.breakout.ball;
 import java.util.ArrayList;
 
 import com.gamesbykevin.androidframework.anim.Animation;
+import com.gamesbykevin.androidframework.resources.Audio;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.brick.Brick;
@@ -43,6 +44,9 @@ public class Balls extends Entity implements ICommon
 	 * The number of frames to wait until speeding up all existing balls
 	 */
 	private static final int SPEED_UP_BALLS_DELAY = (MainThread.FPS * 45);
+	
+	//different sound effects we can play
+	private boolean soundBrickCollisionSolid, soundBrickCollision, soundWallCollision, soundLoseBall;
 	
 	public Balls(final Game game) throws Exception 
 	{
@@ -348,6 +352,12 @@ public class Balls extends Entity implements ICommon
 		
 		if (getBalls() != null)
 		{
+			//flag all false to start
+			soundBrickCollisionSolid = false;
+			soundBrickCollision = false;
+			soundWallCollision = false;
+			soundLoseBall = false;
+			
 			//update all balls
 			for (int i = 0; i < getBalls().size(); i++)
 			{
@@ -357,10 +367,6 @@ public class Balls extends Entity implements ICommon
 				//if the ball is hidden skip it
 				if (ball.isHidden())
 					continue;
-				
-				//store the original position
-				final double x = ball.getX();
-				final double y = ball.getY();
 				
 				//update ball
 				ball.update();
@@ -377,18 +383,24 @@ public class Balls extends Entity implements ICommon
 							row = rowMax;
 							col = colMax;
 							
-							//since there was collision, move the ball back
-							ball.setX(x);
-							ball.setY(y);
-							
 							//no need to check the other bricks since the ball already hit
 							break;
 						}
 					}
 				}
 				
+				final boolean hidden = ball.isHidden();
+				final double dx = ball.getDX();
+				final double dy = ball.getDY();
+				
 				//make sure the ball stays in bounds
 				ball.verifyBounds();
+				
+				if (dx != ball.getDX() || dy != ball.getDY())
+					soundWallCollision = true;
+				
+				if (!hidden && ball.isHidden())
+					soundLoseBall = true;
 			}
 			
 			//keep track of the elapsed frames
@@ -406,6 +418,16 @@ public class Balls extends Entity implements ICommon
 					ball.speedUp();
 				}
 			}
+			
+			//play sound effects accordingly
+			if (soundBrickCollisionSolid)
+				Audio.play(Assets.AudioGameKey.BallBounceSolid);
+			if (soundBrickCollision)
+				Audio.play(Assets.AudioGameKey.BallBounce);
+			if (soundWallCollision)
+				Audio.play(Assets.AudioGameKey.WallCollision);
+			if (soundLoseBall)
+				Audio.play(Assets.AudioGameKey.LostBall);
 		}
 	}
 	
@@ -428,6 +450,9 @@ public class Balls extends Entity implements ICommon
 				//if the brick is solid just bounce the ball off it
 				if (brick.isSolid())
 				{
+					//flag true to play sound
+					soundBrickCollisionSolid = true;
+					
 					//flip y-velocity
 					ball.setDY(-ball.getDY());
 					
@@ -454,6 +479,9 @@ public class Balls extends Entity implements ICommon
 				}
 				else
 				{
+					//flag true to play sound
+					soundBrickCollision = true;
+					
 					//if the ball is not a fire ball flip the y-velocity
 					if (!ball.hasFire())
 						ball.setDY(-ball.getDY());

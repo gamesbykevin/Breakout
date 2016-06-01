@@ -81,7 +81,7 @@ public class Assets
      */
     public enum ImageGameKey
     {
-    	Border, LevelCompleted, GameOver, LaserBlue, LaserGreen, LaserRed, 
+    	Border, LevelCompleted, Cursor, GameOver, LaserBlue, LaserGreen, LaserRed, 
     	LevelCompleteText, Lives, LevelLocked, PageNext, Numbers,
     	Particle1, Particle2, Particle3, Particle4, Particle5, Particle6, Particle7, 
     	PagePrevious, GetReady, Sheet, LevelOpen
@@ -102,7 +102,7 @@ public class Assets
      */
     public enum AudioMenuKey
     {
-    	Selection
+    	LevelComplete, Gameover, Menu, Selection, Theme
     }
     
     /**
@@ -111,7 +111,8 @@ public class Assets
      */
     public enum AudioGameKey
     {
-    	
+    	BallBounce, BallBounceSolid, FirePowerup, Invalid, LaserFire, LostBall, NewLife, 
+    	PaddleCatch, PaddleCollision, Powerup, WallCollision
     }
     
     /**

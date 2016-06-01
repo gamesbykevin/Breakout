@@ -11,6 +11,7 @@ import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.androidframework.screen.Screen;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.game.GameHelper;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 import java.util.HashMap;
@@ -224,7 +225,7 @@ public final class ScreenManager implements Screen, Disposable
 	        		Audio.stop();
 	        		
 	        		//play menu theme
-	        		//Audio.play(Assets.AudioMenuKey.Music, true);
+	        		Audio.play(Assets.AudioMenuKey.Menu, true);
 	        	}
 	        }
 	        else if (state == State.Running)
@@ -232,8 +233,9 @@ public final class ScreenManager implements Screen, Disposable
 	        	//stop all sound
 	        	Audio.stop();
 	        	
-	        	//play main theme music
-	        	//Audio.play(Assets.AudioGameKey.Music, true);
+	        	//if previously paused, start playing main theme
+	        	if (getState() == State.Paused && GameHelper.isReady())
+	        		Audio.play(Assets.AudioMenuKey.Theme, true);
 	        }
     	}
     	finally

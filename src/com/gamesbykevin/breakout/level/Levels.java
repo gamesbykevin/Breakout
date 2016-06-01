@@ -43,7 +43,7 @@ public class Levels implements Disposable
 	/**
 	 * How many of the bricks should we flag as a bonus
 	 */
-	private static final float BONUS_RATIO = .3f;
+	private static final float BONUS_RATIO = .25f;
 	
 	//list to choose random keys from
 	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();

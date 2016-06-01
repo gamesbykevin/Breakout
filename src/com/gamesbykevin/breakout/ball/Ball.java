@@ -11,16 +11,6 @@ import com.gamesbykevin.breakout.wall.Wall;
 public final class Ball extends Entity implements ICommon 
 {
 	/**
-	 * The starting x-coordinate for the ball
-	 */
-	public static final int START_X = (GamePanel.WIDTH / 2);
-	
-	/**
-	 * The starting y-coordinate for the ball
-	 */
-	public static final int START_Y = (GamePanel.HEIGHT / 2);
-	
-	/**
 	 * Dimensions of ball
 	 */
 	public static final int WIDTH = 16;
@@ -29,6 +19,16 @@ public final class Ball extends Entity implements ICommon
 	 * Dimensions of ball
 	 */
 	public static final int HEIGHT = 16;
+	
+	/**
+	 * The starting x-coordinate for the ball
+	 */
+	public static final int START_X = (GamePanel.WIDTH / 2);
+	
+	/**
+	 * The starting y-coordinate for the ball
+	 */
+	public static final int START_Y = (GamePanel.HEIGHT / 2) - HEIGHT;
 	
 	/**
 	 * The animation dimension on the sprite sheet

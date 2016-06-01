@@ -2,6 +2,8 @@ package com.gamesbykevin.breakout.powerup;
 
 import java.util.ArrayList;
 
+import com.gamesbykevin.androidframework.resources.Audio;
+import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
@@ -101,6 +103,11 @@ public class Powerups extends Entity implements ICommon
 	@Override
 	public void update() throws Exception 
 	{
+		//possible sound effects to play
+		boolean soundPowerup = false;
+		boolean soundFireball = false;
+		boolean soundNewlife = false;
+		
 		//check all power ups
 		for (Powerup powerup : getPowerups())
 		{
@@ -122,39 +129,66 @@ public class Powerups extends Entity implements ICommon
 				{
 					case Magnet: 
 						getGame().getPaddle().setMagnet(true);
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case Expand:
 						getGame().getPaddle().expand();
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case Shrink:
 						getGame().getPaddle().shrink();
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case Laser:
 						getGame().getPaddle().setLaser(true);
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case ExtraLife:
 						GameHelper.addLife(getGame());
+						
+						//play sound effect
+						soundNewlife = true;
 						break;
 						
 					case ExtraBalls:
 						getGame().getBalls().add();
 						getGame().getBalls().add();
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case SpeedUp:
 						getGame().getBalls().speedUp();
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case SpeedDown:
 						getGame().getBalls().speedDown();
+						
+						//play sound effect
+						soundPowerup = true;
 						break;
 						
 					case Fireball:
 						getGame().getBalls().setFire(true);
+						
+						//play sound effect
+						soundFireball = true;
 						break;
 				
 					default:
@@ -167,6 +201,14 @@ public class Powerups extends Entity implements ICommon
 				powerup.update();
 			}
 		}
+		
+		//play sound effects accordingly
+		if (soundPowerup)
+			Audio.play(Assets.AudioGameKey.Powerup);
+		if (soundFireball)
+			Audio.play(Assets.AudioGameKey.FirePowerup);
+		if (soundNewlife)
+			Audio.play(Assets.AudioGameKey.NewLife);
 	}
 
 	@Override

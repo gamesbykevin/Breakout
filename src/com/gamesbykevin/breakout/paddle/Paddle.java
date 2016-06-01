@@ -1,6 +1,7 @@
 package com.gamesbykevin.breakout.paddle;
 
 import com.gamesbykevin.androidframework.anim.Animation;
+import com.gamesbykevin.androidframework.resources.Audio;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.ball.Ball;
@@ -49,7 +50,7 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * Default starting coordinate
 	 */
-	public static final int START_Y = GamePanel.HEIGHT - (GamePanel.HEIGHT / 6);
+	public static final int START_Y = GamePanel.HEIGHT - (int)(GamePanel.HEIGHT * .20);
 	
 	/**
 	 * The different ratios to adjust each ball velocity
@@ -115,6 +116,14 @@ public class Paddle extends Entity implements ICommon
 	 * The duration to vibrate when the ball hits the paddle
 	 */
 	private static final long VIBRATE_BALL_COLLISION = 125L;
+	
+	//flag to play different sound effects
+	private boolean soundPaddleCollision, soundPaddleCollisionMagnet, soundLaserFire;   
+
+	/**
+	 * Dimension of the cursor
+	 */
+	private static final int CURSOR_DIMENSION = 84;
 	
 	/**
 	 * Default Constructor
@@ -361,6 +370,11 @@ public class Paddle extends Entity implements ICommon
 			if (hasRight())
 				this.setX(getX() + MOVE_VELOCITY);
 		}
+
+		//flag false first
+		soundPaddleCollision = false;
+		soundPaddleCollisionMagnet = false;
+		soundLaserFire = false;
 		
 		//check each ball for paddle collision
 		for (Ball ball : getGame().getBalls().getBalls())
@@ -376,6 +390,8 @@ public class Paddle extends Entity implements ICommon
 			//check first for collision with the ball
 			if (hasCollision(ball))
 			{
+				soundPaddleCollision = true;
+				
 				//if the ball has moved past the paddle
 				if (ball.getY() > getY() + (getHeight() / 2))
 					continue;
@@ -419,6 +435,9 @@ public class Paddle extends Entity implements ICommon
 				//if the paddle is a magnet then we freeze the ball
 				if (hasMagnet())
 				{
+					//flag to play sound effect
+					soundPaddleCollisionMagnet = true;
+					
 					//freeze the ball
 					ball.setFrozen(true);
 					
@@ -427,6 +446,9 @@ public class Paddle extends Entity implements ICommon
 				}
 				else
 				{
+					//flag to play sound effect
+					soundPaddleCollision = true;
+					
 					//vibrate when a ball hits the paddle
 					super.getGame().vibrate(VIBRATE_BALL_COLLISION);
 				}
@@ -466,6 +488,9 @@ public class Paddle extends Entity implements ICommon
 				//if enough time has lapsed fire more lasers
 				if (this.framesLaserCurrent >= FRAMES_LASER_DELAY)
 				{
+					//flag true to play sound effect
+					soundLaserFire = true;
+					
 					//reset current count
 					this.framesLaserCurrent = 0;
 					
@@ -474,6 +499,14 @@ public class Paddle extends Entity implements ICommon
 				}
 			}
 		}
+		
+		//play sound effects accordingly
+		if (soundPaddleCollision)
+			Audio.play(Assets.AudioGameKey.PaddleCollision);
+		if (soundPaddleCollisionMagnet)
+			Audio.play(Assets.AudioGameKey.PaddleCatch);
+		if (soundLaserFire)
+			Audio.play(Assets.AudioGameKey.LaserFire);
 	}
 	
 	@Override
@@ -508,5 +541,13 @@ public class Paddle extends Entity implements ICommon
 		
 		//render any lasers
 		getLasers().render(canvas);
+		
+		//render the cursor
+		canvas.drawBitmap(
+			Images.getImage(Assets.ImageGameKey.Cursor), 
+			(float)(getX() + (getWidth() / 2) - (CURSOR_DIMENSION / 2)), 
+			(float)(getY() + getHeight() + (int)(CURSOR_DIMENSION * .4)), 
+			null
+		);
 	}
 }

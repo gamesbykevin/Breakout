@@ -329,6 +329,13 @@ public class MenuScreen implements Screen, Disposable
                     //flag notify false
                     notify = false;
                     
+					//we will need to choose another level
+                    if (getScreen().getScreenGame().getGame() != null)
+                    {
+                    	if (getScreen().getScreenGame().getGame().getSelect() != null)
+                    		getScreen().getScreenGame().getGame().getSelect().setSelection(false);
+                    }
+                    
                     //play sound effect
                     Audio.play(Assets.AudioMenuKey.Selection);
                     
