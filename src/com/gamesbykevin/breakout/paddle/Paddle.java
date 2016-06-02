@@ -390,11 +390,11 @@ public class Paddle extends Entity implements ICommon
 			//check first for collision with the ball
 			if (hasCollision(ball))
 			{
-				soundPaddleCollision = true;
-				
 				//if the ball has moved past the paddle
 				if (ball.getY() > getY() + (getHeight() / 2))
 					continue;
+				
+				soundPaddleCollision = true;
 				
 				//switch ball y-velocity
 				ball.setDY(-ball.getDY());
