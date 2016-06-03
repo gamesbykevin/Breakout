@@ -394,6 +394,7 @@ public class Paddle extends Entity implements ICommon
 				if (ball.getY() > getY() + (getHeight() / 2))
 					continue;
 				
+				//play sound effect
 				soundPaddleCollision = true;
 				
 				//switch ball y-velocity
