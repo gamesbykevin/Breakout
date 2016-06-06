@@ -58,7 +58,7 @@ public final class Brick extends Entity implements ICommon
 	/**
 	 * The number of times a solid brick can be hit before it is dead
 	 */
-	private static final int COLLISIONS_LIMIT_SOLID = 4;
+	private static final int COLLISIONS_LIMIT_SOLID = 3;
 	
 	/**
 	 * The number of times a non-solid brick can be hit before it is dead

@@ -186,6 +186,10 @@ public class Levels implements Disposable
 		//check every row in the level
 		for (int row = 0; row < level.getKey().size(); row++)
 		{
+			//make sure we stay in bounds
+			if (row >= level.getKey().size())
+				break;
+			
 			//get the current line
 			final String line = level.getKey().get(row);
 			

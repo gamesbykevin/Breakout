@@ -297,7 +297,7 @@ public class Balls extends Entity implements ICommon
 	private void add(double x, double y)
 	{
 		//don't add any additional balls if we reached our limit
-		if (getBalls().size() >= MAX_BALL_LIMIT)
+		if (getCount() >= MAX_BALL_LIMIT)
 			return;
 		
 		//first see if we can reuse an existing ball

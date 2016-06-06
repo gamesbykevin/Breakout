@@ -134,6 +134,10 @@ public final class GameHelper
         		//mark this level as not completed
         		game.getSelect().setCompleted(levelIndex, false);
         	}
+        	
+        	//if debugging unlock every level
+        	if (MainThread.DEBUG)
+            	game.getSelect().setLocked(levelIndex, false);
         }
         
     	//the first level can never be locked
