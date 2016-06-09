@@ -13,6 +13,7 @@ import com.gamesbykevin.androidframework.resources.Audio;
 import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.breakout.MainActivity;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.screen.OptionsScreen;
 import com.gamesbykevin.breakout.screen.ScreenManager;
 import com.gamesbykevin.breakout.screen.ScreenManager.State;
@@ -300,28 +301,36 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
 						{
 							if (getScreen().getScreenGame().getGame() != null)
 							{
-								//check the x-coordinate (anything between -1 and 1 is neutral)
-								if (x > .75)
+								//check each coordinate milestone for paddle velocity
+								for (int i = 0; i < Paddle.PADDLE_TILT_COORDINATES.length; i++)
 								{
-									//move left
-									this.getScreen().getScreenGame().getGame().getPaddle().touch(0, true);
+									//if we are within this tilt milestone
+									if (x > Paddle.PADDLE_TILT_COORDINATES[i])
+									{
+										//move left, and apply touch/power
+										this.getScreen().getScreenGame().getGame().getPaddle().touch(0, true, Paddle.PADDLE_TILT_VELOCITY_POWER[i]);
+										
+										//no need to continue
+										return;
+									}
+									else if (x < -Paddle.PADDLE_TILT_COORDINATES[i])
+									{
+										//move right, and apply touch/power
+										this.getScreen().getScreenGame().getGame().getPaddle().touch(WIDTH, true, Paddle.PADDLE_TILT_VELOCITY_POWER[i]);
+										
+										//no need to continue
+										return;
+									}
 								}
-								else if (x < -.75)
-								{
-									//move right
-									this.getScreen().getScreenGame().getGame().getPaddle().touch(WIDTH, true);
-								}
-								else
-								{
-									//stop moving
-									this.getScreen().getScreenGame().getGame().getPaddle().touch(0, false);
-								}
+								
+								//we weren't in range so stop tilting
+								this.getScreen().getScreenGame().getGame().getPaddle().touch(0, false, Paddle.TOUCH_POWER_0);
 							}
 						}
 					}
 					
-					if (MainThread.DEBUG);
-						//System.out.println("x" + event.values[0] + ", y=" + event.values[1] + ", z=" + event.values[2]);
+					//if (MainThread.DEBUG)
+					//	System.out.println("x" + event.values[0] + ", y=" + event.values[1] + ", z=" + event.values[2]);
 					break;
 					
 				//if we forget to manage the sensor we need to know

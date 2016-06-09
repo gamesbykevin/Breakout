@@ -324,7 +324,7 @@ public final class Game implements IGame
     		
     		//flag touch false, depending on controls setting
     		if (GameHelper.canTouch(this))
-    			getPaddle().touch(x, false);
+    			getPaddle().touch(x, false, Paddle.TOUCH_POWER_0);
     	}
     	else if (action == MotionEvent.ACTION_DOWN)
 		{
@@ -333,16 +333,16 @@ public final class Game implements IGame
     		
     		//flag touch true, depending on controls setting
     		if (GameHelper.canTouch(this))
-    			getPaddle().touch(x, true);
+    			getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
 		}
 		else if (action == MotionEvent.ACTION_MOVE)
     	{
-    		//un-flag press
-    		this.press = false;
+    		//flag press
+    		this.press = true;
     		
     		//flag touch true, depending on controls setting
     		if (GameHelper.canTouch(this))
-    			getPaddle().touch(x, true);
+    			getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
     	}
     }
     

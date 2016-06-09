@@ -300,6 +300,9 @@ public class Balls extends Entity implements ICommon
 		if (getCount() >= MAX_BALL_LIMIT)
 			return;
 		
+		//pick random xoffset
+		final double xOffset = -Ball.WIDTH + GamePanel.RANDOM.nextInt(Ball.WIDTH * 2);
+		
 		//first see if we can reuse an existing ball
 		for (Ball ball : getBalls())
 		{
@@ -314,12 +317,12 @@ public class Balls extends Entity implements ICommon
 			ball.reset();
 			
 			//place ball accordingly
-			ball.setX(x);
+			ball.setX(x + xOffset);
 			ball.setY(y);
 			
 			//choose random velocity
 			ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
-			ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+			ball.setDY(-Ball.SPEED_MIN);
 			
 			//make sure ball is no longer hidden
 			ball.setHidden(false);
@@ -328,16 +331,16 @@ public class Balls extends Entity implements ICommon
 			return;
 		}
 		
-		//create a new ball
+		//create a new ball since we couldn't reuse an existing
 		Ball ball = new Ball(getRandomKey());
 
 		//position the ball
-		ball.setX(x);
+		ball.setX(x + xOffset);
 		ball.setY(y);
 		
 		//choose random velocity
 		ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
-		ball.setDY(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+		ball.setDY(-Ball.SPEED_MIN);
 		
 		//add to list
 		getBalls().add(ball);
@@ -503,9 +506,18 @@ public class Balls extends Entity implements ICommon
 	@Override
 	public void reset() 
 	{
-		//remove all balls
+		//flag all balls hidden
 		if (getBalls() != null)
-			getBalls().clear();
+		{
+			for (Ball ball : getBalls())
+			{
+				//reset ball
+				ball.reset();
+				
+				//flag it hidden
+				ball.setHidden(true);
+			}
+		}
 		
 		//reset frames count
 		frames = 0;
@@ -522,6 +534,10 @@ public class Balls extends Entity implements ICommon
 				//get the current ball
 				final Ball ball = getBalls().get(i);
 
+				//if hidden don't render
+				if (ball.isHidden())
+					continue;
+				
 				//assign values
 				super.setX(ball);
 				super.setY(ball);

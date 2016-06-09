@@ -17,6 +17,32 @@ import android.graphics.Canvas;
 
 public class Paddle extends Entity implements ICommon
 {
+	
+	/**
+	 * 100% Touch power (full)
+	 */
+	public static final float TOUCH_POWER_100 = 1.0f;
+	
+	/**
+	 * 75% Touch power
+	 */
+	public static final float TOUCH_POWER_75 = 0.75f;
+
+	/**
+	 * 50% Touch power
+	 */
+	public static final float TOUCH_POWER_50 = 0.5f;
+	
+	/**
+	 * 25% Touch power
+	 */
+	public static final float TOUCH_POWER_25 = 0.25f;
+	
+	/**
+	 * 0% Touch power (none)
+	 */
+	public static final float TOUCH_POWER_0 = 0f;
+	
 	/**
 	 * Dimensions of paddle
 	 */
@@ -61,6 +87,16 @@ public class Paddle extends Entity implements ICommon
 	 * The velocity adjustment when paddle collision occurs
 	 */
 	private static final float[] PADDLE_COLLISION_VELOCITY = { 1.35f, 1.15f, 0.75f, 0.5f, 0.0f };
+
+	/**
+	 * The different x-coordinates to tell how much we are tilting
+	 */
+	public static final float[] PADDLE_TILT_COORDINATES = {6.54f, 3.27f, .75f};
+	
+	/**
+	 * The different power depending on the tilt coordinates
+	 */
+	public static final float[] PADDLE_TILT_VELOCITY_POWER = {TOUCH_POWER_100, TOUCH_POWER_75, TOUCH_POWER_50};
 	
 	//our lasers object
 	private Lasers lasers;
@@ -104,13 +140,16 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * The speed at which the paddle can move
 	 */
-	private static final double MOVE_VELOCITY = 8.5;
+	private static final double MOVE_VELOCITY = (WIDTH / PADDLE_COLLISION_VELOCITY.length);
 	
 	//did we touch the screen to move the paddle
 	private boolean touch = false;
 	
 	//the x-coordinate touched
 	private float touchX = 0;
+	
+	//the amount of touch power to apply
+	private float touchPower = 1.0f;
 	
 	/**
 	 * The duration to vibrate when the ball hits the paddle
@@ -306,11 +345,17 @@ public class Paddle extends Entity implements ICommon
      * If touch is false the touchX is not stored
      * @param touchX Where did the user touch
      * @param touch Did the user touch?
+     * @param touchPower the % of power we applied to the touch 0% - 100%
      */
-    public void touch(final float touchX, final boolean touch)
+    public void touch(final float touchX, final boolean touch, final float touchPower)
     {
+    	//flag touch true
     	this.touch = touch;
     	
+    	//store the touch power ratio
+		this.touchPower = touchPower;
+		
+		//if we are touching store the destination x
     	if (this.touch)
     		this.touchX = touchX;
     }
@@ -354,7 +399,7 @@ public class Paddle extends Entity implements ICommon
 		}
 		
 		//if moving and close enough to the destination we can place at the location
-		if ((hasRight() || hasLeft()) && xdiff < MOVE_VELOCITY)
+		if ((hasRight() || hasLeft()) && xdiff < MOVE_VELOCITY * this.touchPower)
 		{
 			//place at coordinate
 			this.setX(touchX - (getWidth() / 2));
@@ -366,9 +411,9 @@ public class Paddle extends Entity implements ICommon
 		else
 		{
 			if (hasLeft())
-				this.setX(getX() - MOVE_VELOCITY);
+				this.setX(getX() - (MOVE_VELOCITY * this.touchPower));
 			if (hasRight())
-				this.setX(getX() + MOVE_VELOCITY);
+				this.setX(getX() + (MOVE_VELOCITY * this.touchPower));
 		}
 
 		//flag false first

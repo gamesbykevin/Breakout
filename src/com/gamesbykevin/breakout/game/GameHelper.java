@@ -84,6 +84,9 @@ public final class GameHelper
 		//reset frames count
 		GameHelper.FRAMES = 0;
     	
+		//reset balls
+		game.getBalls().reset();
+		
         //reset paddle and ball(s)
 		game.getBalls().add(game.getPaddle());
     	
