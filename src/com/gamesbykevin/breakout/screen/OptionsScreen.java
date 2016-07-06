@@ -165,6 +165,10 @@ public class OptionsScreen implements Screen, Disposable
         button.addDescription("Control: Finger");
         button.setX(x);
         button.setY(y);
+        
+        //default to finger in case they do not have setting saved yet
+        button.setIndex(1);
+        
     	this.buttons.put(Key.Controls, button);
     }
     

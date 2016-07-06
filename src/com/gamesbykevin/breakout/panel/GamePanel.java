@@ -340,8 +340,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
 		}
 		catch (Exception e)
 		{
-			if (MainThread.DEBUG)
-				e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -359,12 +358,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
                 RANDOM = new Random(System.nanoTime());
             
             //create the thread if it doesn't exist
-            if (getThread() == null)
-        		this.thread = new MainThread(getHolder(), this);
+    		this.thread = new MainThread(getHolder(), this);
             
-            //if the thread isn't running, start it
-            if (!getThread().isRunning())
-            	getThread().start();
+            //start the thread
+        	getThread().start();
             
             //flag the thread as not paused
             getThread().setPause(false);
@@ -388,6 +385,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
         {
             e.printStackTrace();
         }
+        
+        //return control to android
+        return;
     }
     
     @Override
@@ -410,6 +410,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback, Di
         	//if the screen does not exist, just exit the game
         	getActivity().finish();
         }
+        
+        //return control to android
+        return;
     }
     
     @Override

@@ -96,7 +96,8 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * The different power depending on the tilt coordinates
 	 */
-	public static final float[] PADDLE_TILT_VELOCITY_POWER = {TOUCH_POWER_100, TOUCH_POWER_75, TOUCH_POWER_50};
+	//public static final float[] PADDLE_TILT_VELOCITY_POWER = {TOUCH_POWER_100, TOUCH_POWER_75, TOUCH_POWER_50};
+	public static final float[] PADDLE_TILT_VELOCITY_POWER = {TOUCH_POWER_100, TOUCH_POWER_100, TOUCH_POWER_100};
 	
 	//our lasers object
 	private Lasers lasers;
