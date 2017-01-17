@@ -6,6 +6,7 @@ import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.level.Levels;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -20,7 +21,76 @@ public class Bricks extends Entity implements ICommon
 	 */
 	public enum Key
 	{
-		Yellow, Red, Purple, Silver, Green, Blue
+		Yellow(40,100, "Y"), Black(80,100, "B"), Grey(120,100, "G"), 
+		Red(40,120, "R"),	Orange(80,120, "O"), Brown(120, 120, "N"), 
+		Purple(40,140, "U"), Pink(80,140, "P"), 
+		Silver(40,160, "S"), White(80,160, "W"),
+		Green(40,180, "C"),  DarkGreen(80,180, "D"),
+		Blue(40,200, "E"), 	DarkBlue(80,200, "F");
+		
+		//location of animation coordinates
+		private final int x, y;
+		
+		//the code that we can match to this key
+		private final String code;
+		
+		private Key(final int x, final int y, final String code)
+		{
+			//assign animation coordinates
+			this.x = x;
+			this.y = y;
+			
+			//the code to compare
+			this.code = code;
+		}
+		
+		/**
+		 * Do we have a matching code?
+		 * @param code The code we want to check
+		 * @return true if the codes match, false otherwise or if any values checked are null
+		 */
+		public boolean hasCode(final String code)
+		{
+			//if any is null we can't match
+			if (code == null)
+				return false;
+			if (getCode() == null)
+				return false;
+			
+			//if values match return true
+			if (getCode().equalsIgnoreCase(code))
+				return true;
+			
+			//no match was found
+			return false;
+		}
+		
+		/**
+		 * Get the code
+		 * @return The character code to match to this key
+		 */
+		public String getCode()
+		{
+			return this.code;
+		}
+		
+		/**
+		 * Get X coordinate
+		 * @return The starting x-coordinate on the sprite sheet
+		 */
+		public int getX()
+		{
+			return this.x;
+		}
+		
+		/**
+		 * Get Y coordinate
+		 * @return The starting y-coordinate on the sprite sheet
+		 */
+		public int getY()
+		{
+			return this.y;
+		}
 	}
 	
 	/**
@@ -56,45 +126,34 @@ public class Bricks extends Entity implements ICommon
 		//reset all bricks
 		reset();
 		
-		//where animation is located
-		int x = 40;
-		int y = 0;
+		//make sure all key values are valid
+		for (int x = 0; x < Key.values().length; x++)
+		{
+			if (Key.values()[x].hasCode(Levels.BRICK_EMPTY))
+				throw new Exception("The key code can't be the same as brick empty");
+			if (Key.values()[x].hasCode(Levels.BRICK_BREAKABLE_NO_COLOR))
+				throw new Exception("The key code can't be the same as brick breakable no color");
+			if (Key.values()[x].hasCode(Levels.BRICK_UNBREAKABLE))
+				throw new Exception("The key code can't be the same as brick unbreakable");
+			if (Key.values()[x].hasCode(Levels.LEVEL_SEPARATOR))
+				throw new Exception("The key code can't be the same as level separator");
+			
+			for (int y = 0; y < Key.values().length; y++)
+			{
+				//make sure we aren't checking the same
+				if (x == y)
+					continue;
+				
+				if (Key.values()[x].hasCode(Key.values()[y].getCode()))
+					throw new Exception("Two keys cannot have the same value");
+			}
+		}
 		
+		//map out animations
 		for (Key key : Key.values())
 		{
-			//locate y-coordinate
-			switch (key)
-			{
-				case Yellow:
-					y = 64;
-					break;
-					
-				case Red:
-					y = 84;
-					break;
-					
-				case Purple:
-					y = 104;
-					break;
-					
-				case Silver:
-					y = 124;
-					break;
-					
-				case Green:
-					y = 144;
-					break;
-					
-				case Blue:
-					y = 164;
-					break;
-					
-				default:
-					throw new Exception("Key not found: " + key.toString());
-			}
-			
 			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, Brick.WIDTH, Brick.HEIGHT);
+			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), key.getX(), key.getY(), Brick.WIDTH, Brick.HEIGHT);
 			
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);

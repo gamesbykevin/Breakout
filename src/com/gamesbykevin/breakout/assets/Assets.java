@@ -72,7 +72,7 @@ public class Assets
     public enum ImageMenuKey
     {
     	Background, Button, Cancel, Confirm, Facebook, Instructions,
-    	Logo, Gameover, Splash, Twitter, Winner
+    	Logo, Gameover, Splash, Twitter, Winner, Youtube
     }
     
     /**

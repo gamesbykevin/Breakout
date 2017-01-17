@@ -7,6 +7,7 @@ import com.gamesbykevin.androidframework.resources.Files;
 import com.gamesbykevin.breakout.assets.Assets;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
+import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.panel.GamePanel;
 
 public class Levels implements Disposable
@@ -23,22 +24,22 @@ public class Levels implements Disposable
 	/**
 	 * Character representing empty space
 	 */
-	private static final String BRICK_EMPTY = "_";
+	public static final String BRICK_EMPTY = "_";
 	
 	/**
 	 * Character representing a breakable brick
 	 */
-	private static final String BRICK_BREAKABLE = "A";
+	public static final String BRICK_BREAKABLE_NO_COLOR = "X";
 	
 	/**
 	 * Character representing an un-breakable brick
 	 */
-	private static final String BRICK_UNBREAKABLE = "B";
+	public static final String BRICK_UNBREAKABLE = "Z";
 	
 	/**
 	 * Character that indicates new level begins
 	 */
-	private static final String LEVEL_SEPARATOR = "#";
+	public static final String LEVEL_SEPARATOR = "#";
 	
 	/**
 	 * How many of the bricks should we flag as a bonus
@@ -183,6 +184,9 @@ public class Levels implements Disposable
 		//clear the list of locations
 		getLocations().clear();
 		
+		//are there brick with no assigned color?
+		boolean noColor = false;
+		
 		//check every row in the level
 		for (int row = 0; row < level.getKey().size(); row++)
 		{
@@ -205,17 +209,6 @@ public class Levels implements Disposable
 					//if empty flag dead true
 					bricks.getBricks()[row][col].setDead(true);
 				}
-				else if (character.equalsIgnoreCase(BRICK_BREAKABLE))
-				{
-					//assign animation
-					bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
-					
-					//flag not dead
-					bricks.getBricks()[row][col].reset();
-					
-					//add place as possible location 
-					getLocations().add(new Location(col, row));
-				}
 				else if (character.equalsIgnoreCase(BRICK_UNBREAKABLE))
 				{
 					//assign animation
@@ -227,16 +220,58 @@ public class Levels implements Disposable
 					//flag the brick as solid so it can't be broken
 					bricks.getBricks()[row][col].setSolid(true);
 				}
+				else if (character.equalsIgnoreCase(BRICK_BREAKABLE_NO_COLOR))
+				{
+					//there are bricks here with no specified color
+					noColor = true;
+					
+					//assign animation
+					bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
+					
+					//flag not dead
+					bricks.getBricks()[row][col].reset();
+					
+					//add place as possible location 
+					getLocations().add(new Location(col, row));
+				}
 				else
 				{
-					//anything else flag dead true
-					bricks.getBricks()[row][col].setDead(true);
+					//check if we have a match
+					boolean match = false;
+					
+					//check each color key to see if the character matches
+					for (Key key : Key.values())
+					{
+						//if we have a match
+						if (key.hasCode(character))
+						{
+							//flag match
+							match = true;
+						
+							//assign animation
+							bricks.getBricks()[row][col].setKey(key);
+							
+							//flag not dead
+							bricks.getBricks()[row][col].reset();
+							
+							//add place as possible location 
+							getLocations().add(new Location(col, row));
+							
+							//exit for loop
+							break;
+						}
+					}
+					
+					//if there is no match, the brick is dead
+					if (!match)
+						bricks.getBricks()[row][col].setDead(true);
 				}
 			}
 		}
 		
-		//assign different colors to the bricks
-		colorizeBricks(bricks);
+		//if there are bricks without an assigned color, populate all bricks with colors
+		if (noColor)
+			colorizeBricks(bricks);
 		
 		//add random bonuses to the bricks
 		populateBonuses(bricks);
@@ -338,27 +373,9 @@ public class Levels implements Disposable
 					key = null;
 				}
 				break;
-			
-			//every brick is random
-			case 2:
-				//check every column in the row
-				for (int col = 0; col < bricks.getBricks()[0].length; col++)
-				{
-					//check every row in the level
-					for (int row = 0; row < bricks.getBricks().length; row++)
-					{
-						//get the current brick
-						Brick brick = bricks.getBricks()[row][col];
-						
-						//if the brick is not dead or hidden or solid, assign the key
-						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							brick.setKey(getKey());
-					}
-				}
-				break;
 				
 			//all bricks are the same
-			case 3:
+			case 2:
 			default:
 				//get animation key
 				key = getKey();

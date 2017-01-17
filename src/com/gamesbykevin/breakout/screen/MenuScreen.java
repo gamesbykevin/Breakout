@@ -57,7 +57,7 @@ public class MenuScreen implements Screen, Disposable
     
     private enum Key
     {
-        Start, Exit, Settings, Instructions, More, Rate, Twitter, Facebook
+        Start, Exit, Settings, Instructions, More, Rate, Twitter, Facebook, Youtube
     }
     
     //the user selection from the menu
@@ -84,17 +84,22 @@ public class MenuScreen implements Screen, Disposable
     /**
      * x-coordinate for the instructions icon
      */
-    public static final int ICON_X_INSTRUCTIONS = (int)((GamePanel.WIDTH * .33) - ((GamePanel.WIDTH * .33) / 2) - (MenuScreen.ICON_DIMENSION / 2));
+    public static final int ICON_X_INSTRUCTIONS = (int)((GamePanel.WIDTH * .25) - ((GamePanel.WIDTH * .25) / 2) - (MenuScreen.ICON_DIMENSION / 2));
     
     /**
      * x-coordinate for the facebook icon
      */
-    public static final int ICON_X_FACEBOOK = (int)((GamePanel.WIDTH * .66) - ((GamePanel.WIDTH * .33) / 2) - (MenuScreen.ICON_DIMENSION / 2));
+    public static final int ICON_X_FACEBOOK = (int)((GamePanel.WIDTH * .50) - ((GamePanel.WIDTH * .25) / 2) - (MenuScreen.ICON_DIMENSION / 2));
     
     /**
      * x-coordinate for the twitter icon
      */
-    public static final int ICON_X_TWITTER = (int)((GamePanel.WIDTH * 1.0) - ((GamePanel.WIDTH * .33) / 2) - (MenuScreen.ICON_DIMENSION / 2));
+    public static final int ICON_X_TWITTER = (int)((GamePanel.WIDTH * .75) - ((GamePanel.WIDTH * .25) / 2) - (MenuScreen.ICON_DIMENSION / 2));
+    
+    /**
+     * x-coordinate for the youtube icon
+     */
+    public static final int ICON_X_YOUTUBE = (int)((GamePanel.WIDTH * 1.0) - ((GamePanel.WIDTH * .25) / 2) - (MenuScreen.ICON_DIMENSION / 2));
     
     /**
      * y-coordinate for the icons
@@ -145,6 +150,9 @@ public class MenuScreen implements Screen, Disposable
         x = ICON_X_TWITTER;
         addButton(x, y, Key.Twitter, Assets.ImageMenuKey.Twitter);
         
+        x = ICON_X_YOUTUBE;
+        addButton(x, y, Key.Youtube, Assets.ImageMenuKey.Youtube);
+        
         //set the size and bounds of the buttons
         for (Key key : Key.values())
         {
@@ -156,6 +164,7 @@ public class MenuScreen implements Screen, Disposable
 	        	case Twitter:
 	        	case Facebook:
 	        	case Instructions:
+	        	case Youtube:
                 	button.setWidth(ICON_DIMENSION);
                 	button.setHeight(ICON_DIMENSION);
                 	button.updateBounds();
@@ -306,7 +315,7 @@ public class MenuScreen implements Screen, Disposable
                     //play sound effect
                     Audio.play(Assets.AudioMenuKey.Selection);
                     
-                    //go to instructions
+                    //go to facebook
                     getScreen().getPanel().getActivity().openWebpage(MainActivity.WEBPAGE_FACEBOOK_URL);
                     
                     //we do not need to continue
@@ -316,8 +325,18 @@ public class MenuScreen implements Screen, Disposable
                     //play sound effect
                     Audio.play(Assets.AudioMenuKey.Selection);
                     
-                    //go to instructions
+                    //go to twitter
                     getScreen().getPanel().getActivity().openWebpage(MainActivity.WEBPAGE_TWITTER_URL);
+                    
+                    //we do not need to continue
+	                break;
+        			
+        		case Youtube:
+                    //play sound effect
+                    Audio.play(Assets.AudioMenuKey.Selection);
+                    
+                    //go to youtube
+                    getScreen().getPanel().getActivity().openWebpage(MainActivity.WEBPAGE_YOUTUBE_URL);
                     
                     //we do not need to continue
 	                break;
@@ -428,6 +447,7 @@ public class MenuScreen implements Screen, Disposable
 		        		case Instructions:
 		        		case Facebook:
 		        		case Twitter:
+		        		case Youtube:
 		        			button.render(canvas);
 		        			break;
 		        			

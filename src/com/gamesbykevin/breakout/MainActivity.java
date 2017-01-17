@@ -41,6 +41,11 @@ public class MainActivity extends Activity
     public static final String WEBPAGE_TWITTER_URL = "https://twitter.com/gamesbykevin";
     
     /**
+     * The youtube url
+     */
+    public static final String WEBPAGE_YOUTUBE_URL = "https://youtube.com/gamesbykevin";
+    
+    /**
      * Called when the activity is first created
      * @param savedInstanceState 
      */

@@ -132,7 +132,10 @@ public final class GameHelper
         	else
         	{
         		//mark this level as locked
-        		game.getSelect().setLocked(levelIndex, true);
+        		//game.getSelect().setLocked(levelIndex, true);
+        		
+        		//don't lock any levels
+        		game.getSelect().setLocked(levelIndex, false);
         		
         		//mark this level as not completed
         		game.getSelect().setCompleted(levelIndex, false);
