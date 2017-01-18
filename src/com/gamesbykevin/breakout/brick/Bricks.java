@@ -23,7 +23,7 @@ public class Bricks extends Entity implements ICommon
 	{
 		Yellow(40,100, "Y"), Black(80,100, "B"), Grey(120,100, "G"), 
 		Red(40,120, "R"),	Orange(80,120, "O"), Brown(120, 120, "N"), 
-		Purple(40,140, "U"), Pink(80,140, "P"), 
+		Purple(40,140, "U"), Pink(80,140, "P"), Peach(120,140, "H"),  
 		Silver(40,160, "S"), White(80,160, "W"),
 		Green(40,180, "C"),  DarkGreen(80,180, "D"),
 		Blue(40,200, "E"), 	DarkBlue(80,200, "F");
