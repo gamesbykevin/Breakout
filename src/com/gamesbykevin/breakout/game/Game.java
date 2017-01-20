@@ -284,7 +284,7 @@ public final class Game implements IGame
             //create new paint object
             this.paint = new Paint();
             //this.paint.setTypeface(Font.getFont(Assets.FontGameKey.Default));
-            this.paint.setTextSize(48f);
+            this.paint.setTextSize(42f);
             this.paint.setColor(Color.WHITE);
             this.paint.setLinearText(false);
     	}
