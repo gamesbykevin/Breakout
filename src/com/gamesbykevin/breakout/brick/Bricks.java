@@ -94,15 +94,25 @@ public class Bricks extends Entity implements ICommon
 	}
 	
 	/**
-	 * Dimensions of bricks board
+	 * Dimensions of bricks board with normal size bricks
 	 */
-	public static final int COLS = 11;
+	public static final int COLS_NORMAL = 11;
+
+	/**
+	 * Dimensions of bricks board with smaller bricks
+	 */
+	public static final int COLS_SMALL = 22;
 	
 	/**
-	 * Dimensions of bricks board
+	 * Dimensions of bricks board with normal size bricks
 	 */
-	public static final int ROWS = 18;
+	public static final int ROWS_NORMAL = 18;
 
+	/**
+	 * Dimensions of bricks board with smaller bricks
+	 */
+	public static final int ROWS_SMALL = 36;
+	
 	/**
 	 * The starting x-coordinate
 	 */
@@ -118,13 +128,7 @@ public class Bricks extends Entity implements ICommon
 	
 	public Bricks(final Game game) throws Exception
 	{
-		super(game, Brick.WIDTH, Brick.HEIGHT);
-		
-		//create a new array list for the bricks
-		this.bricks = new Brick[ROWS][COLS];
-		
-		//reset all bricks
-		reset();
+		super(game, Brick.WIDTH_NORMAL, Brick.HEIGHT_NORMAL);
 		
 		//make sure all key values are valid
 		for (int x = 0; x < Key.values().length; x++)
@@ -153,7 +157,7 @@ public class Bricks extends Entity implements ICommon
 		for (Key key : Key.values())
 		{
 			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), key.getX(), key.getY(), Brick.WIDTH, Brick.HEIGHT);
+			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), key.getX(), key.getY(), Brick.WIDTH_ANIMATION, Brick.HEIGHT_ANIMATION);
 			
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);
@@ -166,6 +170,28 @@ public class Bricks extends Entity implements ICommon
 	@Override
 	public final void reset() 
 	{
+		//create a new array list for the bricks
+		this.bricks = new Brick[(int)getRow()][(int)getCol()];
+		
+		//the size of the bricks
+		int width, height;
+		
+		//determine the size of the bricks
+		if (getBricks()[0].length == COLS_NORMAL)
+		{
+			width = Brick.WIDTH_NORMAL;
+			height = Brick.HEIGHT_NORMAL;
+		}
+		else
+		{
+			width = Brick.WIDTH_SMALL;
+			height = Brick.HEIGHT_SMALL;
+		}
+		
+		//assign dimensions
+		super.setWidth(width);
+		super.setHeight(height);
+		
 		//create a brick at every position and mark dead (to start)
 		for (int row = 0; row < getBricks().length; row++)
 		{
@@ -178,9 +204,13 @@ public class Bricks extends Entity implements ICommon
 					getBricks()[row][col] = new Brick(Key.Blue);
 					
 					//assign correct position
-					getBricks()[row][col].setX(START_X + (col * Brick.WIDTH));
-					getBricks()[row][col].setY(START_Y + (row * Brick.HEIGHT));
+					getBricks()[row][col].setX(START_X + (col * width));
+					getBricks()[row][col].setY(START_Y + (row * height));
 				}
+				
+				//ensure correct dimensions are assigned
+				getBricks()[row][col].setWidth(width);
+				getBricks()[row][col].setHeight(height);
 				
 				//reset brick
 				getBricks()[row][col].reset();

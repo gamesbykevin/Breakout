@@ -42,9 +42,14 @@ public class Levels implements Disposable
 	public static final String LEVEL_SEPARATOR = "#";
 	
 	/**
-	 * How many of the bricks should we flag as a bonus
+	 * How many of the bricks should we flag as a bonus for normal sized bricks
 	 */
-	private static final float BONUS_RATIO = .25f;
+	private static final float BONUS_RATIO_NORMAL = .25f;
+	
+	/**
+	 * How many of the bricks should we flag as a bonus for small sized bricks
+	 */
+	private static final float BONUS_RATIO_SMALL = .10f;
 	
 	//list to choose random keys from
 	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();
@@ -175,9 +180,6 @@ public class Levels implements Disposable
 	 */
 	public void populate(final Bricks bricks)
 	{
-		//reset bricks
-		bricks.reset();
-		
 		//get the current level
 		Level level = get();
 		
@@ -186,6 +188,21 @@ public class Levels implements Disposable
 		
 		//are there brick with no assigned color?
 		boolean noColor = false;
+		
+		//set bricks array size
+		if (level.getKey().get(0).length() == Bricks.COLS_NORMAL)
+		{
+			bricks.setCol(Bricks.COLS_NORMAL);
+			bricks.setRow(Bricks.ROWS_NORMAL);
+		}
+		else
+		{
+			bricks.setCol(Bricks.COLS_SMALL);
+			bricks.setRow(Bricks.ROWS_SMALL);
+		}
+		
+		//reset bricks
+		bricks.reset();
 		
 		//check every row in the level
 		for (int row = 0; row < level.getKey().size(); row++)
@@ -405,8 +422,18 @@ public class Levels implements Disposable
 	 */
 	private void populateBonuses(final Bricks bricks)
 	{
-		//calculate how many bricks should be flagged as a bonus
-		final int limit = (int)(bricks.getCount() * BONUS_RATIO);
+		//# bricks that should be flagged as a bonus
+		final int limit;
+		
+		//set bricks array size
+		if (get().getKey().get(0).length() == Bricks.COLS_NORMAL)
+		{
+			limit = (int)(bricks.getCount() * BONUS_RATIO_NORMAL);
+		}
+		else
+		{
+			limit = (int)(bricks.getCount() * BONUS_RATIO_SMALL);
+		}
 		
 		//track the count
 		int count = 0;

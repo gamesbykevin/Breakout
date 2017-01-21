@@ -23,7 +23,7 @@ public final class Laser extends Entity
 	/**
 	 * The rate at which the laser can move
 	 */
-	private static final double Y_VELOCITY = (Brick.HEIGHT * .75); 
+	private static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .75); 
 	
 	protected Laser(final double x, final double y) 
 	{

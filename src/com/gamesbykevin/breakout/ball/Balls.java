@@ -300,7 +300,7 @@ public class Balls extends Entity implements ICommon
 		if (getCount() >= MAX_BALL_LIMIT)
 			return;
 		
-		//pick random xoffset
+		//pick random x-offset
 		final double xOffset = -Ball.WIDTH + GamePanel.RANDOM.nextInt(Ball.WIDTH * 2);
 		
 		//first see if we can reuse an existing ball

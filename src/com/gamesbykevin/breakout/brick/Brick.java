@@ -40,14 +40,34 @@ public final class Brick extends Entity implements ICommon
 	private static final int PARTICLE_SPEED = (PARTICLE_DIMENSION / 2);
 	
 	/**
+	 * Animation width of a brick
+	 */
+	public static final int WIDTH_ANIMATION = 40;
+	
+	/**
+	 * Animation height of a brick
+	 */
+	public static final int HEIGHT_ANIMATION = 20;
+	
+	/**
 	 * Default width of a brick
 	 */
-	public static final int WIDTH = 40;
+	public static final int WIDTH_NORMAL = 40;
 	
 	/**
 	 * Default height of a brick
 	 */
-	public static final int HEIGHT = 20;
+	public static final int HEIGHT_NORMAL = 20;
+	
+	/**
+	 * Small width of a brick
+	 */
+	public static final int WIDTH_SMALL = 20;
+	
+	/**
+	 * Small height of a brick
+	 */
+	public static final int HEIGHT_SMALL = 10;
 	
 	//animation for the brick
 	private Key key;
@@ -80,7 +100,7 @@ public final class Brick extends Entity implements ICommon
 	 */
 	protected Brick(final Key key)
 	{
-		super(null, WIDTH, HEIGHT);
+		super(null, WIDTH_NORMAL, HEIGHT_NORMAL);
 		
 		//assign animation key
 		setKey(key);

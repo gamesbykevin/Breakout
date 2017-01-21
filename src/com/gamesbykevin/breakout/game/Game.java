@@ -261,14 +261,6 @@ public final class Game implements IGame
     		
     		//reset level
     		GameHelper.resetLevel(this);
-    		
-        	/*
-    		switch (getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Difficulty))
-    		{
-    			default:
-	    			break;
-    		}
-    		*/
     	}
     }
     

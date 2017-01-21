@@ -38,7 +38,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The maximum speed allowed
 	 */
-	public static final double SPEED_MAX = Brick.HEIGHT;
+	public static final double SPEED_MAX = Brick.HEIGHT_NORMAL;
 	
 	/**
 	 * The minimum speed allowed
