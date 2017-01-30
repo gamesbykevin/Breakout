@@ -66,6 +66,16 @@ public final class GameHelper
 	private static int FRAMES = 0;
 	
 	/**
+	 * Keep track of debug level
+	 */
+	private static int DEBUG_LEVEL_INDEX = 0;
+	
+	/**
+	 * How much time has elapsed
+	 */
+	private static long TIME_ELAPSED = 0;
+	
+	/**
 	 * Can the user touch the screen to move the paddle?
 	 * @param game Our game reference object
 	 * @return true if the user can touch the screen to move the paddle, false otherwise
@@ -215,6 +225,42 @@ public final class GameHelper
      */
     public static final void update(final Game game) throws Exception
     {
+    	if (MainThread.DEBUG)
+    	{
+    		//if no ai assistance loop through levels
+    		if (!MainThread.AI_ASSISTANCE)
+    		{
+	    		if (game.getSelect().hasSelection())
+	    		{
+		    		if (TIME_ELAPSED == 0)
+		    			TIME_ELAPSED = System.currentTimeMillis();
+		    		
+		    		if (System.currentTimeMillis() - TIME_ELAPSED >= 1000)
+		    		{
+		    			//move to next level
+		    			DEBUG_LEVEL_INDEX++;
+		    			
+		    			//reset timer
+		    			TIME_ELAPSED = System.currentTimeMillis();
+		    			
+		    			//assign the appropriate level
+		    			game.getLevels().setLevelIndex(DEBUG_LEVEL_INDEX);
+		    			
+		    			//reset the board for the next level
+		    			RESET = true;
+		    		}
+		    		
+					//make sure we remove "get ready" screen
+					FRAMES = GET_READY_FRAMES_LIMIT;
+	    		}
+    		}
+    		else
+    		{
+    			//if ai assistance enabled, have ai play the level
+    			
+    		}
+    	}
+    	
     	if (!game.getSelect().hasSelection())
     	{
     		//update the object
@@ -398,11 +444,25 @@ public final class GameHelper
 			}
 			else if (LOSE || !isReady())
 			{
-    			//darken background
-    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
-    			
-				//render image
-    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
+				if (MainThread.DEBUG)
+				{
+					if (MainThread.AI_ASSISTANCE)
+					{
+		    			//darken background
+		    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
+		    			
+						//render image
+		    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
+					}
+				}
+				else
+				{
+	    			//darken background
+	    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
+	    			
+					//render image
+	    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
+				}
 			}
     	}
     }

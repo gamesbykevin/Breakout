@@ -217,71 +217,90 @@ public class Levels implements Disposable
 			//check every column in the row
 			for (int col = 0; col < line.length(); col++)
 			{
-				//check the current character
-				final String character = line.substring(col, col + 1); 
-				
-				//now determine if there is a brick here
-				if (character == null || character.equalsIgnoreCase(BRICK_EMPTY))
+				try
 				{
-					//if empty flag dead true
-					bricks.getBricks()[row][col].setDead(true);
-				}
-				else if (character.equalsIgnoreCase(BRICK_UNBREAKABLE))
-				{
-					//assign animation
-					bricks.getBricks()[row][col].setKey(Bricks.Key.Silver);
+					//check the current character
+					final String character = line.substring(col, col + 1); 
 					
-					//flag not dead
-					bricks.getBricks()[row][col].reset();
-					
-					//flag the brick as solid so it can't be broken
-					bricks.getBricks()[row][col].setSolid(true);
-				}
-				else if (character.equalsIgnoreCase(BRICK_BREAKABLE_NO_COLOR))
-				{
-					//there are bricks here with no specified color
-					noColor = true;
-					
-					//assign animation
-					bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
-					
-					//flag not dead
-					bricks.getBricks()[row][col].reset();
-					
-					//add place as possible location 
-					getLocations().add(new Location(col, row));
-				}
-				else
-				{
-					//check if we have a match
-					boolean match = false;
-					
-					//check each color key to see if the character matches
-					for (Key key : Key.values())
+					//now determine if there is a brick here
+					if (character == null || character.equalsIgnoreCase(BRICK_EMPTY))
 					{
-						//if we have a match
-						if (key.hasCode(character))
-						{
-							//flag match
-							match = true;
-						
-							//assign animation
-							bricks.getBricks()[row][col].setKey(key);
-							
-							//flag not dead
-							bricks.getBricks()[row][col].reset();
-							
-							//add place as possible location 
-							getLocations().add(new Location(col, row));
-							
-							//exit for loop
-							break;
-						}
-					}
-					
-					//if there is no match, the brick is dead
-					if (!match)
+						//if empty flag dead true
 						bricks.getBricks()[row][col].setDead(true);
+					}
+					else if (character.equalsIgnoreCase(BRICK_UNBREAKABLE))
+					{
+						//assign animation
+						bricks.getBricks()[row][col].setKey(Bricks.Key.Silver);
+						
+						//flag not dead
+						bricks.getBricks()[row][col].reset();
+						
+						//flag the brick as solid so it can't be broken
+						bricks.getBricks()[row][col].setSolid(true);
+					}
+					else if (character.equalsIgnoreCase(BRICK_BREAKABLE_NO_COLOR))
+					{
+						//there are bricks here with no specified color
+						noColor = true;
+						
+						//assign animation
+						bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
+						
+						//flag not dead
+						bricks.getBricks()[row][col].reset();
+						
+						//add place as possible location 
+						getLocations().add(new Location(col, row));
+					}
+					else
+					{
+						//check if we have a match
+						boolean match = false;
+						
+						//check each color key to see if the character matches
+						for (Key key : Key.values())
+						{
+							//if we have a match
+							if (key.hasCode(character))
+							{
+								//flag match
+								match = true;
+							
+								//assign animation
+								bricks.getBricks()[row][col].setKey(key);
+								
+								//flag not dead
+								bricks.getBricks()[row][col].reset();
+								
+								//add place as possible location 
+								getLocations().add(new Location(col, row));
+								
+								//exit for loop
+								break;
+							}
+						}
+						
+						//if there is no match, the brick is dead
+						if (!match)
+							bricks.getBricks()[row][col].setDead(true);
+					}
+				}
+				catch (Exception e)
+				{
+					//print helpful info
+					System.out.println("Level Index: " + getLevelIndex());
+					
+					//print current row where error occurred
+					System.out.println(level.getKey().get(row));
+					
+					//print stack trace error
+					e.printStackTrace();
+					
+					//end loop
+					row = level.getKey().size();
+					col = line.length();
+					break;
 				}
 			}
 		}

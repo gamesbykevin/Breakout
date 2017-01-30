@@ -1607,7 +1607,6 @@ zxxxxzxxxxz
 zzzzzzzzzzz
 ########################Level 103
 ___________
-___________
 __x_____x__
 _xzx___xzx_
 xxxxx_xxxxx
@@ -2038,7 +2037,6 @@ ____N______
 ____N______
 ########################Level 132
 ___________
-___________
 B___BBB___B
 BB_BYYYB_BB
 BBBYYYYYBBB
@@ -2074,7 +2072,6 @@ _DCCRBGRCCD
 ___CRBGRC__
 ____RBGR___
 ########################Level 134
-___________
 ___________
 ______B____
 ____GGG____
@@ -2527,8 +2524,6 @@ _RRBRRRRRR_
 _RRRRRRRRR_
 __RRRRRRR__
 ########################Level 163
-___________
-___________
 ___YYYYY___
 __YYYYYYY__
 _YGGYGGYYY_
@@ -2671,8 +2666,6 @@ _BOOOOOOOB_
 __BOOOOOB__
 ___BBBBB___
 ########################Level 173
-___________
-___________
 ____PPP____
 __OOPPPP___
 __O___PP___
@@ -2680,7 +2673,6 @@ _____PP____
 ____PP_____
 ___PP______
 __PP_______
-_PPPPPPP___
 _PPPPPPPP__
 __PPPPPPPP_
 ___PPPPP___
@@ -2690,7 +2682,6 @@ _____O__O__
 ____OOOO___
 ___O_O_____
 ___O_O_____
-_____O_____
 _____O_____
 ___OOO_____
 ########################Level 174
@@ -2717,8 +2708,6 @@ _RRRB______
 _RR________
 _RR________
 ########################Level 176
-___________
-___________
 __BBB_BBB__
 _BEEEBEEEB_
 BEEBBEBBEEB
@@ -2727,8 +2716,6 @@ BEB_____BEB
 _BEB___BEB_
 __BEB_BEB__
 ___BEBEB___
-____BEB____
-____BEB____
 ____BEB____
 ____BEB____
 ____BEB____
@@ -2900,11 +2887,8 @@ __NHHYHHN__
 _B_DDNDD___
 ___DD_DD___
 ########################Level 188
-___________
-___________
 B_________B
 BB_______BB
-BBBBBBBBBBB
 BBBBBBBBBBB
 BBBBBBBBBBB
 BBBBBBBBBBB
@@ -3019,8 +3003,6 @@ __BYYYYYNB_
 ___BNNNNB__
 ____BBBB___
 ########################Level 196
-___________
-___________
 ___YYYYYY__
 __YYYZZYYY_
 _YYYZWWZYYY
@@ -4548,8 +4530,6 @@ _BBFFFFFB___BFFFFFBB__
 BFFFFFFFB___BFFFFFFFB_
 BBBBBBBBB___BBBBBBBBB_
 ########################Level 262
-______________________
-______________________
 _____BBBBBBB___B______
 ___BBYYYYYYYBB_BB_____
 __BYYYYYYYYYYYBBBBB___
