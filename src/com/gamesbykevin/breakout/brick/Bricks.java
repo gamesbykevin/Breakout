@@ -104,6 +104,11 @@ public class Bricks extends Entity implements ICommon
 	public static final int COLS_SMALL = 22;
 	
 	/**
+	 * Dimensions of bricks board with xtra smaller bricks
+	 */
+	public static final int COLS_XSMALL = 44;
+	
+	/**
 	 * Dimensions of bricks board with normal size bricks
 	 */
 	public static final int ROWS_NORMAL = 18;
@@ -112,6 +117,11 @@ public class Bricks extends Entity implements ICommon
 	 * Dimensions of bricks board with smaller bricks
 	 */
 	public static final int ROWS_SMALL = 36;
+	
+	/**
+	 * Dimensions of bricks board with xtra smaller bricks
+	 */
+	public static final int ROWS_XSMALL = 72;
 	
 	/**
 	 * The starting x-coordinate
@@ -182,10 +192,15 @@ public class Bricks extends Entity implements ICommon
 			width = Brick.WIDTH_NORMAL;
 			height = Brick.HEIGHT_NORMAL;
 		}
-		else
+		else if (getBricks()[0].length == COLS_SMALL)
 		{
 			width = Brick.WIDTH_SMALL;
 			height = Brick.HEIGHT_SMALL;
+		}
+		else
+		{
+			width = Brick.WIDTH_XSMALL;
+			height = Brick.HEIGHT_XSMALL;
 		}
 		
 		//assign dimensions

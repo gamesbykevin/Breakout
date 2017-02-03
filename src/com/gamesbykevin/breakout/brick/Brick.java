@@ -69,6 +69,16 @@ public final class Brick extends Entity implements ICommon
 	 */
 	public static final int HEIGHT_SMALL = 10;
 	
+	/**
+	 * Xtra small width of a brick
+	 */
+	public static final int WIDTH_XSMALL = 10;
+	
+	/**
+	 * Xtra small height of a brick
+	 */
+	public static final int HEIGHT_XSMALL = 5;
+	
 	//animation for the brick
 	private Key key;
 	

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.gamesbykevin.androidframework.resources.Disposable;
 import com.gamesbykevin.androidframework.resources.Files;
 import com.gamesbykevin.breakout.assets.Assets;
+import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.brick.Bricks.Key;
@@ -194,11 +195,19 @@ public class Levels implements Disposable
 		{
 			bricks.setCol(Bricks.COLS_NORMAL);
 			bricks.setRow(Bricks.ROWS_NORMAL);
+			Ball.SPEED_MAX = Brick.HEIGHT_NORMAL;
 		}
-		else
+		else if (level.getKey().get(0).length() == Bricks.COLS_SMALL)
 		{
 			bricks.setCol(Bricks.COLS_SMALL);
 			bricks.setRow(Bricks.ROWS_SMALL);
+			Ball.SPEED_MAX = Brick.HEIGHT_SMALL;
+		}
+		else 
+		{
+			bricks.setCol(Bricks.COLS_XSMALL);
+			bricks.setRow(Bricks.ROWS_XSMALL);
+			Ball.SPEED_MAX = Brick.HEIGHT_XSMALL;
 		}
 		
 		//reset bricks
