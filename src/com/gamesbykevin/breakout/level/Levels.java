@@ -52,6 +52,11 @@ public class Levels implements Disposable
 	 */
 	private static final float BONUS_RATIO_SMALL = .10f;
 	
+	/**
+	 * How many of the bricks should we flag as a bonus for xtra small sized bricks
+	 */
+	private static final float BONUS_RATIO_XSMALL = .065f;
+	
 	//list to choose random keys from
 	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();
 	
@@ -458,9 +463,13 @@ public class Levels implements Disposable
 		{
 			limit = (int)(bricks.getCount() * BONUS_RATIO_NORMAL);
 		}
-		else
+		else if (get().getKey().get(0).length() == Bricks.COLS_SMALL)
 		{
 			limit = (int)(bricks.getCount() * BONUS_RATIO_SMALL);
+		}
+		else
+		{
+			limit = (int)(bricks.getCount() * BONUS_RATIO_XSMALL);
 		}
 		
 		//track the count

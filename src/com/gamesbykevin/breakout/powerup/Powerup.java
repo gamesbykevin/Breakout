@@ -3,7 +3,7 @@ package com.gamesbykevin.breakout.powerup;
 import com.gamesbykevin.androidframework.anim.Animation;
 import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.assets.Assets;
-import com.gamesbykevin.breakout.ball.Ball;
+import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.panel.GamePanel;
@@ -56,7 +56,7 @@ public class Powerup extends Entity implements ICommon
 	/**
 	 * The rate at which the power up falls
 	 */
-	public static final double Y_VELOCITY = (Ball.SPEED_MAX * .15);
+	public static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .25);
 	
 	//the animation key of the power up
 	private Key key;

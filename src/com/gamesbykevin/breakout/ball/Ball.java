@@ -246,17 +246,25 @@ public final class Ball extends Entity implements ICommon
 		//make sure we stay within range
 		if (getDX() > 0)
 		{
-			if (getDX() > SPEED_MAX)
+			if (getDX() >= SPEED_MAX)
+			{
 				super.setDX(SPEED_MAX);
-			if (getDX() < SPEED_MIN)
+			}
+			else if (getDX() < SPEED_MIN)
+			{
 				super.setDX(SPEED_MIN);
+			}
 		}
 		else
 		{
-			if (-getDX() > SPEED_MAX)
+			if (-getDX() >= SPEED_MAX)
+			{
 				super.setDX(-SPEED_MAX);
-			if (-getDX() < SPEED_MIN)
+			}
+			else if (-getDX() < SPEED_MIN)
+			{
 				super.setDX(-SPEED_MIN);
+			}
 		}
 	}
 	
@@ -270,17 +278,25 @@ public final class Ball extends Entity implements ICommon
 		//make sure we stay within range
 		if  (getDY() > 0)
 		{
-			if (getDY() > SPEED_MAX)
+			if (getDY() >= SPEED_MAX)
+			{
 				super.setDY(SPEED_MAX);
-			if (getDY() < SPEED_MIN)
+			}
+			else if (getDY() < SPEED_MIN)
+			{
 				super.setDY(SPEED_MIN);
+			}
 		}
 		else
 		{
-			if (-getDY() > SPEED_MAX)
+			if (-getDY() >= SPEED_MAX)
+			{
 				super.setDY(-SPEED_MAX);
-			if (-getDY() < SPEED_MIN)
+			}
+			else if (-getDY() < SPEED_MIN)
+			{
 				super.setDY(-SPEED_MIN);
+			}
 		}
 	}
 	
