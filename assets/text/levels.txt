@@ -7017,7 +7017,32 @@ ________________BWWWWWWWWWWWWWWB____________
 _________________BBWWWWWWWWWWWB_____________
 ___________________BBBBBBBBBBB______________
 ########################Level 353
-
+__________BBBB________
+________BBCCCCB_______
+_______BCCCCCCB_______
+______BCCCCBBBBBB_____
+_____BCCCBBBBBBBBB____
+_____BCCBBHHHHBBB_____
+____BBBBBHHHBHB_______
+____BHHBBHHHBHBBB_____
+____BHHBBBHHHHHHHB____
+____BHHHBHHBHHHHHB____
+_____BHHHHBBBHHHB_____
+______BBHHHHBBBB______
+_____BBBBHHHHHB_______
+_____BCCBBBBBBB_______
+____BCCCCBBHHHB_______
+____BCCCCBHHHHHB______
+____BCCCCBHHHHHB______
+____BBCCCCBHHHBBB_____
+____BBBCCCBBBBBHB_____
+_____BBBBBBHHBBHB_____
+____BBBBBBBBBBBB______
+____BBBBBBBBBBBB______
+______BBBBBBBBB_______
+______BCCCCCB_________
+______BCCCCCCB________
+______BBBBBBBB________
 ########################Level 354
 ########################Level 355
 ########################Level 356
