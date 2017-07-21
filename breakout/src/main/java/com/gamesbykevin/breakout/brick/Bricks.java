@@ -1,7 +1,5 @@
 package com.gamesbykevin.breakout.brick;
 
-import com.gamesbykevin.androidframework.anim.Animation;
-import com.gamesbykevin.androidframework.resources.Images;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 
@@ -137,10 +135,10 @@ public class Bricks extends Entity implements ICommon
 		for (Key key : Key.values())
 		{
 			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), key.getX(), key.getY(), Brick.WIDTH_ANIMATION, Brick.HEIGHT_ANIMATION);
+			//Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), key.getX(), key.getY(), Brick.WIDTH_ANIMATION, Brick.HEIGHT_ANIMATION);
 			
 			//now add animation to the sprite sheet
-			super.getSpritesheet().add(key, animation);
+			//super.getSpritesheet().add(key, animation);
 		}
 	}
 	
@@ -256,7 +254,7 @@ public class Bricks extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() throws Exception
+	public void update()
 	{
 		//update bricks?
 		for (int row = 0; row < getBricks().length; row++)
@@ -295,13 +293,13 @@ public class Bricks extends Entity implements ICommon
 					super.setY(brick.getY());
 					
 					//assign the appropriate animation
-					super.getSpritesheet().setKey(brick.getKey());
+					//super.getSpritesheet().setKey(brick.getKey());
 					
 					//if the brick is solid apply transparency
 					if (brick.isSolid())
 					{
 						//assign the correct transparency
-						make brick transparent
+						//make brick transparent
 
 						//render the brick
 						super.render(openGL);
