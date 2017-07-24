@@ -67,7 +67,7 @@ public class Lasers extends Entity implements ICommon
 					continue;
 				
 				//update location of laser
-				//laser.update();
+				laser.update();
 				
 				//set the length
 				final int rowMax = MANAGER.getBricks().getBricks().length;
@@ -93,8 +93,8 @@ public class Lasers extends Entity implements ICommon
 								brick.markCollision();
 								
 								//if the brick contains a power up we will add it
-								//if (brick.hasPowerup())
-									//MANAGER.getPowerups().add(brick);
+								if (brick.hasPowerup())
+									MANAGER.getPowerups().add(brick);
 								
 								//move to the end
 								row = rowMax;

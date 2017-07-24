@@ -24,18 +24,21 @@ public final class GameHelper
 	/**
 	 * The number of frames to display get ready text
 	 */
-	private static final int GET_READY_FRAMES_LIMIT = FPS;
+	protected static final int GET_READY_FRAMES_LIMIT = FPS;
 
 	/**
 	 * Our object that will keep track of our lives
 	 */
 	public static StatDescription STAT_DESCRIPTION = new StatDescription();
 
+	//did we win?
+	public static boolean WIN = false;
+
     /**
      * Start the current assigned level all over 
      * @param game Our game reference object
      */
-    public final static void resetLevel(final Manager game)
+    protected final static void resetLevel(final Manager game)
 	{
 		//reset balls
 		game.getBalls().reset();
@@ -49,15 +52,14 @@ public final class GameHelper
         //populate the bricks accordingly
         game.getLevels().populate(game.getBricks());
 	}
-	
+
     /**
      * Restart the same level because the player lost a life
-     * @param game Our game reference object
      */
-    protected final static void restartLevel(final Manager game)
+    protected final static void restartLevel()
     {
         //reset paddle and ball(s)
-		game.getBalls().add(game.getPaddle());
+		MANAGER.getBalls().add(MANAGER.getPaddle());
     }
 
     /**
@@ -66,33 +68,30 @@ public final class GameHelper
     protected final static boolean isGameOver()
 	{
 		//if there are no more bricks to be broken the game is over
-		if (MANAGER.getBricks().getCount() <= 0)
+		if (MANAGER.getBricks().getCount() <= 0) {
+			WIN = true;
 			return true;
+		}
 
 		//if there are no more balls in play, the game is over
-		if (MANAGER.getBalls().getCount() < 1)
+		if (MANAGER.getBalls().getCount() < 1) {
+			WIN = true;
 			return true;
+		}
+
+		//flag win false
+		WIN = false;
 
 		//game is not yet over
 		return false;
 	}
-    
-    /**
-     * Is the game ready?
-     * @return true if the number of frames elapsed the limit
-     */
-    public static boolean isReady()
-    {
-		return (FRAMES > GET_READY_FRAMES_LIMIT);
-    }
-    
+
     /**
      * Render the game accordingly
      * @param openGL Place to write pixel data
-     * @param game Our game reference object
      * @throws Exception
      */
-    public static final void render(final GL10 openGL, final Manager game) throws Exception
+    public static final void render(final GL10 openGL)
     {
 		/*
     	if (!NOTIFY)
@@ -105,18 +104,7 @@ public final class GameHelper
     	}
     	else
     	{
-        	if (!game.getSelect().hasSelection())
-        	{
-        		//draw background
-        		canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.Border), 0, 0, null);
-        		
-        		//render level select screen
-        		game.getSelect().render(canvas, game.getPaint());
-        		
-        		//no need to continue
-        		return;
-        	}
-    		
+
     		//render the wall
     		game.getWall().render(canvas);
     		
@@ -176,5 +164,20 @@ public final class GameHelper
 			}
     	}
     	*/
+
+		//render the bricks
+		MANAGER.getBricks().render(openGL);
+
+		//render the power ups
+		MANAGER.getPowerups().render(openGL);
+
+		//render the balls
+		MANAGER.getBalls().render(openGL);
+
+		//render the paddle
+		MANAGER.getPaddle().render(openGL);
+
+		//render number of lives
+		STAT_DESCRIPTION.render(openGL);
     }
 }

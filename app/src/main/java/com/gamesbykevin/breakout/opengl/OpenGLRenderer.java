@@ -5,11 +5,13 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLUtils;
 
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
@@ -19,27 +21,23 @@ import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
 public class OpenGLRenderer implements Renderer {
 
-    //our activity reference
-    private final Context activity;
-
     //get the ratio of the users screen compared to the default dimensions for the render
     private float scaleRenderX, scaleRenderY;
 
     //get the ratio of the users screen compared to the default dimensions for the motion event
     public float scaleMotionX = 0, scaleMotionY = 0;
 
-    //maintain list of texture id's so we can access when rendering textures
-    public static int[] TEXTURES;
-
     /**
      * Have all textures been loaded?
      */
     public static boolean LOADED = false;
 
+    //object containing all the texture ids
+    private Textures textures;
+
     public OpenGLRenderer(Context activity) {
 
-        //store context reference
-        this.activity = activity;
+        this.textures = new Textures(activity);
 
         //flag the textures loaded as false
         LOADED = false;
@@ -107,112 +105,10 @@ public class OpenGLRenderer implements Renderer {
         gl.glEnableClientState(GL10.GL_SMOOTH);
 
         //load our textures
-        loadTextures(gl);
+        this.textures.loadTextures(gl);
 
         //flag that we have loaded the textures
         LOADED = true;
-    }
-
-    public int loadTexture(Bitmap bitmap, GL10 gl, int[] textures, int index) {
-
-        try {
-
-            //our container to generate the textures
-            gl.glGenTextures(1, textures, index);
-
-            //bind the texture id
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[index]);
-
-            if (false) {
-                //we want smoother images
-                gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-                gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
-            } else {
-                //not smoother images
-                gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-                gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-            }
-
-            //allow any size texture
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-
-            //allow any size texture
-            gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-
-            //add bitmap to texture
-            GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-
-            //we no longer need the resource
-            bitmap.recycle();
-
-            if (textures[index] == 0) {
-                throw new Exception("Error loading texture: " + index);
-            } else {
-                //display texture id
-                UtilityHelper.logEvent("Texture loaded id: " + textures[index]);
-            }
-
-        } catch (Exception e) {
-            UtilityHelper.handleException(e);
-        }
-
-        //return our texture id
-        return textures[index];
-    }
-
-    private void loadTextures(GL10 gl) {
-
-        /*
-        //load textures into our array
-        TEXTURES = new int[];
-
-        //get the sprite sheet containing all our animations
-        Bitmap spriteSheet = BitmapFactory.decodeResource(activity.getResources(), R.drawable.blocks);
-
-        //temp bitmap image reference
-        Bitmap tmp = null;
-
-        //load every texture that we need
-        for (int i = 0; i < Block.VALUES.length; i++) {
-
-            //retrieve the current bitmap
-            tmp = Bitmap.createBitmap(spriteSheet, i * ANIMATION_DIMENSIONS, 0, ANIMATION_DIMENSIONS, ANIMATION_DIMENSIONS);
-
-            //load the individual texture
-            loadTexture(tmp, gl, TEXTURES, i);
-        }
-
-        Bitmap numberSheet = BitmapFactory.decodeResource(activity.getResources(), R.drawable.numbers);
-
-        for (int i = 0; i < TOTAL_CHARACTERS; i++) {
-            tmp = Bitmap.createBitmap(
-                numberSheet,
-                i * StatDescription.ANIMATION_WIDTH,
-                0,
-                StatDescription.ANIMATION_WIDTH,
-                StatDescription.ANIMATION_HEIGHT
-            );
-
-            //load the individual texture
-            loadTexture(tmp, gl, TEXTURES, i + Block.VALUES.length);
-        }
-
-        //load the word textures
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.best);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_BEST_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.level);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_LEVEL_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.score);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_SCORE_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.game_over);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_GAMEOVER_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.time);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_TIME_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.background);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_BACKGROUND_INDEX);
-        tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.win);
-        loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_WIN_INDEX);
-        */
     }
 
     /**
@@ -232,6 +128,6 @@ public class OpenGLRenderer implements Renderer {
         gl.glScalef(scaleRenderX, scaleRenderY, 0.0f);
 
         //render game objects
-        //MANAGER.draw(gl, TEXTURES);
+        MANAGER.render(gl);
     }
 }

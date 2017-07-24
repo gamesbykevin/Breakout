@@ -94,9 +94,8 @@ public final class Brick extends Entity implements ICommon
 	
 	/**
 	 * Default Constructor
-	 * @param key The animation key for the brick
 	 */
-	protected Brick(final Key key)
+	protected Brick()
 	{
 		super(WIDTH_NORMAL, HEIGHT_NORMAL);
 	}

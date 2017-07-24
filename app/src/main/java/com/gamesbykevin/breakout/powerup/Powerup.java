@@ -13,7 +13,19 @@ public class Powerup extends Entity implements ICommon
 	//different animations for the power ups
 	public enum Key
 	{
-		Magnet, Expand, Shrink, Laser, ExtraLife, ExtraBalls, SpeedUp, SpeedDown, Fireball
+		Magnet(404), Expand(316), Shrink(338),
+		Laser(448), ExtraLife(426), ExtraBalls(360),
+		SpeedUp(294), SpeedDown(272), Fireball(250);
+
+		private final int y;
+
+		Key(int y) {
+			this.y = y;
+		}
+
+		public int getY() {
+			return this.y;
+		}
 	}
 	
 	/**
@@ -55,116 +67,23 @@ public class Powerup extends Entity implements ICommon
 	 * The rate at which the power up falls
 	 */
 	public static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .25);
-	
-	//the animation key of the power up
-	private Key key;
-	
+
 	/**
 	 * Default constructor
 	 */
-	public Powerup() throws Exception
+	public Powerup()
 	{
 		super(WIDTH, HEIGHT);
-		
-		//set animation coordinates
-		final int x = 0;
-		int y = 0;
-		
-		//map the power up animations
-		for (Key key : Key.values())
-		{
-			switch (key)
-			{
-				case Magnet:
-					y = 404;
-					break;
-					
-				case Expand:
-					y = 316;
-					break;
-					
-				case Shrink:
-					y = 338;
-					break;
-					
-				case Laser:
-					y = 448;
-					break;
-					
-				case ExtraLife:
-					y = 426;
-					break;
-					
-				case ExtraBalls:
-					y = 360;
-					break;
-					
-				case SpeedUp:
-					y = 294;
-					break;
-					
-				case SpeedDown:
-					y = 272;
-					break;
-					
-				case Fireball:
-					y = 250;
-					break;
-					
-				default:
-					throw new Exception("Key not found: " + key.toString());
-			}
 
-			/*
-			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, ANIMATION_WIDTH, ANIMATION_HEIGHT, ANIMATION_COLS, ANIMATION_ROWS, ANIMATION_COLS * ANIMATION_ROWS);
-			
-			//the animation will always loop
-			animation.setLoop(true);
-			
-			//assign the animation delay
-			animation.setDelay(ANIMATION_DELAY);
-			
-			//now add animation to the sprite sheet
-			super.getSpritesheet().add(key, animation);
-			*/
-		}
-		
 		//assign the y-velocity
 		super.setDY(Y_VELOCITY);
 		
 		//reset the power up
 		reset();
 	}
-	
-	/**
-	 * Get a random key
-	 * @return pick a random power up
-	 */
-	private Key getRandomKey()
-	{
-		return (Key.values()[GameActivity.getRandomObject().nextInt(Key.values().length)]);
-	}
-	
-	/**
-	 * Assign the key
-	 * @param key The desired animation key
-	 */
-	public void setKey(final Key key)
-	{
-		this.key = key;
-		
-		//assign the proper animation key
-		super.getSpritesheet().setKey(getKey());
-	}
-	
-	/**
-	 * Get the key
-	 * @return The current assigned animation key
-	 */
-	public Key getKey()
-	{
-		return this.key;
+
+	public Key getKey() {
+		return Key.Expand;
 	}
 	
 	@Override
@@ -186,9 +105,6 @@ public class Powerup extends Entity implements ICommon
 	{
 		//don't hide the power up
 		setHidden(false);
-		
-		//assign random animation
-		this.setKey(getRandomKey());
 	}
 	
 	@Override

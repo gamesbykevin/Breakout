@@ -1,6 +1,7 @@
 package com.gamesbykevin.breakout.util;
 
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.opengl.Textures;
 
 import java.util.ArrayList;
 
@@ -12,27 +13,20 @@ import javax.microedition.khronos.opengles.GL10;
 public class StatDescription extends Entity {
 
     //the dimensions of each number character animation
-    public static final int ANIMATION_WIDTH = 66;
-    public static final int ANIMATION_HEIGHT = 83;
+    public static final int ANIMATION_WIDTH = 65;
+    public static final int ANIMATION_HEIGHT = 100;
 
-    private final static float RATIO = 0.35F;
-
-    private final static int STAT_WIDTH = (int)(ANIMATION_WIDTH * RATIO);
-    private final static int STAT_HEIGHT = (int)(ANIMATION_HEIGHT * RATIO);
+    private final static int STAT_WIDTH = 32;
+    private final static int STAT_HEIGHT = 50;
 
     //our array object for each digit in our score
     private ArrayList<Character> characters;
 
-    //the text to display
-    private String desc = "";
-
     //track the value
     private long statValue = -1;
 
+    //just make sure the x-coordinate stays put
     private double anchorX = 0;
-
-    //the total number of characters we need access to render
-    public static final int TOTAL_CHARACTERS = 12;
 
     //object to format the text displayed
     private static StringBuilder BUILDER = new StringBuilder();
@@ -85,7 +79,6 @@ public class StatDescription extends Entity {
 
     public void setDescription(String desc)
     {
-        /*
         //disable any unnecessary digits
         for (int i = desc.length(); i < characters.size(); i++)
         {
@@ -101,51 +94,43 @@ public class StatDescription extends Entity {
             switch (desc.charAt(i))
             {
                 case '0':
-                    textureId = TEXTURES[Block.VALUES.length + 0];
+                    textureId = Textures.IDS[Textures.IDS.length - 10];
                     break;
 
                 case '1':
-                    textureId = TEXTURES[Block.VALUES.length + 1];
+                    textureId = Textures.IDS[Textures.IDS.length - 9];
                     break;
 
                 case '2':
-                    textureId = TEXTURES[Block.VALUES.length + 2];
+                    textureId = Textures.IDS[Textures.IDS.length - 8];
                     break;
 
                 case '3':
-                    textureId = TEXTURES[Block.VALUES.length + 3];
+                    textureId = Textures.IDS[Textures.IDS.length - 7];
                     break;
 
                 case '4':
-                    textureId = TEXTURES[Block.VALUES.length + 4];
+                    textureId = Textures.IDS[Textures.IDS.length - 6];
                     break;
 
                 case '5':
-                    textureId = TEXTURES[Block.VALUES.length + 5];
+                    textureId = Textures.IDS[Textures.IDS.length - 5];
                     break;
 
                 case '6':
-                    textureId = TEXTURES[Block.VALUES.length + 6];
+                    textureId = Textures.IDS[Textures.IDS.length - 4];
                     break;
 
                 case '7':
-                    textureId = TEXTURES[Block.VALUES.length + 7];
+                    textureId = Textures.IDS[Textures.IDS.length - 3];
                     break;
 
                 case '8':
-                    textureId = TEXTURES[Block.VALUES.length + 8];
+                    textureId = Textures.IDS[Textures.IDS.length - 2];
                     break;
 
                 case '9':
-                    textureId = TEXTURES[Block.VALUES.length + 9];
-                    break;
-
-                case ':':
-                    textureId = TEXTURES[Block.VALUES.length + 10];
-                    break;
-
-                case '.':
-                    textureId = TEXTURES[Block.VALUES.length + 11];
+                    textureId = Textures.IDS[Textures.IDS.length - 1];
                     break;
 
                 default:
@@ -164,7 +149,6 @@ public class StatDescription extends Entity {
                 characters.add(new Character(textureId));
             }
         }
-        */
     }
 
     @Override

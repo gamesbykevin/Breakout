@@ -11,6 +11,8 @@ import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
@@ -173,12 +175,6 @@ public class Paddle extends Entity implements ICommon
 		
 		//create new lasers object
 		this.lasers = new Lasers();
-		
-		//create animation
-		//Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), 80, 64, WIDTH, HEIGHT);
-		
-		//now add animation to the sprite sheet
-		//super.getSpritesheet().add(DEFAULT, animation);
 		
 		//reset paddle
 		reset();
@@ -495,7 +491,7 @@ public class Paddle extends Entity implements ICommon
 					soundPaddleCollision = true;
 					
 					//vibrate when a ball hits the paddle
-					//activity.vibrate(VIBRATE_BALL_COLLISION);
+					activity.vibrate();
 				}
 			}
 		}
@@ -579,22 +575,12 @@ public class Paddle extends Entity implements ICommon
 	}
 	
 	@Override
-	public void render(final Canvas canvas) throws Exception
+	public void render(GL10 openGL)
 	{
-		/*
 		//render the paddle
-		super.render(canvas);
+		super.render(openGL);
 		
 		//render any lasers
-		getLasers().render(canvas);
-		
-		//render the cursor
-		canvas.drawBitmap(
-			Images.getImage(Assets.ImageGameKey.Cursor), 
-			(float)(getX() + (getWidth() / 2) - (CURSOR_DIMENSION / 2)), 
-			(float)(getY() + getHeight() + (int)(CURSOR_DIMENSION * .4)), 
-			null
-		);
-		*/
+		getLasers().render(openGL);
 	}
 }

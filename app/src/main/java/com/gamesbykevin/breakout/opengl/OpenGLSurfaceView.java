@@ -261,7 +261,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
             //UtilityHelper.logEvent("scale: (" + x + ", " + y + ")");
 
             //update game accordingly
-            //MANAGER.onTouchEvent(event.getAction(), x, y);
+            MANAGER.onTouchEvent(event.getAction(), x, y);
         }
         catch (Exception e)
         {

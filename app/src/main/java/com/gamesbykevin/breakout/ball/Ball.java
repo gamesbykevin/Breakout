@@ -1,7 +1,6 @@
 package com.gamesbykevin.breakout.ball;
 
 import com.gamesbykevin.breakout.activity.GameActivity;
-import com.gamesbykevin.breakout.ball.Balls.Key;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
@@ -56,10 +55,7 @@ public final class Ball extends Entity implements ICommon
 	 * The rate at which to decrease the speed
 	 */
 	public static final double SPEED_DECREASE = 0.95;
-	
-	//assign the animation type
-	private Balls.Key key;
-	
+
 	//store the x-ratio for paddle collision
 	private double xratio = 1.0;
 	
@@ -80,12 +76,9 @@ public final class Ball extends Entity implements ICommon
 	 */
 	private static final int FIRE_FRAME_LIMIT = (FPS * 20);
 	
-	protected Ball(final Balls.Key key) 
+	protected Ball()
 	{
 		super(WIDTH, HEIGHT);
-		
-		//assign key
-		setKey(key);
 	}
 	
 	/**
@@ -162,28 +155,6 @@ public final class Ball extends Entity implements ICommon
 	public double getXRatio()
 	{
 		return this.xratio;
-	}
-	
-	/**
-	 * Assign the animation key for the ball
-	 * @param key The animation key for the ball
-	 */
-	public void setKey(final Balls.Key key)
-	{
-		this.key = key;
-	}
-	
-	/**
-	 * Get the animation key for the ball
-	 * @return The animation key for the ball, if hasFire() returns true Key.Red will always returned
-	 */
-	public Balls.Key getKey()
-	{
-		//if fire is enabled return specific animation
-		if (hasFire())
-			return Key.Red;
-		
-		return this.key;
 	}
 	
 	/**

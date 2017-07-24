@@ -13,13 +13,14 @@ import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.util.StatDescription;
 import com.gamesbykevin.breakout.util.UtilityHelper;
-import com.gamesbykevin.breakout.wall.Wall;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
 import static com.gamesbykevin.breakout.game.GameHelper.GAME_OVER_FRAMES_DELAY;
+import static com.gamesbykevin.breakout.game.GameHelper.GET_READY_FRAMES_LIMIT;
 import static com.gamesbykevin.breakout.game.GameHelper.STAT_DESCRIPTION;
+import static com.gamesbykevin.breakout.game.GameHelper.WIN;
 import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 
 /**
@@ -30,9 +31,6 @@ public class Manager implements ICommon {
 
     //the collection of bricks
     private Bricks bricks;
-
-    //the wall around the game
-    private Wall wall;
 
     //the paddle in the game
     private Paddle paddle;
@@ -78,9 +76,6 @@ public class Manager implements ICommon {
 
         //create new bricks container
         this.bricks = new Bricks();
-
-        //create new wall
-        this.wall = new Wall();
 
         //create new paddle
         this.paddle = new Paddle();
@@ -153,8 +148,8 @@ public class Manager implements ICommon {
                 //if the game is over, move to the next step
                 if (GameHelper.isGameOver()) {
 
-                    //if there are no more bricks left, we won
-                    if (getBricks().getCount() <= 0) {
+                    //did we win?
+                    if (WIN) {
 
                         //save the index of the current level completed
                         STATISTICS.update(true);
@@ -165,7 +160,9 @@ public class Manager implements ICommon {
 
                         //display message
                         UtilityHelper.logEvent("GAME OVER WIN!!!");
+
                     } else {
+
                         //display message
                         UtilityHelper.logEvent("GAME OVER LOSE!!!");
 
@@ -175,7 +172,6 @@ public class Manager implements ICommon {
                         if (STAT_DESCRIPTION.getStatValue() <= 0) {
                             //play sound
                             activity.playSound(R.raw.gameover);
-
                         }
                     }
 
@@ -192,6 +188,29 @@ public class Manager implements ICommon {
 
             case GameOver:
 
+                //the next step will vary if we win/lose
+                if (WIN) {
+                    //keep counting if enough time has not yet passed
+                    if (frames < GAME_OVER_FRAMES_DELAY) {
+
+                        //keep track of frames elapsed
+                        frames++;
+
+                        //if we are now ready to display go ahead and do it
+                        if (frames >= GAME_OVER_FRAMES_DELAY)
+                            activity.setScreen(Screen.GameOver);
+                    }
+                } else {
+                    if (frames < GET_READY_FRAMES_LIMIT) {
+
+                        //keep track of frames elapsed
+                        frames++;
+
+                        if (frames >= GET_READY_FRAMES_LIMIT)
+                            ;
+                    }
+                }
+
                 //keep counting if enough time has not yet passed
                 if (frames < GAME_OVER_FRAMES_DELAY) {
 
@@ -207,36 +226,23 @@ public class Manager implements ICommon {
     }
 
     @Override
-    public void render(GL10 openGL) {
-
-        //render everything on screen
-        GameHelper.render(openGL, this);
-    }
-
-    @Override
     public void dispose() {
 
         if (levels != null)
             levels.dispose();
-
         if (bricks != null)
             bricks.dispose();
-
         if (paddle != null)
             paddle.dispose();
-
         if (balls != null)
             balls.dispose();
-
         if (powerups != null)
             powerups.dispose();
-
         if (bricks != null)
             bricks.dispose();
 
         levels = null;
         bricks = null;
-        wall = null;
         paddle = null;
         balls = null;
         powerups = null;
@@ -323,20 +329,18 @@ public class Manager implements ICommon {
     }
 
     /**
-     * Get the wall
-     * @return Object that renders the wall
-     */
-    public Wall getWall()
-    {
-        return this.wall;
-    }
-
-    /**
      * Get the paddle
      * @return The paddle object the player interacts with
      */
     public Paddle getPaddle()
     {
         return this.paddle;
+    }
+
+    @Override
+    public void render(GL10 openGL) {
+
+        //render everything on screen
+        //GameHelper.render(openGL);
     }
 }

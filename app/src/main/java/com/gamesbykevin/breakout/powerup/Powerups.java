@@ -2,14 +2,14 @@ package com.gamesbykevin.breakout.powerup;
 
 import java.util.ArrayList;
 
+import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.activity.GameActivity;
-import com.gamesbykevin.breakout.activity.MainActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.GameHelper;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 
@@ -63,7 +63,7 @@ public class Powerups extends Entity implements ICommon
 	 * Add power up
 	 * @param brick The brick whose location we want to place the power up
 	 */
-	public void add(final Brick brick) throws Exception
+	public void add(final Brick brick)
 	{
 		//lets see if we can re-use an existing power up
 		for (Powerup powerup : getPowerups())
@@ -118,10 +118,7 @@ public class Powerups extends Entity implements ICommon
 			{
 				//flag the power up as hidden
 				powerup.setHidden(true);
-				
-				if (MainActivity.DEBUG)
-					System.out.println("Key + " + powerup.getKey().toString());
-				
+
 				//determine which power up to apply
 				switch (powerup.getKey())
 				{
@@ -154,8 +151,8 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case ExtraLife:
-						GameHelper.addLife(MANAGER);
-						
+						GameHelper.STAT_DESCRIPTION.setDescription(GameHelper.STAT_DESCRIPTION.getStatValue() + 1);
+
 						//play sound effect
 						soundNewlife = true;
 						break;
@@ -188,27 +185,22 @@ public class Powerups extends Entity implements ICommon
 						//play sound effect
 						soundFireball = true;
 						break;
-				
-					//default:
-					//	throw new Exception("Key not found here: " + powerup.getSpritesheet().getKey().toString());
 				}
 			}
 			else
 			{
 				//update power up location etc...
-				//powerup.update();
+				powerup.update(activity);
 			}
 		}
 
-		/*
 		//play sound effects accordingly
 		if (soundPowerup)
-			Audio.play(Assets.AudioGameKey.Powerup);
+			activity.playSound(R.raw.powerup);
 		if (soundFireball)
-			Audio.play(Assets.AudioGameKey.FirePowerup);
+			activity.playSound(R.raw.firepickup);
 		if (soundNewlife)
-			Audio.play(Assets.AudioGameKey.NewLife);
-		*/
+			activity.playSound(R.raw.newlife);
 	}
 
 	@Override
@@ -223,12 +215,11 @@ public class Powerups extends Entity implements ICommon
 	}
 	
 	@Override
-	public void render(final Canvas canvas) throws Exception
+	public void render(final GL10 openGL)
 	{
 		//render all power ups
-		for (Powerup powerup : getPowerups())
-		{
-			powerup.render(canvas);
+		for (int i = 0; i < getPowerups().size(); i++) {
+			getPowerups().get(i).render(openGL);
 		}
 	}
 }

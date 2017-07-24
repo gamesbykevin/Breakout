@@ -2,6 +2,7 @@ package com.gamesbykevin.breakout.ball;
 
 import java.util.ArrayList;
 
+import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
@@ -17,17 +18,6 @@ public class Balls extends Entity implements ICommon
 {
 	//list of balls in play
 	private ArrayList<Ball> balls;
-	
-	//list of keys for the ball animations
-	private ArrayList<Key> keys;
-	
-	/**
-	 * The different animations for each ball
-	 */
-	public enum Key
-	{
-		Yellow, Blue, Green, Orange, Red, White
-	}
 	
 	/**
 	 * The number of balls allowed at once
@@ -52,54 +42,6 @@ public class Balls extends Entity implements ICommon
 		
 		//create new list of balls
 		this.balls = new ArrayList<Ball>();
-		
-		//create new list of keys
-		this.keys = new ArrayList<Key>();
-		
-		//where animation is located
-		final int y = 0;
-		
-		for (Key key : Key.values())
-		{
-			int x;
-			
-			//locate y-coordinate
-			switch (key)
-			{
-				case Yellow:
-					x = (0 * Ball.DIMENSIONS);
-					break;
-					
-				case Blue:
-					x = (1 * Ball.DIMENSIONS);
-					break;
-					
-				case Green:
-					x = (2 * Ball.DIMENSIONS);
-					break;
-					
-				case Orange:
-					x = (3 * Ball.DIMENSIONS);
-					break;
-					
-				case Red:
-					x = (4 * Ball.DIMENSIONS);
-					break;
-					
-				case White:
-					x = (5 * Ball.DIMENSIONS);
-					break;
-					
-				default:
-					throw new RuntimeException("Key not found: " + key.toString());
-			}
-			
-			//create new animation
-			//Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, Ball.DIMENSIONS, Ball.DIMENSIONS);
-			
-			//now add animation to the sprite sheet
-			//super.getSpritesheet().add(key, animation);
-		}
 	}
 
 	@Override
@@ -118,12 +60,6 @@ public class Balls extends Entity implements ICommon
 			
 			this.balls.clear();
 			this.balls = null;
-		}
-		
-		if (this.keys != null)
-		{
-			this.keys.clear();
-			this.keys = null;
 		}
 	}
 
@@ -215,40 +151,7 @@ public class Balls extends Entity implements ICommon
 			}
 		}
 	}
-	
-	/**
-	 * Get a random key
-	 * @return A random animation key for the balls (except red)
-	 */
-	private Key getRandomKey()
-	{
-		//if empty populate list
-		if (this.keys.isEmpty())
-		{
-			for (Key key : Key.values())
-			{
-				//skip red
-				if (key == Key.Red)
-					continue;
-				
-				//add key to list
-				this.keys.add(key);
-			}
-		}
-		
-		//pick random index
-		final int index = GameActivity.getRandomObject().nextInt(this.keys.size());
-		
-		//assign random chosen value
-		final Key tmp = this.keys.get(index);
-		
-		//remove value from array list
-		this.keys.remove(index);
-		
-		//return random chosen value
-		return tmp;
-	}
-	
+
 	/**
 	 * Remove any existing balls and add a default ball<br>
 	 * We also reset the paddle location and place the ball there.<br>
@@ -306,10 +209,7 @@ public class Balls extends Entity implements ICommon
 			//we can't re-use a ball already in play
 			if (!ball.isHidden())
 				continue;
-			
-			//pick random animation
-			ball.setKey(getRandomKey());
-			
+
 			//reset ball
 			ball.reset();
 			
@@ -329,7 +229,7 @@ public class Balls extends Entity implements ICommon
 		}
 		
 		//create a new ball since we couldn't reuse an existing
-		Ball ball = new Ball(getRandomKey());
+		Ball ball = new Ball();
 
 		//position the ball
 		ball.setX(x + xOffset);
@@ -346,7 +246,6 @@ public class Balls extends Entity implements ICommon
 	@Override
 	public void update(GameActivity activity)
 	{
-		/*
 		//set the length
 		final int rowMax = MANAGER.getBricks().getBricks().length;
 		final int colMax = MANAGER.getBricks().getBricks()[0].length;
@@ -370,7 +269,7 @@ public class Balls extends Entity implements ICommon
 					continue;
 				
 				//update ball
-				ball.update();
+				ball.update(activity);
 				
 				//check if the ball has hit any of the bricks
 				for (int row = 0; row < rowMax; row++)
@@ -430,7 +329,6 @@ public class Balls extends Entity implements ICommon
 			if (soundLoseBall)
 				activity.playSound(R.raw.loseball);
 		}
-		*/
 	}
 	
 	/**
@@ -439,7 +337,7 @@ public class Balls extends Entity implements ICommon
 	 * @param brick The brick we want to check
 	 * @return true if collision, false otherwise
 	 */
-	private boolean checkBrickCollision(final Ball ball, final Brick brick) throws Exception
+	private boolean checkBrickCollision(final Ball ball, final Brick brick)
 	{
 		if (!brick.isDead())
 		{
@@ -542,6 +440,9 @@ public class Balls extends Entity implements ICommon
 				super.setY(ball);
 				super.setWidth(ball);
 				super.setHeight(ball);
+
+				//assign the correct texture
+				super.setTextureId(ball.getTextureId());
 
 				//render the current ball
 				super.render(openGL);
