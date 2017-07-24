@@ -1,32 +1,17 @@
-package com.gamesbykevin.a2048.opengl;
+package com.gamesbykevin.breakout.opengl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLUtils;
 
-import com.gamesbykevin.a2048.R;
-import com.gamesbykevin.a2048.board.Block;
-import com.gamesbykevin.a2048.util.StatDescription;
-import com.gamesbykevin.a2048.util.UtilityHelper;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.a2048.activity.GameActivity.MANAGER;
-import static com.gamesbykevin.a2048.board.Block.ANIMATION_DIMENSIONS;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_BACKGROUND_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_BEST_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_GAMEOVER_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_LEVEL_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_SCORE_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_TIME_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TEXTURE_WORD_WIN_INDEX;
-import static com.gamesbykevin.a2048.game.GameManagerHelper.TOTAL_WORD_TEXTURES;
-import static com.gamesbykevin.a2048.opengl.OpenGLSurfaceView.HEIGHT;
-import static com.gamesbykevin.a2048.opengl.OpenGLSurfaceView.WIDTH;
-import static com.gamesbykevin.a2048.util.StatDescription.TOTAL_CHARACTERS;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
 /**
  * Created by Kevin on 6/1/2017.
@@ -164,7 +149,7 @@ public class OpenGLRenderer implements Renderer {
                 throw new Exception("Error loading texture: " + index);
             } else {
                 //display texture id
-                //UtilityHelper.logEvent("Texture loaded id: " + textures[index]);
+                UtilityHelper.logEvent("Texture loaded id: " + textures[index]);
             }
 
         } catch (Exception e) {
@@ -177,8 +162,9 @@ public class OpenGLRenderer implements Renderer {
 
     private void loadTextures(GL10 gl) {
 
+        /*
         //load textures into our array
-        TEXTURES = new int[Block.VALUES.length + TOTAL_CHARACTERS + TOTAL_WORD_TEXTURES];
+        TEXTURES = new int[];
 
         //get the sprite sheet containing all our animations
         Bitmap spriteSheet = BitmapFactory.decodeResource(activity.getResources(), R.drawable.blocks);
@@ -226,6 +212,7 @@ public class OpenGLRenderer implements Renderer {
         loadTexture(tmp, gl, TEXTURES, TEXTURE_BACKGROUND_INDEX);
         tmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.win);
         loadTexture(tmp, gl, TEXTURES, TEXTURE_WORD_WIN_INDEX);
+        */
     }
 
     /**
@@ -245,6 +232,6 @@ public class OpenGLRenderer implements Renderer {
         gl.glScalef(scaleRenderX, scaleRenderY, 0.0f);
 
         //render game objects
-        MANAGER.draw(gl, TEXTURES);
+        //MANAGER.draw(gl, TEXTURES);
     }
 }

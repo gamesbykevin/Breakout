@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Breakout</string>
+    <string translatable="false" name="app_name">Breakout</string>
 
     <!-- button text -->
     <string name="button_text_next">Next</string>
     <string name="button_text_restart">Restart</string>
-    <string name="button_text_achievements">Achievements</string>
-    <string name="button_text_leaderboard">Leaderboard</string>
     <string name="button_text_rate">Rate</string>
     <string name="button_text_more">More</string>
     <string name="button_text_menu">Menu</string>
@@ -19,14 +17,12 @@
     <string name="sound_off">Sound: Off</string>
     <string name="control_touch">Control: Touch</string>
     <string name="control_tilt">Control: Tilt</string>
-    <string name="text_header_level_select">Select Level</string>
+    <string name="text_header_level_select">Levels</string>
 
-    <!--header text for our game options, &#160; is to create an empty space-->
-    <string name="header_option_difficulty">Skill:&#160;</string>
-    <string name="header_option_mode">Mode:&#160;</string>
-
-    <!-- Make sure name and value are unique -->
+    <!-- shared preferences key -->
     <string translatable="false" name="preference_file_key">com.gamesbykevin.2048.PREFERENCE_FILE_KEY</string>
+
+    <!-- each shared preference setting, all need to be unique -->
     <string translatable="false" name="sound_file_key">com.gamesbykevin.2048.SOUND_FILE_KEY</string>
     <string translatable="false" name="vibrate_file_key">com.gamesbykevin.2048.VIBRATE_FILE_KEY</string>
     <string translatable="false" name="control_file_key">com.gamesbykevin.2048.CONTROL_FILE_KEY</string>

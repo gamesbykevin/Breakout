@@ -1,4 +1,4 @@
-package com.gamesbykevin.a2048.ui;
+package com.gamesbykevin.breakout.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -10,9 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gamesbykevin.a2048.R;
-import com.gamesbykevin.a2048.level.Level;
+import com.gamesbykevin.breakout.R;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,8 +28,8 @@ public class CustomAdapter extends ArrayAdapter {
     //resource id for the layout
     private int resourceId;
 
-    //list of our levels
-    private List<Level> data;
+    //list of levels we have beaten
+    private List<Boolean> data;
 
     //images for completed and not-completed levels
     private Drawable imageGreen, imageRed;
@@ -39,7 +40,7 @@ public class CustomAdapter extends ArrayAdapter {
      * @param layoutResourceId
      * @param data
      */
-    public CustomAdapter(Context context, int layoutResourceId, List<Level> data) {
+    public CustomAdapter(Context context, int layoutResourceId, List<Boolean> data) {
 
         super(context, layoutResourceId, data);
 
@@ -74,34 +75,27 @@ public class CustomAdapter extends ArrayAdapter {
         }
         else
         {
-            holder = (ViewHolder) itemView.getTag();
+            holder = (ViewHolder)itemView.getTag();
         }
 
         //get our images if they don't yet exist
         if (imageRed == null)
-            imageRed = ContextCompat.getDrawable(context, R.drawable.red);
+            imageRed = ContextCompat.getDrawable(context, R.drawable.standard);
         if (imageGreen == null)
-            imageGreen = ContextCompat.getDrawable(context, R.drawable.green);
+            imageGreen = ContextCompat.getDrawable(context, R.drawable.completed);
 
-        //setup text description and image
-        Level item = (Level)getItem(position);
-
-        if (item.isCompleted()) {
+        if (data.get(position)) {
             holder.imgItem.setImageDrawable(imageGreen);
             holder.txtItem.setText("");
-
         } else {
             holder.imgItem.setImageDrawable(imageRed);
-            holder.txtItem.setText(item.getTitle());
+            holder.txtItem.setText((position + 1));
         }
 
         //return the created item
         return itemView;
     }
 
-    /**
-     *
-     */
     static class ViewHolder
     {
         //reference that we will need for each item

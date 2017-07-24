@@ -1,8 +1,7 @@
 package com.gamesbykevin.breakout.common;
 
 import com.gamesbykevin.androidframework.resources.Disposable;
-
-import android.graphics.Canvas;
+import com.gamesbykevin.breakout.activity.GameActivity;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -10,9 +9,8 @@ public interface ICommon extends Disposable
 {
 	/**
 	 * Update the entity
-	 * @throws Exception
 	 */
-	public void update();
+	public void update(GameActivity activity);
 
 	/**
 	 * Logic to reset

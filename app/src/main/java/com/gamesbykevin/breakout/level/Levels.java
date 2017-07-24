@@ -1,14 +1,18 @@
 package com.gamesbykevin.breakout.level;
 
+import android.content.Context;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import com.gamesbykevin.androidframework.resources.Disposable;
-import com.gamesbykevin.androidframework.resources.Files;
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.brick.Bricks.Key;
-import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 public class Levels implements Disposable
 {
@@ -58,20 +62,27 @@ public class Levels implements Disposable
 	
 	//list to choose random keys from
 	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();
-	
+
+	//the name of the file containing all the levels
+	private static final String FILE_NAME = "levels.txt";
+
 	/**
 	 * Default Constructor
 	 */
-	public Levels() 
+	public Levels(Context context)
 	{
-		//create list of levels
-		this.levels = new ArrayList<Level>();
-		
-		//create a list of possible bonus bricks
-		this.locations = new ArrayList<Location>();
-		
-		//load the levels
-		load();
+		try {
+			//create list of levels
+			this.levels = new ArrayList<Level>();
+
+			//create a list of possible bonus bricks
+			this.locations = new ArrayList<Location>();
+
+			//load the levels
+			load(context);
+		} catch (Exception e) {
+			UtilityHelper.handleException(e);
+		}
 	}
 	
 	@Override
@@ -102,12 +113,17 @@ public class Levels implements Disposable
 	/**
 	 * Load the levels from what is found in the text file
 	 */
-	private void load()
+	private void load(Context context) throws Exception
 	{
 		Level level = null;
-		
-		//check every line in our text file
-		for (String line : Files.getText(Assets.TextKey.Levels).getLines())
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(FILE_NAME)));
+
+		//this will contain the current line of the text file
+		String line;
+
+		//read every line in our text file
+		while ((line = reader.readLine()) != null)
 		{
 			//if the line has the level separator add to the list
 			if (line.contains(LEVEL_SEPARATOR))
@@ -244,7 +260,7 @@ public class Levels implements Disposable
 					else if (character.equalsIgnoreCase(BRICK_UNBREAKABLE))
 					{
 						//assign animation
-						bricks.getBricks()[row][col].setKey(Bricks.Key.Silver);
+						//bricks.getBricks()[row][col].setKey(Bricks.Key.Silver);
 						
 						//flag not dead
 						bricks.getBricks()[row][col].reset();
@@ -258,7 +274,7 @@ public class Levels implements Disposable
 						noColor = true;
 						
 						//assign animation
-						bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
+						//bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
 						
 						//flag not dead
 						bricks.getBricks()[row][col].reset();
@@ -281,7 +297,7 @@ public class Levels implements Disposable
 								match = true;
 							
 								//assign animation
-								bricks.getBricks()[row][col].setKey(key);
+								//bricks.getBricks()[row][col].setKey(key);
 								
 								//flag not dead
 								bricks.getBricks()[row][col].reset();
@@ -353,7 +369,8 @@ public class Levels implements Disposable
 			populateKeys();
 		
 		//pick random index
-		final int index = GamePanel.RANDOM.nextInt(this.keys.size());
+
+		final int index = GameActivity.getRandomObject().nextInt(this.keys.size());
 		
 		//pick random animation key
 		Bricks.Key tmp = this.keys.get(index);
@@ -375,7 +392,7 @@ public class Levels implements Disposable
 		Bricks.Key key = null;
 		
 		//pick a random pattern to color the bricks
-		switch (GamePanel.RANDOM.nextInt(4))
+		switch (GameActivity.getRandomObject().nextInt(4))
 		{
 			//each row is a different color
 			case 0:
@@ -392,8 +409,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							brick.setKey(key);
+						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							//brick.setKey(key);
 					}
 					
 					key = null;
@@ -415,8 +432,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							brick.setKey(key);
+						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							//brick.setKey(key);
 					}
 					
 					key = null;
@@ -439,8 +456,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							brick.setKey(key);
+						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							//brick.setKey(key);
 					}
 				}
 				break;
@@ -478,7 +495,7 @@ public class Levels implements Disposable
 		while (!getLocations().isEmpty())
 		{
 			//pick random index
-			final int index = GamePanel.RANDOM.nextInt(getLocations().size());
+			final int index = GameActivity.getRandomObject().nextInt(getLocations().size());
 			
 			//get the random location
 			final int col = getLocations().get(index).getCol(); 

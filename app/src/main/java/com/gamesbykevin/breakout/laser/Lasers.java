@@ -2,6 +2,7 @@ package com.gamesbykevin.breakout.laser;
 
 import java.util.ArrayList;
 
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
@@ -9,14 +10,16 @@ import com.gamesbykevin.breakout.paddle.Paddle;
 
 import android.graphics.Canvas;
 
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+
 public class Lasers extends Entity implements ICommon 
 {
 	//the list of lasers
 	private ArrayList<Laser> lasers;
 
-	public Lasers(Game game) 
+	public Lasers()
 	{
-		super(game, Laser.WIDTH, Laser.HEIGHT);
+		super(Laser.WIDTH, Laser.HEIGHT);
 		
 		//create new list of lasers
 		this.lasers = new ArrayList<Laser>();
@@ -54,7 +57,7 @@ public class Lasers extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() throws Exception 
+	public void update(GameActivity activity)
 	{
 		if (getLasers() != null)
 		{
@@ -64,11 +67,11 @@ public class Lasers extends Entity implements ICommon
 					continue;
 				
 				//update location of laser
-				laser.update();
+				//laser.update();
 				
 				//set the length
-				final int rowMax = getGame().getBricks().getBricks().length;
-				final int colMax = getGame().getBricks().getBricks()[0].length;
+				final int rowMax = MANAGER.getBricks().getBricks().length;
+				final int colMax = MANAGER.getBricks().getBricks()[0].length;
 				
 				//check if it hit any bricks etc.....
 				for (int row = 0; row < rowMax; row++)
@@ -76,7 +79,7 @@ public class Lasers extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//get the current brick
-						final Brick brick = getGame().getBricks().getBricks()[row][col];
+						final Brick brick = MANAGER.getBricks().getBricks()[row][col];
 						
 						if (!brick.isDead())
 						{
@@ -90,8 +93,8 @@ public class Lasers extends Entity implements ICommon
 								brick.markCollision();
 								
 								//if the brick contains a power up we will add it
-								if (brick.hasPowerup())
-									super.getGame().getPowerups().add(brick);
+								//if (brick.hasPowerup())
+									//MANAGER.getPowerups().add(brick);
 								
 								//move to the end
 								row = rowMax;

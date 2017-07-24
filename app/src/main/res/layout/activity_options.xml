@@ -27,7 +27,7 @@
                 android:checked="true" />
         </TableRow>
         <TableRow style="@style/RowMenu">
-            <com.gamesbykevin.breakout.ui.MultiStateToggleButton
+            <ToggleButton
                 style="@style/ButtonMenu"
                 android:id="@+id/ToggleButtonControl"
                 android:textOn="@string/control_touch"

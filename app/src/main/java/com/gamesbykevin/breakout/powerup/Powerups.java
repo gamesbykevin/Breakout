@@ -2,14 +2,16 @@ package com.gamesbykevin.breakout.powerup;
 
 import java.util.ArrayList;
 
-import com.gamesbykevin.androidframework.resources.Audio;
+import com.gamesbykevin.breakout.activity.GameActivity;
+import com.gamesbykevin.breakout.activity.MainActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.GameHelper;
-import com.gamesbykevin.breakout.thread.MainThread;
 
 import android.graphics.Canvas;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 
 public class Powerups extends Entity implements ICommon
 {
@@ -17,13 +19,11 @@ public class Powerups extends Entity implements ICommon
 	private ArrayList<Powerup> powerups;
 	
 	/**
-	 * Constructor
-	 * @param game
-	 * @throws Exception
+	 * Default constructor
 	 */
-	public Powerups(Game game) throws Exception
+	public Powerups()
 	{
-		super(game, Powerup.WIDTH, Powerup.HEIGHT);
+		super(Powerup.WIDTH, Powerup.HEIGHT);
 
 		//create list of power ups
 		this.powerups = new ArrayList<Powerup>();
@@ -99,7 +99,7 @@ public class Powerups extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() throws Exception 
+	public void update(GameActivity activity)
 	{
 		//possible sound effects to play
 		boolean soundPowerup = false;
@@ -114,92 +114,93 @@ public class Powerups extends Entity implements ICommon
 				continue;
 			
 			//check for paddle collision
-			if (getGame().getPaddle().hasCollision(powerup))
+			if (MANAGER.getPaddle().hasCollision(powerup))
 			{
 				//flag the power up as hidden
 				powerup.setHidden(true);
 				
-				if (MainThread.DEBUG)
+				if (MainActivity.DEBUG)
 					System.out.println("Key + " + powerup.getKey().toString());
 				
 				//determine which power up to apply
 				switch (powerup.getKey())
 				{
-					case Magnet: 
-						getGame().getPaddle().setMagnet(true);
+					case Magnet:
+						MANAGER.getPaddle().setMagnet(true);
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Expand:
-						getGame().getPaddle().expand();
+						MANAGER.getPaddle().expand();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Shrink:
-						getGame().getPaddle().shrink();
+						MANAGER.getPaddle().shrink();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Laser:
-						getGame().getPaddle().setLaser(true);
+						MANAGER.getPaddle().setLaser(true);
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case ExtraLife:
-						GameHelper.addLife(getGame());
+						GameHelper.addLife(MANAGER);
 						
 						//play sound effect
 						soundNewlife = true;
 						break;
 						
 					case ExtraBalls:
-						getGame().getBalls().add();
-						getGame().getBalls().add();
+						MANAGER.getBalls().add();
+						MANAGER.getBalls().add();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case SpeedUp:
-						getGame().getBalls().speedUp();
+						MANAGER.getBalls().speedUp();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case SpeedDown:
-						getGame().getBalls().speedDown();
+						MANAGER.getBalls().speedDown();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Fireball:
-						getGame().getBalls().setFire(true);
+						MANAGER.getBalls().setFire(true);
 						
 						//play sound effect
 						soundFireball = true;
 						break;
 				
-					default:
-						throw new Exception("Key not found here: " + powerup.getSpritesheet().getKey().toString());
+					//default:
+					//	throw new Exception("Key not found here: " + powerup.getSpritesheet().getKey().toString());
 				}
 			}
 			else
 			{
 				//update power up location etc...
-				powerup.update();
+				//powerup.update();
 			}
 		}
-		
+
+		/*
 		//play sound effects accordingly
 		if (soundPowerup)
 			Audio.play(Assets.AudioGameKey.Powerup);
@@ -207,6 +208,7 @@ public class Powerups extends Entity implements ICommon
 			Audio.play(Assets.AudioGameKey.FirePowerup);
 		if (soundNewlife)
 			Audio.play(Assets.AudioGameKey.NewLife);
+		*/
 	}
 
 	@Override

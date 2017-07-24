@@ -1,10 +1,14 @@
 package com.gamesbykevin.breakout.game;
 
-import com.gamesbykevin.androidframework.resources.Audio;
-import com.gamesbykevin.androidframework.resources.Images;
-import com.gamesbykevin.breakout.thread.MainThread;
+import com.gamesbykevin.breakout.R;
+import com.gamesbykevin.breakout.activity.GameActivity;
+import com.gamesbykevin.breakout.util.StatDescription;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 /**
  * Game helper methods
@@ -13,84 +17,26 @@ import android.graphics.Canvas;
 public final class GameHelper 
 {
 	/**
-	 * Did we win?
+	 * The duration we wait until we show the game over screen
 	 */
-	public static boolean WIN = false;
-	
-	/**
-	 * Did we lose?
-	 */
-	public static boolean LOSE = false;
-	
-	/**
-	 * Do we reset the game?
-	 */
-	public static boolean RESET = false;
-	
-	/**
-	 * Should we display the loading screen to the user
-	 */
-	public static boolean NOTIFY = false;
-	
-	/**
-	 * Is the game over?
-	 */
-	public static boolean GAMEOVER = false;
-	
-	/**
-	 * Darken the background accordingly
-	 */
-	private static final int TRANSITION_ALPHA_TRANSPARENCY = 95;
-	
-	/**
-	 * The default starting # of lives
-	 */
-	public static final int DEFAULT_LIVES = 5;
-	
-	/**
-	 * The # of lives we have
-	 */
-	public static int LIVES = 0;
-	
+	protected static final int GAME_OVER_FRAMES_DELAY = (FPS * 2);
+
 	/**
 	 * The number of frames to display get ready text
 	 */
-	private static final int GET_READY_FRAMES_LIMIT = MainThread.FPS;
-	
+	private static final int GET_READY_FRAMES_LIMIT = FPS;
+
 	/**
-	 * Keep track of frames elapsed
+	 * Our object that will keep track of our lives
 	 */
-	private static int FRAMES = 0;
-	
-	/**
-	 * Keep track of debug level
-	 */
-	private static int DEBUG_LEVEL_INDEX = 0;
-	
-	/**
-	 * How much time has elapsed
-	 */
-	private static long TIME_ELAPSED = 0;
-	
-	/**
-	 * Can the user touch the screen to move the paddle?
-	 * @param game Our game reference object
-	 * @return true if the user can touch the screen to move the paddle, false otherwise
-	 */
-    protected final static boolean canTouch(final Game game)
-    {
-    	return (game.getScreen().getScreenOptions().getIndex(OptionsScreen.Key.Controls) == 1 || game.getScreen().getPanel().getSensor() == null);
-    }
-	
+	public static StatDescription STAT_DESCRIPTION = new StatDescription();
+
     /**
      * Start the current assigned level all over 
      * @param game Our game reference object
      */
     public final static void resetLevel(final Manager game)
 	{
-		//reset frames count
-		GameHelper.FRAMES = 0;
-    	
 		//reset balls
 		game.getBalls().reset();
 		
@@ -116,174 +62,20 @@ public final class GameHelper
 
     /**
      * Check if the player lost a life or if the level has been completed
-     * @param game Our game reference object
      */
-    protected final static void check(final Manager game)
+    protected final static boolean isGameOver()
 	{
-		//if there are no more bricks to be broken
-		if (game.getBricks().getCount() <= 0)
-		{
-			//reset frames count
-			FRAMES = 0;
-			
-			//flag that we won
-			WIN = true;
-			
-			//save the index of the level completed
-			game.getScore().update(game.getLevels().getLevelIndex());
-			
-			//update the select screen
-			updateSelect(game);
-			
-			//go to the game over screen
-			game.getScreen().setState(ScreenManager.State.GameOver);
-			
-			//stop all previously playing sound
-			Audio.stop();
-			
-			//play sound effect
-			Audio.play(Assets.AudioMenuKey.LevelComplete, true);
-		}
-		else if (game.getBalls().getCount() < 1)
-		{
-			//reset frames
-			FRAMES = 0;
-			
-			//flag lose true
-			LOSE = true;
-			
-			//take a life away
-			deductLife(game);
-			
-			//if no more lives, the game is over
-    		if (LIVES <= 0)
-    		{
-				//flag game over true
-				GAMEOVER = true;
-				
-				//go to the game over screen
-				game.getScreen().setState(ScreenManager.State.GameOver);
-				
-				//stop all previously playing sound
-				Audio.stop();
-				
-				//play sound effect
-				Audio.play(Assets.AudioMenuKey.Gameover);
-    		}
-		}
+		//if there are no more bricks to be broken the game is over
+		if (MANAGER.getBricks().getCount() <= 0)
+			return true;
+
+		//if there are no more balls in play, the game is over
+		if (MANAGER.getBalls().getCount() < 1)
+			return true;
+
+		//game is not yet over
+		return false;
 	}
-    
-    /**
-     * Update game
-     * @throws Exception 
-     */
-    public static final void update(final Manager game) throws Exception
-    {
-    	if (MainThread.DEBUG)
-    	{
-    		//if no ai assistance loop through levels
-    		if (!MainThread.AI_ASSISTANCE)
-    		{
-	    		if (game.getSelect().hasSelection())
-	    		{
-		    		if (TIME_ELAPSED == 0)
-		    			TIME_ELAPSED = System.currentTimeMillis();
-		    		
-		    		if (System.currentTimeMillis() - TIME_ELAPSED >= 1000)
-		    		{
-		    			//move to next level
-		    			DEBUG_LEVEL_INDEX++;
-		    			
-		    			//reset timer
-		    			TIME_ELAPSED = System.currentTimeMillis();
-		    			
-		    			//assign the appropriate level
-		    			game.getLevels().setLevelIndex(DEBUG_LEVEL_INDEX);
-		    			
-		    			//reset the board for the next level
-		    			RESET = true;
-		    		}
-		    		
-					//make sure we remove "get ready" screen
-					FRAMES = GET_READY_FRAMES_LIMIT;
-	    		}
-    		}
-    		else
-    		{
-    			//if ai assistance enabled, have ai play the level
-    			
-    		}
-    	}
-    	
-    	if (!game.getSelect().hasSelection())
-    	{
-    		//update the object
-    		game.getSelect().update();
-    		
-    		//if we have a selection now, reset the board
-    		if (game.getSelect().hasSelection())
-    		{
-    			//make sure the level is not locked, if it is locked play sound effect
-    			if (game.getSelect().isLocked(game.getSelect().getLevelIndex()))
-    			{
-    				//flag selection as false
-    				game.getSelect().setSelection(false);
-    				
-    				//play sound effect
-    				Audio.play(Assets.AudioGameKey.Invalid);
-    			}
-    			else
-    			{
-    				//assign the appropriate level
-    				game.getLevels().setLevelIndex(game.getSelect().getLevelIndex());
-    				
-    				//reset the board for the next level
-    				RESET = true;
-    			}
-    		}
-    		
-    		//no need to continue
-    		return;
-    	}
-    	
-    	if (isReady())
-    	{
-    		if (LOSE)
-    		{
-    			//do we need to do anything here
-    			LOSE = false;
-    			
-    			//reset level again
-    			restartLevel(game);
-    		}
-    		else
-    		{
-	    		//update the bricks
-    			game.getBricks().update();
-	    		
-	    		//update the balls
-    			game.getBalls().update();
-	    		
-	    		//update the paddle
-    			game.getPaddle().update();
-	    		
-	    		//update the power ups
-    			game.getPowerups().update();
-    			
-    			//see if the player lost a life or completed a level
-    			check(game);
-    		}
-    	}
-    	else
-    	{
-    		//keep track of the frames count
-    		FRAMES++;
-    		
-    		//if we are now ready, start playing the theme
-    		if (isReady())
-    			Audio.play(Assets.AudioMenuKey.Theme, true);
-    	}
-    }
     
     /**
      * Is the game ready?
@@ -295,50 +87,14 @@ public final class GameHelper
     }
     
     /**
-     * Can the user interact with the game?<br>
-     * The user will not if game over, reset, win/lose, etc....
-     * @return true if reset = false, notify = true, win = false, lose = false, isReady() = true
-     */
-    public static final boolean canInteract()
-    {
-    	return (!RESET && NOTIFY && !WIN && !LOSE && isReady());
-    }
-    
-    public static final void resetLives(final Manager game)
-    {
-    	//reset the number of lives
-    	LIVES = DEFAULT_LIVES;
-    	
-    	//update number object
-    	game.getNumber().setNumber(LIVES);
-    }
-    
-    public static final void addLife(final Manager game)
-    {
-    	//increase lives
-    	LIVES++;
-    	
-    	//update number object
-    	game.getNumber().setNumber(LIVES);
-    }
-    
-    public static final void deductLife(final Manager game)
-    {
-    	//decrease lives
-    	LIVES--;
-    	
-    	//update number object
-    	game.getNumber().setNumber(LIVES);
-    }
-    
-    /**
      * Render the game accordingly
-     * @param canvas Place to write pixel data
+     * @param openGL Place to write pixel data
      * @param game Our game reference object
      * @throws Exception
      */
-    public static final void render(final Canvas canvas, final Manager game) throws Exception
+    public static final void render(final GL10 openGL, final Manager game) throws Exception
     {
+		/*
     	if (!NOTIFY)
     	{
 			//render loading screen
@@ -419,5 +175,6 @@ public final class GameHelper
 				}
 			}
     	}
+    	*/
     }
 }

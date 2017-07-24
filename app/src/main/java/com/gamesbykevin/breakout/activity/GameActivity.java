@@ -10,6 +10,13 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
+import com.gamesbykevin.breakout.R;
+import com.gamesbykevin.breakout.game.Manager;
+import com.gamesbykevin.breakout.level.Levels;
+import com.gamesbykevin.breakout.level.Statistics;
+import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
+import com.gamesbykevin.breakout.ui.CustomAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,10 +34,14 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
      */
     private static Random RANDOM;
 
-    /**
-     * Our game manager class
-     */
-    public static GameManager MANAGER;
+    //Our game manager class
+    public static Manager MANAGER;
+
+    //keep track of our level progress
+    public static Statistics STATISTICS;
+
+    //our list of levels
+    public static Levels LEVELS;
 
     //has the activity been paused
     private boolean paused = false;
@@ -63,11 +74,14 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         //call parent
         super.onCreate(savedInstanceState);
 
-        //create our game manager
-        MANAGER = new GameManager(this);
+        //all the levels in the game
+        LEVELS = new Levels(this);
 
-        //first assign default level is 0
-        STATS.setLevelIndex(0);
+        //track our level progress
+        STATISTICS = new Statistics(this, LEVELS.getSize());
+
+        //create our game manager
+        MANAGER = new Manager(this);
 
         //set the content view
         setContentView(R.layout.activity_game);
@@ -95,7 +109,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         levelSelectGrid.setOnItemClickListener(this);
 
         //create the custom adapter using the level selection layout and data to populate it
-        this.customAdapter = new CustomAdapter(getApplicationContext(), R.layout.level_selection, STATS.getLevels());
+        this.customAdapter = new CustomAdapter(getApplicationContext(), R.layout.level_selection, STATISTICS.getResults());
 
         //set our adapter to the grid view
         levelSelectGrid.setAdapter(this.customAdapter);
@@ -105,7 +119,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long id)
     {
         //assign the level selected
-        STATS.setLevelIndex(STATS.getLevels().get(position).getLevelIndex());
+        STATISTICS.setIndex(position);
 
         //show loading screen while we reset
         setScreen(Screen.Loading);
@@ -176,7 +190,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onResume();
 
         //resume sound playing
-        playSound();
+        //playSound();
 
         //if the game was previously paused create a new view
         if (this.paused) {
@@ -209,8 +223,8 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
             glSurfaceView.onResume();
         }
 
-        //determine what screens are displayed
-        setScreen(screen);
+        //determine what screen(s) are displayed
+        setScreen(getScreen());
     }
 
     public Screen getScreen() {
@@ -298,7 +312,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
     public void onClickNext(View view) {
 
         //move to the next index
-        STATS.nextLevelIndex();
+        STATISTICS.setIndex(STATISTICS.getIndex() + 1);
 
         //go back to the ready step
         setScreen(Screen.Ready);

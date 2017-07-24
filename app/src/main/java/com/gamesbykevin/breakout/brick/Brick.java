@@ -1,15 +1,13 @@
 package com.gamesbykevin.breakout.brick;
 
-import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.activity.GameActivity;
+import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.common.ICommon;
-import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.panel.GamePanel;
-import com.gamesbykevin.breakout.thread.MainThread;
-
-import android.graphics.Canvas;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public final class Brick extends Entity implements ICommon
 {
@@ -28,7 +26,7 @@ public final class Brick extends Entity implements ICommon
 	/**
 	 * The number of frames to show the particles before we hide
 	 */
-	private static final int FRAMES_PARTICLE_LIMIT = (MainThread.FPS / 4);
+	private static final int FRAMES_PARTICLE_LIMIT = (FPS / 4);
 	
 	/**
 	 * The size of a single particle
@@ -240,7 +238,7 @@ public final class Brick extends Entity implements ICommon
 	}
 
 	@Override
-	public void update()
+	public void update(GameActivity activity)
 	{
 		//if dead keep count of frames
 		if (isDead())

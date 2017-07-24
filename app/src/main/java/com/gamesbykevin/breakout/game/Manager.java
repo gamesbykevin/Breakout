@@ -2,19 +2,25 @@ package com.gamesbykevin.breakout.game;
 
 import android.view.MotionEvent;
 
-import com.gamesbykevin.androidframework.level.Select;
+import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.common.ICommon;
+import com.gamesbykevin.breakout.activity.GameActivity.Screen;
 import com.gamesbykevin.breakout.level.Levels;
-import com.gamesbykevin.breakout.number.Number;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerups;
-import com.gamesbykevin.breakout.score.Score;
+import com.gamesbykevin.breakout.util.StatDescription;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 import com.gamesbykevin.breakout.wall.Wall;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
+import static com.gamesbykevin.breakout.game.GameHelper.GAME_OVER_FRAMES_DELAY;
+import static com.gamesbykevin.breakout.game.GameHelper.STAT_DESCRIPTION;
+import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 
 /**
  * Created by Kevin on 7/19/2017.
@@ -40,15 +46,30 @@ public class Manager implements ICommon {
     //the object containing the levels
     private Levels levels;
 
-    //the game score card
-    private Score score;
-
     //object for rendering a number
-    private Number number;
+    private StatDescription stat;
 
     private final GameActivity activity;
 
+    //are we pressing on the screen
     private boolean press = false;
+
+    /**
+     * The list of steps in the game
+     */
+    public enum Step {
+        Start,
+        Reset,
+        Loading,
+        GameOver,
+        Updating
+    }
+
+    //what is the current step that we are on
+    public static Step STEP = Step.Loading;
+
+    //keep track so we know when to display the game over screen
+    private int frames = 0;
 
     public Manager(GameActivity activity) {
 
@@ -71,42 +92,124 @@ public class Manager implements ICommon {
         this.powerups = new Powerups();
 
         //create and load the levels
-        this.levels = new Levels();
-
-        //create new number object
-        this.number = new Number();
-
-        //create our score card
-        this.score = new Score(screen.getPanel().getActivity());
+        this.levels = new Levels(activity);
     }
 
     @Override
     public void reset() {
-        //flag reset false
-        GameHelper.RESET = false;
-        GameHelper.WIN = false;
-        GameHelper.LOSE = false;
-
-        //reset level
         GameHelper.resetLevel(this);
     }
 
     @Override
-    public void update() {
-        //if the game is over
-        if (GameHelper.RESET)
-        {
-            //reset the game
-            reset();
-        }
-        else
-        {
-            GameHelper.update(this);
+    public void update(GameActivity activity) {
+
+        switch (STEP) {
+
+            //we are loading
+            case Loading:
+
+                //if the textures have finished loading
+                if (LOADED) {
+
+                    //if loaded display level select screen
+                    activity.setScreen(Screen.LevelSelect);
+
+                    //go to start step
+                    STEP = Step.Start;
+                }
+                break;
+
+            //don't do anything
+            case Start:
+                break;
+
+            //we are resetting the board
+            case Reset:
+
+                //reset level
+                reset();
+
+                //after resetting, next step is updating
+                STEP = Step.Updating;
+
+                //we can go to ready now
+                activity.setScreen(Screen.Ready);
+                break;
+
+            case Updating:
+
+                //update the bricks
+                getBricks().update(activity);
+
+                //update the balls
+                getBalls().update(activity);
+
+                //update the paddle
+                getPaddle().update(activity);
+
+                //update the power ups
+                getPowerups().update(activity);
+
+                //if the game is over, move to the next step
+                if (GameHelper.isGameOver()) {
+
+                    //if there are no more bricks left, we won
+                    if (getBricks().getCount() <= 0) {
+
+                        //save the index of the current level completed
+                        STATISTICS.update(true);
+                        STATISTICS.save();
+
+                        //play sound
+                        activity.playSound(R.raw.complete);
+
+                        //display message
+                        UtilityHelper.logEvent("GAME OVER WIN!!!");
+                    } else {
+                        //display message
+                        UtilityHelper.logEvent("GAME OVER LOSE!!!");
+
+                        //deduct 1 life from our total
+                        STAT_DESCRIPTION.setDescription(STAT_DESCRIPTION.getStatValue() - 1);
+
+                        if (STAT_DESCRIPTION.getStatValue() <= 0) {
+                            //play sound
+                            activity.playSound(R.raw.gameover);
+
+                        }
+                    }
+
+                    //move to game over step
+                    STEP = Step.GameOver;
+
+                    //vibrate the phone
+                    activity.vibrate();
+
+                    //reset frames timer
+                    frames = 0;
+                }
+                break;
+
+            case GameOver:
+
+                //keep counting if enough time has not yet passed
+                if (frames < GAME_OVER_FRAMES_DELAY) {
+
+                    //keep track of frames elapsed
+                    frames++;
+
+                    //if we are now ready to display go ahead and do it
+                    if (frames >= GAME_OVER_FRAMES_DELAY)
+                        activity.setScreen(Screen.GameOver);
+                }
+                break;
         }
     }
 
     @Override
     public void render(GL10 openGL) {
+
+        //render everything on screen
         GameHelper.render(openGL, this);
     }
 
@@ -138,15 +241,17 @@ public class Manager implements ICommon {
         balls = null;
         powerups = null;
         bricks = null;
-        number = null;
     }
 
-    @Override
-    public void update(final int action, final float x, final float y) throws Exception
-    {
-        //if we can't interact, we can't continue
-        if (!GameHelper.canInteract())
-            return;
+    public boolean onTouchEvent(final int action, final float x, final float y) {
+
+        //don't continue if we aren't ready yet
+        if (STEP != Step.Updating)
+            return true;
+
+        //if the control is tilt, we can't continue
+        if (!activity.getBooleanValue(R.string.control_file_key))
+            return true;
 
         if (action == MotionEvent.ACTION_UP)
         {
@@ -157,46 +262,28 @@ public class Manager implements ICommon {
             //un flag press
             this.press = false;
 
-            //flag touch false, depending on controls setting
-            if (GameHelper.canTouch(this))
-                getPaddle().touch(x, false, Paddle.TOUCH_POWER_0);
+            //update the paddle
+            getPaddle().touch(x, false, Paddle.TOUCH_POWER_0);
         }
         else if (action == MotionEvent.ACTION_DOWN)
         {
             //flag that we pressed down
             this.press = true;
 
-            //flag touch true, depending on controls setting
-            if (GameHelper.canTouch(this))
-                getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
+            //update the paddle
+            getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
         }
         else if (action == MotionEvent.ACTION_MOVE)
         {
             //flag press
             this.press = true;
 
-            //flag touch true, depending on controls setting
-            if (GameHelper.canTouch(this))
-                getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
+            //update the paddle
+            getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
         }
-    }
 
-    /**
-     * Get the number object
-     * @return Our number object reference for rendering lives
-     */
-    public Number getNumber()
-    {
-        return this.number;
-    }
-
-    /**
-     * Get our score card
-     * @return Our score reference object to track completed levels
-     */
-    public Score getScore()
-    {
-        return this.score;
+        //return true to keep receiving events
+        return true;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.gamesbykevin.breakout.brick;
 
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 
@@ -254,7 +255,7 @@ public class Bricks extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update()
+	public void update(GameActivity activity)
 	{
 		//update bricks?
 		for (int row = 0; row < getBricks().length; row++)
@@ -266,7 +267,7 @@ public class Bricks extends Entity implements ICommon
 					continue;
 				
 				//update brick
-				getBricks()[row][col].update();
+				getBricks()[row][col].update(activity);
 			}
 		}
 	}

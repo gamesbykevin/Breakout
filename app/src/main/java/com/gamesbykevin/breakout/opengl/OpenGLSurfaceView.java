@@ -1,18 +1,15 @@
-package com.gamesbykevin.a2048.opengl;
+package com.gamesbykevin.breakout.opengl;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.gamesbykevin.a2048.game.GameManager;
-import com.gamesbykevin.a2048.game.GameManager.Step;
-import com.gamesbykevin.a2048.util.UtilityHelper;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
-import static com.gamesbykevin.a2048.activity.GameActivity.MANAGER;
-import static com.gamesbykevin.a2048.activity.MainActivity.DEBUG;
-import static com.gamesbykevin.a2048.game.GameManager.STEP;
-import static com.gamesbykevin.a2048.opengl.OpenGLRenderer.LOADED;
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.MainActivity.DEBUG;
+import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 
 /**
  * Created by Kevin on 6/1/2017.
@@ -152,7 +149,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         getOpenGlRenderer().onResume();
 
         //resume the game manager as well
-        MANAGER.onResume();
+        //MANAGER.onResume();
 
         //flag running true
         this.running = true;
@@ -204,9 +201,9 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
 
         //log event id this loop is running slow
         if (remaining <= 0) {
-            //UtilityHelper.logEvent("Slow: " + remaining);
-            //UtilityHelper.logEvent("Update duration: " + (this.postUpdate - this.previousUpdate));
-            //UtilityHelper.logEvent("Draw   duration: " + (this.postDraw - this.previousDraw));
+            UtilityHelper.logEvent("Slow: " + remaining);
+            UtilityHelper.logEvent("Update duration: " + (this.postUpdate - this.previousUpdate));
+            UtilityHelper.logEvent("Draw   duration: " + (this.postDraw - this.previousDraw));
         }
 
         //make sure we sleep at least 1 millisecond
@@ -251,10 +248,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
 
         try
         {
-            //we can't continue game input if the game is over
-            if (STEP == Step.GameOver)
-                return true;
-
             //we can't continue if the textures have not yet loaded
             if (!LOADED)
                 return true;
@@ -268,15 +261,12 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
             //UtilityHelper.logEvent("scale: (" + x + ", " + y + ")");
 
             //update game accordingly
-            MANAGER.onTouchEvent(event.getAction(), x, y);
+            //MANAGER.onTouchEvent(event.getAction(), x, y);
         }
         catch (Exception e)
         {
             UtilityHelper.handleException(e);
         }
-
-        //UtilityHelper.logEvent("Action: " + event.getAction());
-        //UtilityHelper.logEvent("Action Masked: " + event.getActionMasked());
 
         //return true to keep receiving touch events
         return true;
@@ -291,7 +281,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         this.previousUpdate = System.currentTimeMillis();
 
         //update game logic here
-        MANAGER.update();
+        //MANAGER.update();
 
         //track time after update
         this.postUpdate = System.currentTimeMillis();
@@ -306,11 +296,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         this.previousDraw = System.currentTimeMillis();
 
         try {
-
-            //only render when possible
-            if (!GameManager.canRender())
-                return;
-
             //render game objects
             requestRender();
 

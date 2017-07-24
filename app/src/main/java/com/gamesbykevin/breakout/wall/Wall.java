@@ -1,6 +1,5 @@
 package com.gamesbykevin.breakout.wall;
 
-import com.gamesbykevin.androidframework.resources.Images;
 
 import android.graphics.Canvas;
 
@@ -31,6 +30,6 @@ public class Wall
 	 */
 	public void render(final Canvas canvas) throws Exception
 	{
-		canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.Border), 0, 0, null);
+		//canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.Border), 0, 0, null);
 	}
 }

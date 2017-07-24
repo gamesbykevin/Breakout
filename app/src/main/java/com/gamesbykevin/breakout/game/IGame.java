@@ -1,8 +1,8 @@
 package com.gamesbykevin.breakout.game;
 
-import com.gamesbykevin.androidframework.resources.Disposable;
-
 import android.graphics.Canvas;
+
+import com.gamesbykevin.androidframework.resources.Disposable;
 
 /**
  * Game interface methods

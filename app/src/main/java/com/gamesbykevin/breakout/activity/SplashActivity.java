@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.gamesbykevin.breakout.R;
+
 public class SplashActivity extends BaseActivity implements Runnable {
 
     /**

@@ -2,17 +2,16 @@ package com.gamesbykevin.breakout.ball;
 
 import java.util.ArrayList;
 
-import com.gamesbykevin.androidframework.anim.Animation;
-import com.gamesbykevin.androidframework.resources.Audio;
-import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.paddle.Paddle;
-import com.gamesbykevin.breakout.panel.GamePanel;
-import com.gamesbykevin.breakout.thread.MainThread;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public class Balls extends Entity implements ICommon
 {
@@ -41,15 +40,15 @@ public class Balls extends Entity implements ICommon
 	/**
 	 * The number of frames to wait until speeding up all existing balls
 	 */
-	private static final int SPEED_UP_BALLS_DELAY = (MainThread.FPS * 45);
+	private static final int SPEED_UP_BALLS_DELAY = (FPS * 45);
 	
 	//different sound effects we can play
 	private boolean soundBrickCollisionSolid, soundBrickCollision, soundWallCollision, soundLoseBall;
 	
-	public Balls(final Game game) throws Exception 
-	{
+	public Balls() {
+
 		//call parent constructor
-		super(game, Ball.WIDTH, Ball.HEIGHT);
+		super(Ball.WIDTH, Ball.HEIGHT);
 		
 		//create new list of balls
 		this.balls = new ArrayList<Ball>();
@@ -92,14 +91,14 @@ public class Balls extends Entity implements ICommon
 					break;
 					
 				default:
-					throw new Exception("Key not found: " + key.toString());
+					throw new RuntimeException("Key not found: " + key.toString());
 			}
 			
 			//create new animation
-			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, Ball.DIMENSIONS, Ball.DIMENSIONS);
+			//Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, Ball.DIMENSIONS, Ball.DIMENSIONS);
 			
 			//now add animation to the sprite sheet
-			super.getSpritesheet().add(key, animation);
+			//super.getSpritesheet().add(key, animation);
 		}
 	}
 
@@ -238,7 +237,7 @@ public class Balls extends Entity implements ICommon
 		}
 		
 		//pick random index
-		final int index = GamePanel.RANDOM.nextInt(this.keys.size());
+		final int index = GameActivity.getRandomObject().nextInt(this.keys.size());
 		
 		//assign random chosen value
 		final Key tmp = this.keys.get(index);
@@ -299,7 +298,7 @@ public class Balls extends Entity implements ICommon
 			return;
 		
 		//pick random x-offset
-		final double xOffset = -Ball.WIDTH + GamePanel.RANDOM.nextInt(Ball.WIDTH * 2);
+		final double xOffset = -Ball.WIDTH + GameActivity.getRandomObject().nextInt(Ball.WIDTH * 2);
 		
 		//first see if we can reuse an existing ball
 		for (Ball ball : getBalls())
@@ -319,7 +318,7 @@ public class Balls extends Entity implements ICommon
 			ball.setY(y);
 			
 			//choose random velocity
-			ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+			ball.setDX(GameActivity.getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
 			ball.setDY(-Ball.SPEED_MIN);
 			
 			//make sure ball is no longer hidden
@@ -337,7 +336,7 @@ public class Balls extends Entity implements ICommon
 		ball.setY(y);
 		
 		//choose random velocity
-		ball.setDX(GamePanel.RANDOM.nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+		ball.setDX(GameActivity.getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
 		ball.setDY(-Ball.SPEED_MIN);
 		
 		//add to list
@@ -345,11 +344,12 @@ public class Balls extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() throws Exception 
+	public void update(GameActivity activity)
 	{
+		/*
 		//set the length
-		final int rowMax = getGame().getBricks().getBricks().length;
-		final int colMax = getGame().getBricks().getBricks()[0].length;
+		final int rowMax = MANAGER.getBricks().getBricks().length;
+		final int colMax = MANAGER.getBricks().getBricks()[0].length;
 		
 		if (getBalls() != null)
 		{
@@ -378,7 +378,7 @@ public class Balls extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//if there was ball/brick collision no need to check the other bricks
-						if (checkBrickCollision(ball, getGame().getBricks().getBricks()[row][col]))
+						if (checkBrickCollision(ball, MANAGER.getBricks().getBricks()[row][col]))
 						{
 							//move to the end
 							row = rowMax;
@@ -422,14 +422,15 @@ public class Balls extends Entity implements ICommon
 			
 			//play sound effects accordingly
 			if (soundBrickCollisionSolid)
-				Audio.play(Assets.AudioGameKey.BallBounceSolid);
+				activity.playSound(R.raw.ballbouncesolid);
 			if (soundBrickCollision)
-				Audio.play(Assets.AudioGameKey.BallBounce);
+				activity.playSound(R.raw.ballbounce);
 			if (soundWallCollision)
-				Audio.play(Assets.AudioGameKey.WallCollision);
+				activity.playSound(R.raw.wallcollision);
 			if (soundLoseBall)
-				Audio.play(Assets.AudioGameKey.LostBall);
+				activity.playSound(R.raw.loseball);
 		}
+		*/
 	}
 	
 	/**
@@ -489,7 +490,7 @@ public class Balls extends Entity implements ICommon
 					
 					//if the brick contains a power up we will add it
 					if (brick.hasPowerup())
-						super.getGame().getPowerups().add(brick);
+						MANAGER.getPowerups().add(brick);
 				}
 				
 				//we have collision
@@ -522,7 +523,7 @@ public class Balls extends Entity implements ICommon
 	}
 
 	@Override
-	public void render(Canvas canvas) throws Exception 
+	public void render(final GL10 openGL)
 	{
 		if (getBalls() != null)
 		{
@@ -541,10 +542,9 @@ public class Balls extends Entity implements ICommon
 				super.setY(ball);
 				super.setWidth(ball);
 				super.setHeight(ball);
-				super.getSpritesheet().setKey(ball.getKey());
-				
+
 				//render the current ball
-				super.render(canvas);
+				super.render(openGL);
 			}
 		}
 	}

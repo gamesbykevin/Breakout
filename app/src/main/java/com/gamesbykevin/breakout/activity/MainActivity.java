@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
-import com.gamesbykevin.a2048.R;
-import com.gamesbykevin.a2048.services.BaseGameActivity;
-import com.gamesbykevin.a2048.util.UtilityHelper;
+import com.gamesbykevin.breakout.R;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 public class MainActivity extends BaseActivity {
 

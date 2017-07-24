@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ToggleButton;
 
+import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
 public class OptionsActivity extends BaseActivity {
@@ -101,11 +102,8 @@ public class OptionsActivity extends BaseActivity {
         //get the button
         ToggleButton button = (ToggleButton)view.findViewById(R.id.ToggleButtonSound);
 
-        if (button.isChecked()) {
-            super.playSound(R.raw.title);
-        } else {
+        if (!button.isChecked())
             super.stopSound();
-        }
     }
 
     public void onClickControl(View view) {

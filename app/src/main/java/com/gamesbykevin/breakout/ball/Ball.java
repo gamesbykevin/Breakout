@@ -1,12 +1,14 @@
 package com.gamesbykevin.breakout.ball;
 
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Balls.Key;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.panel.GamePanel;
-import com.gamesbykevin.breakout.thread.MainThread;
+import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
 import com.gamesbykevin.breakout.wall.Wall;
+
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public final class Ball extends Entity implements ICommon 
 {
@@ -23,12 +25,12 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The starting x-coordinate for the ball
 	 */
-	public static final int START_X = (GamePanel.WIDTH / 2);
+	public static final int START_X = (OpenGLSurfaceView.WIDTH / 2);
 	
 	/**
 	 * The starting y-coordinate for the ball
 	 */
-	public static final int START_Y = (GamePanel.HEIGHT / 2) - HEIGHT;
+	public static final int START_Y = (OpenGLSurfaceView.HEIGHT / 2) - HEIGHT;
 	
 	/**
 	 * The animation dimension on the sprite sheet
@@ -76,11 +78,11 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The number of frames to keep the ball on fire
 	 */
-	private static final int FIRE_FRAME_LIMIT = (MainThread.FPS * 20);
+	private static final int FIRE_FRAME_LIMIT = (FPS * 20);
 	
 	protected Ball(final Balls.Key key) 
 	{
-		super(null, WIDTH, HEIGHT);
+		super(WIDTH, HEIGHT);
 		
 		//assign key
 		setKey(key);
@@ -317,7 +319,7 @@ public final class Ball extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() 
+	public void update(GameActivity activity)
 	{
 		//if not frozen, lets move the ball
 		if (!isFrozen())
@@ -347,7 +349,7 @@ public final class Ball extends Entity implements ICommon
 		//make sure the ball stays in bounds
 		if (getDX() > 0)
 		{
-			if (getX() + getWidth() >= GamePanel.WIDTH - Wall.WIDTH)
+			if (getX() + getWidth() >= OpenGLSurfaceView.WIDTH - Wall.WIDTH)
 				setDX(-getDX());
 		}
 		else if (getDX() < 0)
@@ -367,7 +369,7 @@ public final class Ball extends Entity implements ICommon
 		if (!isHidden())
 		{
 			//if the ball goes off the screen let's flag it hidden etc....
-			if (getY() >= GamePanel.HEIGHT)
+			if (getY() >= OpenGLSurfaceView.HEIGHT)
 				setHidden(true);
 		}
 	}

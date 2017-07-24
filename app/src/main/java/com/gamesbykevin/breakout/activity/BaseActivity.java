@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 
+import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -224,23 +225,30 @@ public abstract class BaseActivity extends Activity {
      */
     public void dispose() {
 
-        //set null
-        preferences = null;
-        vibrator = null;
-        GSON = null;
+        try {
+            //set null
+            preferences = null;
+            vibrator = null;
+            GSON = null;
 
-        //stop, kill all sound
-        destroySound();
+            //stop, kill all sound
+            destroySound();
+        } catch (Exception e) {
+            UtilityHelper.handleException(e);
+        }
+
     }
 
     private void destroySound() {
-        for (Integer resId : SOUND.keySet()) {
-            stopSound(resId);
-            SOUND.get(resId).release();
-        }
+        if (SOUND != null) {
+            for (Integer resId : SOUND.keySet()) {
+                stopSound(resId);
+                SOUND.get(resId).release();
+            }
 
-        SOUND.clear();
-        SOUND = null;
+            SOUND.clear();
+            SOUND = null;
+        }
     }
 
     public void stopSound() {

@@ -1,11 +1,10 @@
 package com.gamesbykevin.breakout.powerup;
 
-import com.gamesbykevin.androidframework.anim.Animation;
-import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.panel.GamePanel;
+import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
 
 import android.graphics.Canvas;
 
@@ -61,12 +60,11 @@ public class Powerup extends Entity implements ICommon
 	private Key key;
 	
 	/**
-	 * Constructor
-	 * @param key Animation key for the power up
+	 * Default constructor
 	 */
 	public Powerup() throws Exception
 	{
-		super(null, WIDTH, HEIGHT);
+		super(WIDTH, HEIGHT);
 		
 		//set animation coordinates
 		final int x = 0;
@@ -116,7 +114,8 @@ public class Powerup extends Entity implements ICommon
 				default:
 					throw new Exception("Key not found: " + key.toString());
 			}
-			
+
+			/*
 			//create new animation
 			Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), x, y, ANIMATION_WIDTH, ANIMATION_HEIGHT, ANIMATION_COLS, ANIMATION_ROWS, ANIMATION_COLS * ANIMATION_ROWS);
 			
@@ -128,6 +127,7 @@ public class Powerup extends Entity implements ICommon
 			
 			//now add animation to the sprite sheet
 			super.getSpritesheet().add(key, animation);
+			*/
 		}
 		
 		//assign the y-velocity
@@ -143,7 +143,7 @@ public class Powerup extends Entity implements ICommon
 	 */
 	private Key getRandomKey()
 	{
-		return (Key.values()[GamePanel.RANDOM.nextInt(Key.values().length)]);
+		return (Key.values()[GameActivity.getRandomObject().nextInt(Key.values().length)]);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public class Powerup extends Entity implements ICommon
 	}
 	
 	@Override
-	public void update() throws Exception 
+	public void update(GameActivity activity)
 	{
 		//update animation
 		super.getSpritesheet().update();
@@ -177,7 +177,7 @@ public class Powerup extends Entity implements ICommon
 		super.setY(super.getY() + super.getDY());
 		
 		//if the power up fell off the screen we will hide it
-		if (super.getY() > GamePanel.HEIGHT)
+		if (super.getY() > OpenGLSurfaceView.HEIGHT)
 			setHidden(true);
 	}
 

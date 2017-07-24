@@ -84,12 +84,6 @@ public abstract class Entity extends com.gamesbykevin.androidframework.base.Enti
 		return this.textureId;
 	}
 
-
-	/**
-	 * Each child should have logic to update
-	 */
-	public abstract void update() throws Exception;
-	
 	/**
 	 * Is there collision?
 	 * @param entity The entity we want to check collision with

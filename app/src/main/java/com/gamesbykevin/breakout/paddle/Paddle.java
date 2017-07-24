@@ -1,17 +1,18 @@
 package com.gamesbykevin.breakout.paddle;
 
-import com.gamesbykevin.androidframework.anim.Animation;
-import com.gamesbykevin.androidframework.resources.Audio;
-import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.R;
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.laser.Lasers;
-import com.gamesbykevin.breakout.panel.GamePanel;
-import com.gamesbykevin.breakout.thread.MainThread;
+import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
 import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public class Paddle extends Entity implements ICommon
 {
@@ -69,12 +70,12 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * Default starting coordinate
 	 */
-	public static final int START_X = (GamePanel.WIDTH / 2) - (WIDTH / 2);
+	public static final int START_X = (OpenGLSurfaceView.WIDTH / 2) - (WIDTH / 2);
 	
 	/**
 	 * Default starting coordinate
 	 */
-	public static final int START_Y = GamePanel.HEIGHT - (int)(GamePanel.HEIGHT * .20);
+	public static final int START_Y = OpenGLSurfaceView.HEIGHT - (int)(OpenGLSurfaceView.HEIGHT * .20);
 	
 	/**
 	 * The different ratios to adjust each ball velocity
@@ -115,12 +116,12 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * The delay between each laser fire
 	 */
-	private static final int FRAMES_LASER_DELAY = (MainThread.FPS / 2);
+	private static final int FRAMES_LASER_DELAY = (FPS / 2);
 	
 	/**
 	 * How long we can shoot lasers for
 	 */
-	private static final int FRAMES_LASER_LIMIT = (MainThread.FPS * 4);
+	private static final int FRAMES_LASER_LIMIT = (FPS * 4);
 	
 	//how many frames have elapsed total
 	private int framesMagnet = 0;
@@ -128,7 +129,7 @@ public class Paddle extends Entity implements ICommon
 	/**
 	 * How long do we have magnetism for?
 	 */
-	private static final int FRAMES_MAGNET_LIMIT = (MainThread.FPS * 30);
+	private static final int FRAMES_MAGNET_LIMIT = (FPS * 30);
 	
 	//is the paddle moving left
 	private boolean left = false;
@@ -165,20 +166,19 @@ public class Paddle extends Entity implements ICommon
 	
 	/**
 	 * Default Constructor
-	 * @param game Game reference object
 	 */
-	public Paddle(final Game game)
+	public Paddle()
 	{
-		super(game, WIDTH, HEIGHT);
+		super(WIDTH, HEIGHT);
 		
 		//create new lasers object
-		this.lasers = new Lasers(game);
+		this.lasers = new Lasers();
 		
 		//create animation
-		Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), 80, 64, WIDTH, HEIGHT);
+		//Animation animation = new Animation(Images.getImage(Assets.ImageGameKey.Sheet), 80, 64, WIDTH, HEIGHT);
 		
 		//now add animation to the sprite sheet
-		super.getSpritesheet().add(DEFAULT, animation);
+		//super.getSpritesheet().add(DEFAULT, animation);
 		
 		//reset paddle
 		reset();
@@ -360,7 +360,7 @@ public class Paddle extends Entity implements ICommon
     }
 	
 	@Override
-	public void update() throws Exception
+	public void update(GameActivity activity)
 	{
 		//difference between location and touchX
 		double xdiff = 0;
@@ -421,7 +421,7 @@ public class Paddle extends Entity implements ICommon
 		soundLaserFire = false;
 		
 		//check each ball for paddle collision
-		for (Ball ball : getGame().getBalls().getBalls())
+		for (Ball ball : MANAGER.getBalls().getBalls())
 		{
 			//only check balls that are moving south
 			if (ball.getDY() < 0)
@@ -495,13 +495,13 @@ public class Paddle extends Entity implements ICommon
 					soundPaddleCollision = true;
 					
 					//vibrate when a ball hits the paddle
-					super.getGame().vibrate(VIBRATE_BALL_COLLISION);
+					//activity.vibrate(VIBRATE_BALL_COLLISION);
 				}
 			}
 		}
 		
 		//update the lasers object
-		getLasers().update();
+		getLasers().update(activity);
 		
 		//track how long we have magnetism
 		if (hasMagnet())
@@ -547,11 +547,11 @@ public class Paddle extends Entity implements ICommon
 		
 		//play sound effects accordingly
 		if (soundPaddleCollision)
-			Audio.play(Assets.AudioGameKey.PaddleCollision);
+			activity.playSound(R.raw.paddlecollision);
 		if (soundPaddleCollisionMagnet)
-			Audio.play(Assets.AudioGameKey.PaddleCatch);
+			activity.playSound(R.raw.paddlecatch);
 		if (soundLaserFire)
-			Audio.play(Assets.AudioGameKey.LaserFire);
+			activity.playSound(R.raw.laser);
 	}
 	
 	@Override
@@ -563,14 +563,14 @@ public class Paddle extends Entity implements ICommon
 		//keep the paddle in bounds
 		if (nx < Wall.WIDTH)
 			nx = Wall.WIDTH;
-		if (nx > GamePanel.WIDTH - Wall.WIDTH - getWidth())
-			nx = GamePanel.WIDTH - Wall.WIDTH - getWidth();
+		if (nx > OpenGLSurfaceView.WIDTH - Wall.WIDTH - getWidth())
+			nx = OpenGLSurfaceView.WIDTH - Wall.WIDTH - getWidth();
 		
 		//update x-coordinate
 		super.setX(nx);
 		
 		//check if we need to update any frozen balls
-		for (Ball ball : getGame().getBalls().getBalls())
+		for (Ball ball : MANAGER.getBalls().getBalls())
 		{
 			//if the ball is frozen we will update the x-coordinate
 			if (ball.isFrozen())
@@ -581,6 +581,7 @@ public class Paddle extends Entity implements ICommon
 	@Override
 	public void render(final Canvas canvas) throws Exception
 	{
+		/*
 		//render the paddle
 		super.render(canvas);
 		
@@ -594,5 +595,6 @@ public class Paddle extends Entity implements ICommon
 			(float)(getY() + getHeight() + (int)(CURSOR_DIMENSION * .4)), 
 			null
 		);
+		*/
 	}
 }

@@ -1,6 +1,7 @@
 package com.gamesbykevin.breakout.laser;
 
 import com.gamesbykevin.androidframework.resources.Images;
+import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.wall.Wall;
@@ -26,7 +27,7 @@ public final class Laser extends Entity
 	
 	protected Laser(final double x, final double y) 
 	{
-		super(null, WIDTH, HEIGHT);
+		super(WIDTH, HEIGHT);
 		
 		super.setX(x);
 		super.setY(y);
@@ -35,8 +36,9 @@ public final class Laser extends Entity
 		super.setHidden(false);
 	}
 
+	/*
 	@Override
-	public void update() throws Exception 
+	public void update(GameActivity activity)
 	{
 		super.setY(super.getY() - Y_VELOCITY);
 		
@@ -44,10 +46,11 @@ public final class Laser extends Entity
 		if (super.getY() < Wall.HEIGHT)
 			setHidden(true);
 	}
+	*/
 	
 	@Override
 	public void render(final Canvas canvas) throws Exception
 	{
-		super.render(canvas, Images.getImage(Assets.ImageGameKey.LaserRed));
+		//super.render(canvas, Images.getImage(Assets.ImageGameKey.LaserRed));
 	}
 }
