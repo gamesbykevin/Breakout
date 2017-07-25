@@ -107,8 +107,11 @@ public class Powerups extends Entity implements ICommon
 		boolean soundNewlife = false;
 		
 		//check all power ups
-		for (Powerup powerup : getPowerups())
+		for (int i = 0; i < getPowerups().size(); i++)
 		{
+			//get the current power up
+			Powerup powerup = getPowerups().get(i);
+
 			//skip the power up if it is hidden
 			if (powerup.isHidden())
 				continue;

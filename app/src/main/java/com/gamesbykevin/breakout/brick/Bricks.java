@@ -28,7 +28,9 @@ public class Bricks extends Entity implements ICommon
 		
 		//the code that we can match to this key
 		private final String code;
-		
+
+		private int textureId = 0;
+
 		private Key(final int x, final int y, final String code)
 		{
 			//assign animation coordinates
@@ -38,7 +40,15 @@ public class Bricks extends Entity implements ICommon
 			//the code to compare
 			this.code = code;
 		}
-		
+
+		public void setTextureId(int textureId) {
+			this.textureId = textureId;
+		}
+
+		public int getTextureId() {
+			return this.textureId;
+		}
+
 		/**
 		 * Do we have a matching code?
 		 * @param code The code we want to check
@@ -275,16 +285,16 @@ public class Bricks extends Entity implements ICommon
 				//skip if it does not exist
 				if (brick == null)
 					continue;
-				
+
+				//get the bricks texture
+				super.setTextureId(brick.getTextureId());
+
 				//is the brick dead?
 				if (!brick.isDead())
 				{
 					//position brick
 					super.setX(brick.getX());
 					super.setY(brick.getY());
-
-					//get the bricks texture
-					super.setTextureId(brick.getTextureId());
 
 					//if the brick is solid apply transparency
 					if (brick.isSolid())

@@ -27,7 +27,7 @@ import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
  * Created by Kevin on 7/19/2017.
  */
 
-public class Manager implements ICommon {
+public class Manager {
 
     //the collection of bricks
     private Bricks bricks;
@@ -90,13 +90,11 @@ public class Manager implements ICommon {
         this.levels = new Levels(activity);
     }
 
-    @Override
     public void reset() {
         GameHelper.resetLevel(this);
     }
 
-    @Override
-    public void update(GameActivity activity) {
+    public void update() {
 
         switch (STEP) {
 
@@ -206,26 +204,22 @@ public class Manager implements ICommon {
                         //keep track of frames elapsed
                         frames++;
 
-                        if (frames >= GET_READY_FRAMES_LIMIT)
-                            ;
+                        if (frames >= GET_READY_FRAMES_LIMIT) {
+
+                            //if there are no more lives, just go to game over screen
+                            if (STAT_DESCRIPTION.getStatValue() <= 0) {
+                                activity.setScreen(Screen.GameOver);
+                            } else {
+                                activity.setScreen(Screen.Ready);
+                                STEP = Step.Updating;
+                            }
+                        }
                     }
-                }
-
-                //keep counting if enough time has not yet passed
-                if (frames < GAME_OVER_FRAMES_DELAY) {
-
-                    //keep track of frames elapsed
-                    frames++;
-
-                    //if we are now ready to display go ahead and do it
-                    if (frames >= GAME_OVER_FRAMES_DELAY)
-                        activity.setScreen(Screen.GameOver);
                 }
                 break;
         }
     }
 
-    @Override
     public void dispose() {
 
         if (levels != null)
@@ -337,10 +331,9 @@ public class Manager implements ICommon {
         return this.paddle;
     }
 
-    @Override
     public void render(GL10 openGL) {
 
         //render everything on screen
-        //GameHelper.render(openGL);
+        GameHelper.render(openGL);
     }
 }

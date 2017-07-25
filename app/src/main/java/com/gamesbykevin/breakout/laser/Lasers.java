@@ -10,6 +10,8 @@ import com.gamesbykevin.breakout.paddle.Paddle;
 
 import android.graphics.Canvas;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 
 public class Lasers extends Entity implements ICommon 
@@ -163,20 +165,21 @@ public class Lasers extends Entity implements ICommon
 	{
 		return this.lasers;
 	}
-	
-	@Override
-	public void render(final Canvas canvas) throws Exception
-	{
+
+	public void render(GL10 openGL) {
 		if (getLasers() != null)
 		{
-			for (Laser laser : getLasers())
+			for (int i = 0; i < getLasers().size(); i++)
 			{
+				//get the current laser
+				Laser laser = getLasers().get(i);
+
 				//only render what is not hidden
 				if (laser.isHidden())
 					continue;
-				
+
 				//render the laser
-				laser.render(canvas);
+				laser.render(openGL);
 			}
 		}
 	}

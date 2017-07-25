@@ -18,6 +18,11 @@ import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
 
     /**
+     * Frames per second
+     */
+    public static final int FPS = 90;
+
+    /**
      * The version of open GL we are using
      */
     public static final int OPEN_GL_VERSION = 1;
@@ -39,11 +44,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
     private long previousDraw;
     private long postUpdate;
     private long postDraw;
-
-    /**
-     * Frames per second
-     */
-    public static final int FPS = 90;
 
     /**
      * The duration of each frame (milliseconds)
@@ -200,7 +200,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         long remaining = FRAME_DURATION - duration;
 
         //log event id this loop is running slow
-        if (remaining <= 0) {
+        if (DEBUG && remaining <= 0) {
             UtilityHelper.logEvent("Slow: " + remaining);
             UtilityHelper.logEvent("Update duration: " + (this.postUpdate - this.previousUpdate));
             UtilityHelper.logEvent("Draw   duration: " + (this.postDraw - this.previousDraw));
@@ -256,10 +256,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
             final float x = event.getRawX() * getOpenGlRenderer().scaleMotionX;
             final float y = event.getRawY() * getOpenGlRenderer().scaleMotionY;
 
-            //display log events
-            //UtilityHelper.logEvent("raw:   (" + event.getRawX() + ", " + event.getRawY() + ")");
-            //UtilityHelper.logEvent("scale: (" + x + ", " + y + ")");
-
             //update game accordingly
             MANAGER.onTouchEvent(event.getAction(), x, y);
         }
@@ -281,7 +277,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         this.previousUpdate = System.currentTimeMillis();
 
         //update game logic here
-        //MANAGER.update();
+        MANAGER.update();
 
         //track time after update
         this.postUpdate = System.currentTimeMillis();

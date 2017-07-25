@@ -1,14 +1,16 @@
 package com.gamesbykevin.breakout.game;
 
-import com.gamesbykevin.breakout.R;
-import com.gamesbykevin.breakout.activity.GameActivity;
+import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.opengl.Textures;
 import com.gamesbykevin.breakout.util.StatDescription;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
-import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
+import static com.gamesbykevin.breakout.game.Manager.STEP;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
 /**
  * Game helper methods
@@ -33,6 +35,9 @@ public final class GameHelper
 
 	//did we win?
 	public static boolean WIN = false;
+
+
+	private static Entity ENTITY = new Entity(0, 0);
 
     /**
      * Start the current assigned level all over 
@@ -93,78 +98,6 @@ public final class GameHelper
      */
     public static final void render(final GL10 openGL)
     {
-		/*
-    	if (!NOTIFY)
-    	{
-			//render loading screen
-			canvas.drawBitmap(Images.getImage(Assets.ImageMenuKey.Splash), 0, 0, null);
-			
-			//flag that the user has been notified
-			NOTIFY = true;
-    	}
-    	else
-    	{
-
-    		//render the wall
-    		game.getWall().render(canvas);
-    		
-    		//render the bricks
-    		game.getBricks().render(canvas);
-    		
-    		//render the power ups
-    		game.getPowerups().render(canvas);
-    		
-    		//render the balls
-    		game.getBalls().render(canvas);
-    		
-    		//render the paddle
-    		game.getPaddle().render(canvas);
-    		
-			//render number of lives
-			game.getNumber().render(canvas);
-    		
-			//render image
-			if (WIN)
-			{
-    			//darken background
-    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
-				
-				//render image
-    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.LevelCompleteText), 70, 364, null);
-			}
-			else if (GAMEOVER)
-			{
-    			//darken background
-    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
-				
-				//render image
-    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GameOver), 120, 446, null);
-			}
-			else if (LOSE || !isReady())
-			{
-				if (MainThread.DEBUG)
-				{
-					if (MainThread.AI_ASSISTANCE)
-					{
-		    			//darken background
-		    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
-		    			
-						//render image
-		    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
-					}
-				}
-				else
-				{
-	    			//darken background
-	    			ScreenManager.darkenBackground(canvas, TRANSITION_ALPHA_TRANSPARENCY);
-	    			
-					//render image
-	    			canvas.drawBitmap(Images.getImage(Assets.ImageGameKey.GetReady), 120, 446, null);
-				}
-			}
-    	}
-    	*/
-
 		//render the bricks
 		MANAGER.getBricks().render(openGL);
 
@@ -179,5 +112,21 @@ public final class GameHelper
 
 		//render number of lives
 		STAT_DESCRIPTION.render(openGL);
+
+		//if game over step
+		if (STEP == Manager.Step.GameOver) {
+			if (WIN) {
+				//if we win display "Level Complete" text
+				ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_LEVEL_COMPLETED);
+			} else {
+				if (STAT_DESCRIPTION.getStatValue() <= 0) {
+					//if no more lives, the game is over
+					ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_GAMEOVER);
+				} else {
+					//if we lose display "Ready" text
+					ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_READY);
+				}
+			}
+		}
     }
 }

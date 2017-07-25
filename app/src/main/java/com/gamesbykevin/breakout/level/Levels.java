@@ -260,7 +260,7 @@ public class Levels implements Disposable
 					else if (character.equalsIgnoreCase(BRICK_UNBREAKABLE))
 					{
 						//assign animation
-						//bricks.getBricks()[row][col].setKey(Bricks.Key.Silver);
+						bricks.getBricks()[row][col].setTextureId(Bricks.Key.Silver.getTextureId());
 						
 						//flag not dead
 						bricks.getBricks()[row][col].reset();
@@ -274,7 +274,7 @@ public class Levels implements Disposable
 						noColor = true;
 						
 						//assign animation
-						//bricks.getBricks()[row][col].setKey(Bricks.Key.Purple);
+						bricks.getBricks()[row][col].setTextureId(Bricks.Key.Purple.getTextureId());
 						
 						//flag not dead
 						bricks.getBricks()[row][col].reset();
@@ -297,7 +297,7 @@ public class Levels implements Disposable
 								match = true;
 							
 								//assign animation
-								//bricks.getBricks()[row][col].setKey(key);
+								bricks.getBricks()[row][col].setTextureId(key.getTextureId());
 								
 								//flag not dead
 								bricks.getBricks()[row][col].reset();
@@ -409,8 +409,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							//brick.setKey(key);
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setTextureId(key.getTextureId());
 					}
 					
 					key = null;
@@ -432,8 +432,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							//brick.setKey(key);
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setTextureId(key.getTextureId());
 					}
 					
 					key = null;
@@ -456,8 +456,8 @@ public class Levels implements Disposable
 						Brick brick = bricks.getBricks()[row][col];
 						
 						//if the brick is not dead or hidden or solid, assign the key
-						//if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
-							//brick.setKey(key);
+						if (!brick.isDead() && !brick.isHidden() && !brick.isSolid())
+							brick.setTextureId(key.getTextureId());
 					}
 				}
 				break;

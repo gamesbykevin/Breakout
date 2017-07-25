@@ -2,6 +2,7 @@ package com.gamesbykevin.breakout.laser;
 
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.opengl.Textures;
 import com.gamesbykevin.breakout.wall.Wall;
 
 public final class Laser extends Entity
@@ -30,6 +31,9 @@ public final class Laser extends Entity
 		
 		//don't hide the laser by default
 		super.setHidden(false);
+
+		//assign the animation
+		super.setTextureId(Textures.TEXTURE_ID_LASER);
 	}
 
 	public void update()

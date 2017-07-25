@@ -7,6 +7,7 @@ import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.laser.Lasers;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
+import com.gamesbykevin.breakout.opengl.Textures;
 import com.gamesbykevin.breakout.wall.Wall;
 
 import android.graphics.Canvas;
@@ -178,6 +179,9 @@ public class Paddle extends Entity implements ICommon
 		
 		//reset paddle
 		reset();
+
+		//assign animation
+		super.setTextureId(Textures.TEXTURE_ID_PADDLE);
 	}
 	
 	/**

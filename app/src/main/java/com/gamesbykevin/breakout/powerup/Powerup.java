@@ -8,6 +8,11 @@ import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
 
 import android.graphics.Canvas;
 
+import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.Textures.IDS;
+
 public class Powerup extends Entity implements ICommon
 {
 	//different animations for the power ups
@@ -19,12 +24,22 @@ public class Powerup extends Entity implements ICommon
 
 		private final int y;
 
+		private int indexStart = 0;
+
 		Key(int y) {
 			this.y = y;
 		}
 
 		public int getY() {
 			return this.y;
+		}
+
+		public void setIndexStart(int indexStart) {
+			this.indexStart = indexStart;
+		}
+
+		public int getIndexStart() {
+			return this.indexStart;
 		}
 	}
 	
@@ -39,21 +54,6 @@ public class Powerup extends Entity implements ICommon
 	public static final int ANIMATION_HEIGHT = 22;
 
 	/**
-	 * The number of columns we need to map the animation
-	 */
-	private static final int ANIMATION_COLS = 8;
-	
-	/**
-	 * The number of rows we need to map the animation
-	 */
-	private static final int ANIMATION_ROWS = 1;
-	
-	/**
-	 * The animation delay
-	 */
-	private static final long ANIMATION_DELAY = 75L;
-	
-	/**
 	 * Default width of a power up
 	 */
 	public static final int WIDTH = 40;
@@ -67,6 +67,18 @@ public class Powerup extends Entity implements ICommon
 	 * The rate at which the power up falls
 	 */
 	public static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .25);
+
+	//keep track of the elapsed frames
+	private int frames = 0;
+
+	//how many frames until we switch to the next animation
+	private static final int ANIMATION_DELAY = (FPS / 8);
+
+	//the current position
+	private int index = 0;
+
+	//number of animation images
+	private static final int ANIMATION_COUNT = 8;
 
 	/**
 	 * Default constructor
@@ -89,9 +101,23 @@ public class Powerup extends Entity implements ICommon
 	@Override
 	public void update(GameActivity activity)
 	{
-		//update animation
-		super.getSpritesheet().update();
-		
+		//increase the frame delay
+		frames++;
+
+		//if enough time elapsed
+		if (frames >= ANIMATION_DELAY) {
+
+			//reset the count
+			frames = 0;
+
+			//go to the next animation
+			index++;
+
+			//restart animation when over
+			if (index >= ANIMATION_COUNT)
+				index = 0;
+		}
+
 		//drop the power up
 		super.setY(super.getY() + super.getDY());
 		
@@ -108,9 +134,12 @@ public class Powerup extends Entity implements ICommon
 	}
 	
 	@Override
-	public void render(final Canvas canvas) throws Exception
+	public void render(GL10 openGL)
 	{
+		//assign the animation
+		super.setTextureId(IDS[getKey().getIndexStart() + index]);
+
 		//render power up
-		super.render(canvas);
+		super.render(openGL);
 	}
 }

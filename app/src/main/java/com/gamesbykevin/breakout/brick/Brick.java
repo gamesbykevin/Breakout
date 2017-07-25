@@ -2,7 +2,6 @@ package com.gamesbykevin.breakout.brick;
 
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.common.ICommon;
 
 import javax.microedition.khronos.opengles.GL10;

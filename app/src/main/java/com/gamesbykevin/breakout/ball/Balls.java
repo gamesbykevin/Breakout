@@ -13,6 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.Textures.TOTAL_BALLS;
 
 public class Balls extends Entity implements ICommon
 {
@@ -238,7 +239,10 @@ public class Balls extends Entity implements ICommon
 		//choose random velocity
 		ball.setDX(GameActivity.getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
 		ball.setDY(-Ball.SPEED_MIN);
-		
+
+		//assign a random texture id
+		ball.setTextureId(GameActivity.getRandomObject().nextInt(TOTAL_BALLS));
+
 		//add to list
 		getBalls().add(ball);
 	}

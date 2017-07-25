@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 
 import com.gamesbykevin.androidframework.resources.Disposable;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Game interface methods
  * @author GOD
@@ -14,13 +16,6 @@ public interface IGame extends Disposable
      * Logic to update element
      */
     public void update() throws Exception;
-    
-    /**
-     * Logic to render the game
-     * @param canvas Canvas where we draw
-     * @throws Exception
-     */
-    public void render(final Canvas canvas) throws Exception;
     
     /**
      * Update the game based on a motion event

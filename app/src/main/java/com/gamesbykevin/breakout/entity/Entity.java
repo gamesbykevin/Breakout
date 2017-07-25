@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public abstract class Entity extends com.gamesbykevin.androidframework.base.Entity 
+public class Entity extends com.gamesbykevin.androidframework.base.Entity
 {
 	//is the power up hidden
 	private boolean hidden = false;

@@ -6,11 +6,9 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
 
 import com.gamesbykevin.breakout.R;
-import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Ball;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
-import com.gamesbykevin.breakout.laser.Laser;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerup;
 import com.gamesbykevin.breakout.util.StatDescription;
@@ -27,19 +25,37 @@ public class Textures {
     //array containing all the texture ids
     public static int[] IDS;
 
+    //store reference to access resources
     private final Context activity;
 
     //keep track of the current index
     private int index = 0;
 
     //how many things are we loading here
-    private static final int TOTAL_BALLS = 6;
-    private static final int TOTAL_BRICKS = Bricks.Key.values().length;
-    private static final int TOTAL_NUMBERS = 10;
-    private static final int TOTAL_PARTICLES = 7;
-    private static final int TOTAL_LASERS = 1;
-    private static final int TOTAL_PADDLES = 1;
-    private static final int TOTAL_POWERUPS = Powerup.Key.values().length * 8;
+    public static final int TOTAL_BALLS = 6;
+    public static final int TOTAL_BRICKS = (Bricks.Key.values().length);
+    public static final int TOTAL_NUMBERS = 10;
+    public static final int TOTAL_PARTICLES = 7;
+    public static final int TOTAL_LASERS = 1;
+    public static final int TOTAL_PADDLES = 1;
+    public static final int TOTAL_POWERUPS = (Powerup.Key.values().length * 8);
+
+    //how many images do we have that are words
+    private static final int TOTAL_WORDS = 4;
+
+    public static int TEXTURE_ID_WORD_GAMEOVER = 0;
+    public static int TEXTURE_ID_WORD_READY = 0;
+    public static int TEXTURE_ID_WORD_LEVEL_COMPLETED = 0;
+    public static int TEXTURE_ID_WORD_LIVES = 0;
+    public static int TEXTURE_ID_LASER = 0;
+    public static int TEXTURE_ID_PADDLE = 0;
+    public static int TEXTURE_ID_PARTICLE_1 = 0;
+    public static int TEXTURE_ID_PARTICLE_2 = 0;
+    public static int TEXTURE_ID_PARTICLE_3 = 0;
+    public static int TEXTURE_ID_PARTICLE_4 = 0;
+    public static int TEXTURE_ID_PARTICLE_5 = 0;
+    public static int TEXTURE_ID_PARTICLE_6 = 0;
+    public static int TEXTURE_ID_PARTICLE_7 = 0;
 
     public Textures(Context activity) {
 
@@ -48,7 +64,7 @@ public class Textures {
         //create array containing all the texture ids
         IDS = new int[
                 TOTAL_BALLS + TOTAL_BRICKS + TOTAL_NUMBERS +
-                TOTAL_PARTICLES + TOTAL_LASERS + TOTAL_PADDLES + TOTAL_POWERUPS];
+                TOTAL_PARTICLES + TOTAL_LASERS + TOTAL_PADDLES + TOTAL_POWERUPS + TOTAL_WORDS];
     }
 
     /**
@@ -80,17 +96,20 @@ public class Textures {
             Bitmap brick = Bitmap.createBitmap(sheet, key.getX(), key.getY(), Brick.WIDTH_ANIMATION, Brick.HEIGHT_ANIMATION);
 
             //load the texture
-            loadTexture(brick, openGL);
+            key.setTextureId(loadTexture(brick, openGL));
         }
 
         //load the laser texture
-        loadTexture(Bitmap.createBitmap(sheet, 0, 0, Laser.WIDTH, Laser.HEIGHT), openGL);
+        TEXTURE_ID_LASER = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.laser3), openGL);
 
         //load the paddle texture
-        loadTexture(Bitmap.createBitmap(sheet, 80, 64, Paddle.WIDTH, Paddle.HEIGHT), openGL);
+        TEXTURE_ID_PADDLE = loadTexture(Bitmap.createBitmap(sheet, 80, 64, Paddle.WIDTH, Paddle.HEIGHT), openGL);
 
         //load all of the power ups
         for (Powerup.Key key : Powerup.Key.values()) {
+
+            //set the index start in the TEXTURE[] for each animation
+            key.setIndexStart(this.index);
 
             //each power up has 8 animations
             for (int count = 0; count < 8; count++) {
@@ -107,13 +126,19 @@ public class Textures {
         }
 
         //load the texture for the particles
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle1), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle2), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle3), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle4), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle5), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle6), openGL);
-        loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle7), openGL);
+        TEXTURE_ID_PARTICLE_1 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle1), openGL);
+        TEXTURE_ID_PARTICLE_2 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle2), openGL);
+        TEXTURE_ID_PARTICLE_3 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle3), openGL);
+        TEXTURE_ID_PARTICLE_4 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle4), openGL);
+        TEXTURE_ID_PARTICLE_5 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle5), openGL);
+        TEXTURE_ID_PARTICLE_6 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle6), openGL);
+        TEXTURE_ID_PARTICLE_7 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle7), openGL);
+
+        //load the text words
+        TEXTURE_ID_WORD_GAMEOVER        = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.gameover), openGL);
+        TEXTURE_ID_WORD_LEVEL_COMPLETED = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.level), openGL);
+        TEXTURE_ID_WORD_LIVES           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.lives), openGL);
+        TEXTURE_ID_WORD_READY           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.ready), openGL);
 
         //load the textures for each number display
         for (int i = 0; i < 10; i++) {
