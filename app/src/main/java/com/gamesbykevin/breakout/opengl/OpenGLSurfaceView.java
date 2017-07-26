@@ -20,7 +20,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
     /**
      * Frames per second
      */
-    public static final int FPS = 90;
+    public static final int FPS = 60;
 
     /**
      * The version of open GL we are using
@@ -148,9 +148,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         //resume the open gl renderer
         getOpenGlRenderer().onResume();
 
-        //resume the game manager as well
-        //MANAGER.onResume();
-
         //flag running true
         this.running = true;
 
@@ -230,7 +227,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         frames++;
 
         //if 1 second has passed, print fps counter
-        if (DEBUG && System.currentTimeMillis() - timestamp >= MILLISECONDS_PER_SECOND) {
+        if (System.currentTimeMillis() - timestamp >= MILLISECONDS_PER_SECOND) {
 
             //print progress
             UtilityHelper.logEvent("FPS: " + frames);

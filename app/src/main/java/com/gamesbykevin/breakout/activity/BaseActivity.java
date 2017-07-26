@@ -199,6 +199,10 @@ public abstract class BaseActivity extends Activity {
     public void playSound(final int resId, boolean restart) {
 
         try {
+            //if there is no sound, we can't play it
+            if (SOUND != null || SOUND.isEmpty())
+                return;
+
             //we can't play if the sound is not enabled
             if (!getBooleanValue(R.string.sound_file_key))
                 return;
@@ -252,8 +256,10 @@ public abstract class BaseActivity extends Activity {
     }
 
     public void stopSound() {
-        for (Integer key : SOUND.keySet()) {
-            stopSound(key);
+        if (SOUND != null) {
+            for (Integer key : SOUND.keySet()) {
+                stopSound(key);
+            }
         }
     }
 
@@ -297,14 +303,6 @@ public abstract class BaseActivity extends Activity {
      */
     public void onClickInstagram(View view) {
         openUrl(URL_INSTAGRAM);
-    }
-
-    /**
-     * Open the help page
-     * @param view Current view
-     */
-    public void onClickHelp(View view) {
-        openUrl(URL_HELP);
     }
 
     public void onClickRate(View view) {

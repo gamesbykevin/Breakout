@@ -8,10 +8,12 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.game.GameHelper;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
 
 public class Powerups extends Entity implements ICommon
 {
@@ -81,7 +83,7 @@ public class Powerups extends Entity implements ICommon
 				//assign position at the brick
 				powerup.setX(brick.getX() + (brick.getWidth() / 2) - (powerup.getWidth() / 2));
 				powerup.setY(brick.getY());
-				
+
 				//no need to continue
 				return;
 			}
@@ -154,7 +156,7 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case ExtraLife:
-						GameHelper.STAT_DESCRIPTION.setDescription(GameHelper.STAT_DESCRIPTION.getStatValue() + 1);
+						getStatDescription().setDescription(getStatDescription().getStatValue() + 1);
 
 						//play sound effect
 						soundNewlife = true;
@@ -220,9 +222,19 @@ public class Powerups extends Entity implements ICommon
 	@Override
 	public void render(final GL10 openGL)
 	{
-		//render all power ups
-		for (int i = 0; i < getPowerups().size(); i++) {
-			getPowerups().get(i).render(openGL);
+		if (getPowerups() != null) {
+
+			//render all power ups
+			for (int i = 0; i < getPowerups().size(); i++) {
+				try {
+					if (i >= getPowerups().size())
+						continue;
+
+					getPowerups().get(i).render(openGL);
+				} catch (Exception e) {
+					UtilityHelper.handleException(e);
+				}
+			}
 		}
 	}
 }

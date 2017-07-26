@@ -14,14 +14,13 @@ import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
+import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
+
 public class Levels implements Disposable
 {
 	//the list of levels
 	private ArrayList<Level> levels;
 
-	//the current level
-	private int levelIndex = 0;
-	
 	//list of locations used for the bonus bricks
 	private ArrayList<Location> locations;
 	
@@ -149,29 +148,7 @@ public class Levels implements Disposable
 		if (level != null && !level.getKey().isEmpty())
 			getLevels().add(level);
 	}
-	
-	/**
-	 * Advance to the next level
-	 */
-	public void setLevelIndex()
-	{
-		setLevelIndex(getLevelIndex() + 1);
-	}
-	
-	/**
-	 * Set the level index<br>
-	 * If an invalid value is assigned the level index will be 0
-	 * @param levelIndex The desired level of play
-	 */
-	public void setLevelIndex(final int levelIndex)
-	{
-		this.levelIndex = levelIndex;
-		
-		//stay within range
-		if (getLevelIndex() >= getSize() || getLevelIndex() < 0)
-			setLevelIndex(0);
-	}
-	
+
 	/**
 	 * Get the size
 	 * @return The number of levels that can be played
@@ -185,16 +162,7 @@ public class Levels implements Disposable
 	{
 		return this.levels;
 	}
-	
-	/**
-	 * Get the level index
-	 * @return The desired level of play
-	 */
-	public int getLevelIndex()
-	{
-		return this.levelIndex;
-	}
-	
+
 	/**
 	 * Populate the bricks based on the current level setup
 	 * @param bricks
@@ -317,15 +285,15 @@ public class Levels implements Disposable
 				}
 				catch (Exception e)
 				{
+					//handle error
+					UtilityHelper.handleException(e);
+
 					//print helpful info
-					System.out.println("Level Index: " + getLevelIndex());
+					System.out.println("Level Index: " + STATISTICS.getIndex());
 					
 					//print current row where error occurred
 					System.out.println(level.getKey().get(row));
-					
-					//print stack trace error
-					e.printStackTrace();
-					
+
 					//end loop
 					row = level.getKey().size();
 					col = line.length();
@@ -527,7 +495,7 @@ public class Levels implements Disposable
 	 */
 	private Level get()
 	{
-		return getLevels().get(getLevelIndex());
+		return getLevels().get(STATISTICS.getIndex());
 	}
 	
 	private class Level implements Disposable

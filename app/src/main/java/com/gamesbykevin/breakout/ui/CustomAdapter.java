@@ -12,14 +12,11 @@ import android.widget.TextView;
 
 import com.gamesbykevin.breakout.R;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Kevin on 7/2/2017.
  */
-
 public class CustomAdapter extends ArrayAdapter {
 
     //object reference
@@ -29,18 +26,12 @@ public class CustomAdapter extends ArrayAdapter {
     private int resourceId;
 
     //list of levels we have beaten
-    private List<Boolean> data;
+    private ArrayList<Boolean> data;
 
     //images for completed and not-completed levels
     private Drawable imageGreen, imageRed;
 
-    /**
-     *
-     * @param context
-     * @param layoutResourceId
-     * @param data
-     */
-    public CustomAdapter(Context context, int layoutResourceId, List<Boolean> data) {
+    public CustomAdapter(Context context, int layoutResourceId, ArrayList<Boolean> data) {
 
         super(context, layoutResourceId, data);
 
@@ -49,13 +40,6 @@ public class CustomAdapter extends ArrayAdapter {
         this.data = data;
     }
 
-    /**
-     *
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
-     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
@@ -89,7 +73,7 @@ public class CustomAdapter extends ArrayAdapter {
             holder.txtItem.setText("");
         } else {
             holder.imgItem.setImageDrawable(imageRed);
-            holder.txtItem.setText((position + 1));
+            holder.txtItem.setText("" + (position + 1));
         }
 
         //return the created item

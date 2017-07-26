@@ -14,7 +14,12 @@ import com.gamesbykevin.breakout.powerup.Powerup;
 import com.gamesbykevin.breakout.util.StatDescription;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 
 /**
  * Created by Kevin on 7/23/2017.
@@ -39,14 +44,16 @@ public class Textures {
     public static final int TOTAL_LASERS = 1;
     public static final int TOTAL_PADDLES = 1;
     public static final int TOTAL_POWERUPS = (Powerup.Key.values().length * 8);
+    public static final int TOTAL_BACKGROUNDS = 2;
 
     //how many images do we have that are words
-    private static final int TOTAL_WORDS = 4;
+    private static final int TOTAL_WORDS = 5;
 
     public static int TEXTURE_ID_WORD_GAMEOVER = 0;
     public static int TEXTURE_ID_WORD_READY = 0;
     public static int TEXTURE_ID_WORD_LEVEL_COMPLETED = 0;
     public static int TEXTURE_ID_WORD_LIVES = 0;
+    public static int TEXTURE_ID_WORD_LEVEL = 0;
     public static int TEXTURE_ID_LASER = 0;
     public static int TEXTURE_ID_PADDLE = 0;
     public static int TEXTURE_ID_PARTICLE_1 = 0;
@@ -56,6 +63,11 @@ public class Textures {
     public static int TEXTURE_ID_PARTICLE_5 = 0;
     public static int TEXTURE_ID_PARTICLE_6 = 0;
     public static int TEXTURE_ID_PARTICLE_7 = 0;
+    public static int TEXTURE_ID_BACKGROUND = 0;
+    public static int TEXTURE_ID_BORDER = 0;
+
+    //list of particles to choose from
+    private static List<Integer> PARTICLES;
 
     public Textures(Context activity) {
 
@@ -63,8 +75,24 @@ public class Textures {
 
         //create array containing all the texture ids
         IDS = new int[
-                TOTAL_BALLS + TOTAL_BRICKS + TOTAL_NUMBERS +
+                TOTAL_BALLS + TOTAL_BRICKS + TOTAL_NUMBERS + TOTAL_BACKGROUNDS +
                 TOTAL_PARTICLES + TOTAL_LASERS + TOTAL_PADDLES + TOTAL_POWERUPS + TOTAL_WORDS];
+    }
+
+    public static int getTextureIdParticle() {
+
+        if (PARTICLES == null) {
+            PARTICLES = new ArrayList<>();
+            PARTICLES.add(TEXTURE_ID_PARTICLE_1);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_2);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_3);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_4);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_5);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_6);
+            PARTICLES.add(TEXTURE_ID_PARTICLE_7);
+        }
+
+        return PARTICLES.get(getRandomObject().nextInt(PARTICLES.size()));
     }
 
     /**
@@ -134,26 +162,32 @@ public class Textures {
         TEXTURE_ID_PARTICLE_6 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle6), openGL);
         TEXTURE_ID_PARTICLE_7 = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.particle7), openGL);
 
+        //background images
+        TEXTURE_ID_BACKGROUND = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.background), openGL);;
+        TEXTURE_ID_BORDER = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.border), openGL);;
+
         //load the text words
         TEXTURE_ID_WORD_GAMEOVER        = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.gameover), openGL);
         TEXTURE_ID_WORD_LEVEL_COMPLETED = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.level), openGL);
         TEXTURE_ID_WORD_LIVES           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.lives), openGL);
         TEXTURE_ID_WORD_READY           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.ready), openGL);
+        TEXTURE_ID_WORD_LEVEL           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.level_text), openGL);
+
+        Bitmap numbers = BitmapFactory.decodeResource(activity.getResources(), R.drawable.numbers);
 
         //load the textures for each number display
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < TOTAL_NUMBERS; i++) {
 
             //calculate current x-coordinate
             int x = (i * StatDescription.ANIMATION_WIDTH);
 
             //get the current animation
-            Bitmap powerup = Bitmap.createBitmap(sheet, x, 0, StatDescription.ANIMATION_WIDTH, StatDescription.ANIMATION_HEIGHT);
+            Bitmap powerup = Bitmap.createBitmap(numbers, x, 0, StatDescription.ANIMATION_WIDTH, StatDescription.ANIMATION_HEIGHT);
 
             //load the texture
             loadTexture(powerup, openGL);
         }
     }
-
 
     /**
      * Load a single texture

@@ -7,6 +7,7 @@ import com.gamesbykevin.breakout.common.ICommon;
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.Textures.getTextureIdParticle;
 
 public final class Brick extends Entity implements ICommon
 {
@@ -90,7 +91,10 @@ public final class Brick extends Entity implements ICommon
 	
 	//the number of collisions required before the brick is dead
 	private int collisions;
-	
+
+	//the particle id when the  brick is dead
+	private int particleTextureId = 0;
+
 	/**
 	 * Default Constructor
 	 */
@@ -123,6 +127,16 @@ public final class Brick extends Entity implements ICommon
 		//reset frame count
 		this.frames = 0;
 	}
+
+	public float getTransparency() {
+
+		//if the brick is solid we have to calculate transparency
+		if (isSolid()) {
+			return ((float)collisions / (float)COLLISIONS_LIMIT_SOLID);
+		} else {
+			return 1.0f;
+		}
+	}
 	
 	/**
 	 * Remove the particles for this brick
@@ -140,6 +154,10 @@ public final class Brick extends Entity implements ICommon
 	public void setDead(final boolean dead)
 	{
 		this.dead = dead;
+
+		//if dead pick a particle id
+		if (isDead())
+			this.particleTextureId = getTextureIdParticle();
 	}
 	
 	/**
@@ -249,6 +267,9 @@ public final class Brick extends Entity implements ICommon
 		//if dead render particles
 		if (isDead())
 		{
+			//assign the particle texture id
+			super.setTextureId(particleTextureId);
+
 			//only render the particles for a limited number of frames
 			if (frames <= FRAMES_PARTICLE_LIMIT)
 			{

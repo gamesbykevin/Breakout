@@ -18,7 +18,7 @@ public class UtilityHelper {
             return;
 
         //log as error
-        Log.e("2048", exception.getMessage(), exception);
+        Log.e("Breakout", exception.getMessage(), exception);
 
         //handle process
         exception.printStackTrace();
@@ -45,14 +45,12 @@ public class UtilityHelper {
                 int start = i * maxLogSize;
                 int end = (i+1) * maxLogSize;
                 end = end > message.length() ? message.length() : end;
-                System.out.println(message.substring(start, end));
-                //Log.i("2048", message.substring(start, end));
+                Log.i("Breakout", message.substring(start, end));
             }
 
         } else {
             //log string as information
-            //Log.i("2048", message);
-            System.out.println(message);
+            Log.i("Breakout", message);
         }
     }
 

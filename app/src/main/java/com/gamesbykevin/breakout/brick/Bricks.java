@@ -3,6 +3,7 @@ package com.gamesbykevin.breakout.brick;
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -275,46 +276,59 @@ public class Bricks extends Entity implements ICommon
 	@Override
 	public void render(final GL10 openGL)
 	{
+		//can't render the bricks if they are not there
+		if (getBricks() == null)
+			return;
+
 		for (int row = 0; row < getBricks().length; row++)
 		{
 			for (int col = 0; col < getBricks()[0].length; col++)
 			{
-				//get the current brick
-				final Brick brick = getBricks()[row][col]; 
-				
-				//skip if it does not exist
-				if (brick == null)
-					continue;
+				try {
+					//just make sure we are still in bounds
+					if (row >= getBricks().length)
+						continue;
+					if (col >= getBricks()[0].length)
+						continue;
 
-				//get the bricks texture
-				super.setTextureId(brick.getTextureId());
+					//get the current brick
+					final Brick brick = getBricks()[row][col];
 
-				//is the brick dead?
-				if (!brick.isDead())
-				{
-					//position brick
-					super.setX(brick.getX());
-					super.setY(brick.getY());
+					//skip if it does not exist
+					if (brick == null)
+						continue;
 
-					//if the brick is solid apply transparency
-					if (brick.isSolid())
-					{
-						//assign the correct transparency
-						//make brick transparent
+					//get the bricks texture
+					super.setTextureId(brick.getTextureId());
 
-						//render the brick
-						super.render(openGL);
+					//is the brick dead?
+					if (!brick.isDead()) {
+						//position brick
+						super.setX(brick.getX());
+						super.setY(brick.getY());
+
+						//if the brick is solid apply transparency
+						if (brick.isSolid()) {
+
+							//assign the correct transparency
+							openGL.glColor4f(1.0f, 1.0f, 1.0f, brick.getTransparency());
+
+							//render the brick
+							super.render(openGL);
+
+							//now stop transparency so everything else rendered after doesn't suffer
+							openGL.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+						} else {
+							//render brick
+							super.render(openGL);
+						}
+					} else {
+						//render brick particles (if exist)
+						brick.render(openGL);
 					}
-					else
-					{
-						//render brick
-						super.render(openGL);
-					}
-				}
-				else
-				{
-					//render brick particles (if exist)
-					brick.render(openGL);
+				} catch (Exception e) {
+					UtilityHelper.handleException(e);
 				}
 			}
 		}

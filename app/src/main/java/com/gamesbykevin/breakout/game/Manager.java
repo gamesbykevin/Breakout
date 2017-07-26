@@ -6,7 +6,6 @@ import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.ball.Balls;
 import com.gamesbykevin.breakout.brick.Bricks;
-import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.activity.GameActivity.Screen;
 import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.paddle.Paddle;
@@ -19,14 +18,14 @@ import javax.microedition.khronos.opengles.GL10;
 import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
 import static com.gamesbykevin.breakout.game.GameHelper.GAME_OVER_FRAMES_DELAY;
 import static com.gamesbykevin.breakout.game.GameHelper.GET_READY_FRAMES_LIMIT;
-import static com.gamesbykevin.breakout.game.GameHelper.STAT_DESCRIPTION;
 import static com.gamesbykevin.breakout.game.GameHelper.WIN;
+import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
+import static com.gamesbykevin.breakout.game.GameHelper.restartLevel;
 import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 
 /**
  * Created by Kevin on 7/19/2017.
  */
-
 public class Manager {
 
     //the collection of bricks
@@ -74,24 +73,12 @@ public class Manager {
         //store activity reference
         this.activity = activity;
 
-        //create new bricks container
-        this.bricks = new Bricks();
-
-        //create new paddle
-        this.paddle = new Paddle();
-
-        //create the balls
-        this.balls = new Balls();
-
-        //create the power ups
-        this.powerups = new Powerups();
-
-        //create and load the levels
-        this.levels = new Levels(activity);
+        //default to loading
+        STEP = Step.Loading;
     }
 
     public void reset() {
-        GameHelper.resetLevel(this);
+        GameHelper.resetLevel();
     }
 
     public void update() {
@@ -103,6 +90,26 @@ public class Manager {
 
                 //if the textures have finished loading
                 if (LOADED) {
+
+                    //create new bricks container
+                    if (this.bricks == null)
+                        this.bricks = new Bricks();
+
+                    //create new paddle
+                    if (this.paddle == null)
+                        this.paddle = new Paddle();
+
+                    //create the balls
+                    if (this.balls == null)
+                        this.balls = new Balls();
+
+                    //create the power ups
+                    if (this.powerups == null)
+                        this.powerups = new Powerups();
+
+                    //create and load the levels
+                    if (this.levels == null)
+                        this.levels = new Levels(activity);
 
                     //if loaded display level select screen
                     activity.setScreen(Screen.LevelSelect);
@@ -164,13 +171,15 @@ public class Manager {
                         //display message
                         UtilityHelper.logEvent("GAME OVER LOSE!!!");
 
-                        //deduct 1 life from our total
-                        STAT_DESCRIPTION.setDescription(STAT_DESCRIPTION.getStatValue() - 1);
+                        //take away one of our lives
+                        long lives = (getStatDescription().getStatValue() - 1);
 
-                        if (STAT_DESCRIPTION.getStatValue() <= 0) {
-                            //play sound
+                        //update the image displayed
+                        getStatDescription().setDescription(lives);
+
+                        //no more lives
+                        if (getStatDescription().getStatValue() <= 0)
                             activity.playSound(R.raw.gameover);
-                        }
                     }
 
                     //move to game over step
@@ -199,18 +208,35 @@ public class Manager {
                             activity.setScreen(Screen.GameOver);
                     }
                 } else {
-                    if (frames < GET_READY_FRAMES_LIMIT) {
 
-                        //keep track of frames elapsed
-                        frames++;
+                    //if there are no more lives, the game is over
+                    if (getStatDescription().getStatValue() <= 0) {
+                        //keep counting if enough time has not yet passed
+                        if (frames < GAME_OVER_FRAMES_DELAY) {
 
-                        if (frames >= GET_READY_FRAMES_LIMIT) {
+                            //keep track of frames elapsed
+                            frames++;
 
-                            //if there are no more lives, just go to game over screen
-                            if (STAT_DESCRIPTION.getStatValue() <= 0) {
+                            //if we are now ready to display go ahead and do it
+                            if (frames >= GAME_OVER_FRAMES_DELAY)
                                 activity.setScreen(Screen.GameOver);
-                            } else {
+                        }
+                    } else {
+                        //keep counting if enough time has not yet passed
+                        if (frames < GET_READY_FRAMES_LIMIT) {
+
+                            //keep track of frames elapsed
+                            frames++;
+
+                            if (frames >= GET_READY_FRAMES_LIMIT) {
+
+                                //keep displaying the game
                                 activity.setScreen(Screen.Ready);
+
+                                //add a ball back to the game
+                                restartLevel();
+
+                                //go back to updating
                                 STEP = Step.Updating;
                             }
                         }
@@ -332,6 +358,10 @@ public class Manager {
     }
 
     public void render(GL10 openGL) {
+
+        //don't display if we are still loading
+        if (STEP == Step.Loading)
+            return;
 
         //render everything on screen
         GameHelper.render(openGL);

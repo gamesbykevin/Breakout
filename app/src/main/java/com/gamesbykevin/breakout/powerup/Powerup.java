@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.Textures.IDS;
 
@@ -71,14 +72,17 @@ public class Powerup extends Entity implements ICommon
 	//keep track of the elapsed frames
 	private int frames = 0;
 
-	//how many frames until we switch to the next animation
-	private static final int ANIMATION_DELAY = (FPS / 8);
-
 	//the current position
 	private int index = 0;
 
 	//number of animation images
 	private static final int ANIMATION_COUNT = 8;
+
+	//how many frames until we switch to the next animation
+	private static final int ANIMATION_DELAY = (FPS / (ANIMATION_COUNT * 3));
+
+	//the type of power up
+	private Key key;
 
 	/**
 	 * Default constructor
@@ -94,8 +98,15 @@ public class Powerup extends Entity implements ICommon
 		reset();
 	}
 
+	/**
+	 * Assign a random key
+	 */
+	public void setKey() {
+		this.key = Key.values()[getRandomObject().nextInt(Key.values().length)];
+	}
+
 	public Key getKey() {
-		return Key.Expand;
+		return this.key;
 	}
 	
 	@Override
@@ -131,6 +142,9 @@ public class Powerup extends Entity implements ICommon
 	{
 		//don't hide the power up
 		setHidden(false);
+
+		//pick a random power up
+		setKey();
 	}
 	
 	@Override

@@ -1,11 +1,16 @@
 package com.gamesbykevin.breakout.util;
 
 import com.gamesbykevin.breakout.entity.Entity;
+import com.gamesbykevin.breakout.game.GameHelper;
 import com.gamesbykevin.breakout.opengl.Textures;
+import com.gamesbykevin.breakout.wall.Wall;
 
 import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.gamesbykevin.breakout.game.GameHelper.STAT_X;
+import static com.gamesbykevin.breakout.game.GameHelper.STAT_Y;
 
 /**
  * Created by Kevin on 7/15/2017.
@@ -16,20 +21,16 @@ public class StatDescription extends Entity {
     public static final int ANIMATION_WIDTH = 65;
     public static final int ANIMATION_HEIGHT = 100;
 
-    private final static int STAT_WIDTH = 32;
-    private final static int STAT_HEIGHT = 50;
+    public final static int STAT_WIDTH = 32;
+    public final static int STAT_HEIGHT = 50;
 
     //our array object for each digit in our score
     private ArrayList<Character> characters;
 
+    public static final int DEFAULT_LIVES = 5;
+
     //track the value
-    private long statValue = -1;
-
-    //just make sure the x-coordinate stays put
-    private double anchorX = 0;
-
-    //object to format the text displayed
-    private static StringBuilder BUILDER = new StringBuilder();
+    private long statValue = DEFAULT_LIVES;
 
     /**
      * Default constructor
@@ -47,6 +48,9 @@ public class StatDescription extends Entity {
 
         //set the dimensions
         setDefaultDimensions();
+
+        //set default value
+        setDescription(DEFAULT_LIVES);
     }
 
     public void setDefaultDimensions() {
@@ -56,28 +60,20 @@ public class StatDescription extends Entity {
         super.setHeight(STAT_HEIGHT);
     }
 
-    public void setAnchorX(final double anchorX) {
-        this.anchorX = anchorX;
-    }
-
     public long getStatValue() {
         return this.statValue;
     }
 
     public void setDescription(long newStatValue) {
-        setDescription(newStatValue, false);
+
+        //assign our value
+        this.statValue = newStatValue;
+
+        //assign animations
+        setDescription(String.valueOf(this.statValue));
     }
 
-    public void setDescription(long newStatValue, boolean reset) {
-
-        //reset stat value
-        if (reset)
-            this.statValue = -1;
-
-        setDescription(String.valueOf(newStatValue));
-    }
-
-    public void setDescription(String desc)
+    private void setDescription(String desc)
     {
         //disable any unnecessary digits
         for (int i = desc.length(); i < characters.size(); i++)
@@ -154,25 +150,37 @@ public class StatDescription extends Entity {
     @Override
     public void render(GL10 gl)
     {
+        //store coordinate
+        final double x = getX();
+
         //check every digit in the list
         for (int i = 0; i < characters.size(); i++)
         {
-            //get the current digit object
-            final Character character = characters.get(i);
+            try {
 
-            //if this is not enabled no need to continue
-            if (!character.enabled)
-                return;
+                //get the current digit object
+                final Character character = characters.get(i);
 
-            //assign x-coordinate location
-            setX(anchorX + (i * super.getWidth()));
+                //if this is not enabled no need to continue
+                if (!character.enabled)
+                    return;
 
-            //assign texture
-            super.setTextureId(character.textureId);
+                //assign x-coordinate location
+                setX(getX() + (int)(i * getWidth()));
 
-            //render animation
-            super.render(gl);
+                //assign texture
+                super.setTextureId(character.textureId);
+
+                //render animation
+                super.render(gl);
+
+            } catch (Exception e) {
+                UtilityHelper.handleException(e);
+            }
         }
+
+        //restore coordinate
+        setX(x);
     }
 
     /**

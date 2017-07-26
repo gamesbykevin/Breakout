@@ -7,6 +7,7 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.paddle.Paddle;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import android.graphics.Canvas;
 
@@ -171,15 +172,23 @@ public class Lasers extends Entity implements ICommon
 		{
 			for (int i = 0; i < getLasers().size(); i++)
 			{
-				//get the current laser
-				Laser laser = getLasers().get(i);
+				try {
+					if (i >= getLasers().size())
+						continue;
 
-				//only render what is not hidden
-				if (laser.isHidden())
-					continue;
+					//get the current laser
+					Laser laser = getLasers().get(i);
 
-				//render the laser
-				laser.render(openGL);
+					//only render what is not hidden
+					if (laser.isHidden())
+						continue;
+
+					//render the laser
+					laser.render(openGL);
+
+				} catch (Exception e) {
+					UtilityHelper.handleException(e);
+				}
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import android.widget.TableLayout;
 
 import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.game.Manager;
+import com.gamesbykevin.breakout.game.Manager.Step;
 import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.level.Statistics;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
@@ -23,6 +24,9 @@ import java.util.Random;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.gamesbykevin.breakout.game.GameHelper.WIN;
+import static com.gamesbykevin.breakout.game.Manager.STEP;
+
 
 public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -109,10 +113,13 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         levelSelectGrid.setOnItemClickListener(this);
 
         //create the custom adapter using the level selection layout and data to populate it
-        this.customAdapter = new CustomAdapter(getApplicationContext(), R.layout.level_selection, STATISTICS.getResults());
+        this.customAdapter = new CustomAdapter(this, R.layout.level_selection, STATISTICS.getList());
 
         //set our adapter to the grid view
         levelSelectGrid.setAdapter(this.customAdapter);
+
+        //scroll to position
+        levelSelectGrid.smoothScrollToPosition(STATISTICS.getIndex());
     }
 
     @Override
@@ -123,6 +130,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
         //show loading screen while we reset
         setScreen(Screen.Loading);
+
+        //reset the game board
+        STEP = Step.Reset;
     }
 
     /**
@@ -140,9 +150,6 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
             //create our Random object
             RANDOM = new Random(time);
-
-            //print the random seed
-            //UtilityHelper.logEvent("Random seed: " + time);
         }
 
         return RANDOM;
@@ -301,6 +308,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
             //go to level select screen
             setScreen(Screen.LevelSelect);
 
+            //go back to start step
+            STEP = Step.Start;
+
             //no need to continue here
             return;
         }
@@ -311,11 +321,15 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
     public void onClickNext(View view) {
 
-        //move to the next index
-        STATISTICS.setIndex(STATISTICS.getIndex() + 1);
+        //we only move to the next level if we beat the previous
+        if (WIN)
+            STATISTICS.setIndex(STATISTICS.getIndex() + 1);
 
-        //go back to the ready step
-        setScreen(Screen.Ready);
+        //show loading screen while we reset
+        setScreen(Screen.Loading);
+
+        //reset the game board
+        STEP = Step.Reset;
     }
 
     public void onClickRestart(View view) {

@@ -6,12 +6,6 @@
     android:id="@+id/layoutGame"
     tools:context="com.gamesbykevin.breakout.activity.GameActivity">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/border"
-        />
-
     <!-- OpenGL Surface View container -->
     <com.gamesbykevin.breakout.opengl.OpenGLSurfaceView
         android:id="@+id/openglView"

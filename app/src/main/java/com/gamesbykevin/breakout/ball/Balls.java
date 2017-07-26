@@ -8,11 +8,14 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.paddle.Paddle;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.Textures.IDS;
 import static com.gamesbykevin.breakout.opengl.Textures.TOTAL_BALLS;
 
 public class Balls extends Entity implements ICommon
@@ -202,7 +205,7 @@ public class Balls extends Entity implements ICommon
 			return;
 		
 		//pick random x-offset
-		final double xOffset = -Ball.WIDTH + GameActivity.getRandomObject().nextInt(Ball.WIDTH * 2);
+		final double xOffset = -Ball.WIDTH + getRandomObject().nextInt(Ball.WIDTH * 2);
 		
 		//first see if we can reuse an existing ball
 		for (Ball ball : getBalls())
@@ -219,7 +222,7 @@ public class Balls extends Entity implements ICommon
 			ball.setY(y);
 			
 			//choose random velocity
-			ball.setDX(GameActivity.getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+			ball.setDX(getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
 			ball.setDY(-Ball.SPEED_MIN);
 			
 			//make sure ball is no longer hidden
@@ -237,11 +240,11 @@ public class Balls extends Entity implements ICommon
 		ball.setY(y);
 		
 		//choose random velocity
-		ball.setDX(GameActivity.getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
+		ball.setDX(getRandomObject().nextBoolean() ? Ball.SPEED_MIN : -Ball.SPEED_MIN);
 		ball.setDY(-Ball.SPEED_MIN);
 
 		//assign a random texture id
-		ball.setTextureId(GameActivity.getRandomObject().nextInt(TOTAL_BALLS));
+		ball.setTextureId(IDS[getRandomObject().nextInt(TOTAL_BALLS)]);
 
 		//add to list
 		getBalls().add(ball);
@@ -432,24 +435,32 @@ public class Balls extends Entity implements ICommon
 			//render all balls
 			for (int i = 0; i < getBalls().size(); i++)
 			{
-				//get the current ball
-				final Ball ball = getBalls().get(i);
+				try {
+					if (i >= getBalls().size())
+						continue;
 
-				//if hidden don't render
-				if (ball.isHidden())
-					continue;
-				
-				//assign values
-				super.setX(ball);
-				super.setY(ball);
-				super.setWidth(ball);
-				super.setHeight(ball);
+					//get the current ball
+					final Ball ball = getBalls().get(i);
 
-				//assign the correct texture
-				super.setTextureId(ball.getTextureId());
+					//if hidden don't render
+					if (ball.isHidden())
+						continue;
 
-				//render the current ball
-				super.render(openGL);
+					//assign values
+					super.setX(ball);
+					super.setY(ball);
+					super.setWidth(ball);
+					super.setHeight(ball);
+
+					//assign the correct texture
+					super.setTextureId(ball.getTextureId());
+
+					//render the current ball
+					super.render(openGL);
+
+				} catch (Exception e) {
+					UtilityHelper.handleException(e);
+				}
 			}
 		}
 	}
