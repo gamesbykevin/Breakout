@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
 import static com.gamesbykevin.breakout.activity.MainActivity.DEBUG;
 import static com.gamesbykevin.breakout.opengl.OpenGLRenderer.LOADED;
 
@@ -254,7 +254,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
             final float y = event.getRawY() * getOpenGlRenderer().scaleMotionY;
 
             //update game accordingly
-            MANAGER.onTouchEvent(event.getAction(), x, y);
+            Game.onTouchEvent(event.getAction(), x, y);
         }
         catch (Exception e)
         {
@@ -274,7 +274,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements Runnable {
         this.previousUpdate = System.currentTimeMillis();
 
         //update game logic here
-        MANAGER.update();
+        Game.update();
 
         //track time after update
         this.postUpdate = System.currentTimeMillis();

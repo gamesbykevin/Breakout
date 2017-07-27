@@ -139,12 +139,15 @@ public class Levels implements Disposable
 				if (level == null)
 					level = new Level();
 				
-				//add line to level
-				if (line.length() > 0)
+				//add line to level as long as it isn't big enough
+				if (line.length() > 0 && line.length() < Bricks.COLS_XSMALL)
 					level.getKey().add(line);
 			}
 		}
-		
+
+		//close the reader
+		reader.close();
+
 		if (level != null && !level.getKey().isEmpty())
 			getLevels().add(level);
 	}
@@ -254,10 +257,14 @@ public class Levels implements Disposable
 					{
 						//check if we have a match
 						boolean match = false;
-						
+
+						int size = Key.values().length;
+
 						//check each color key to see if the character matches
-						for (Key key : Key.values())
+						for (int i = 0; i < size; i++)
 						{
+							Key key = Key.values()[i];
+
 							//if we have a match
 							if (key.hasCode(character))
 							{
@@ -316,9 +323,13 @@ public class Levels implements Disposable
 	private void populateKeys()
 	{
 		keys.clear();
-		
-		for (Bricks.Key key : Bricks.Key.values())
+
+		int size = Key.values().length;
+
+		for (int i = 0; i < size; i++)
 		{
+			Key key = Key.values()[i];
+
 			if (key == Bricks.Key.Silver)
 				continue;
 			
@@ -364,6 +375,7 @@ public class Levels implements Disposable
 		{
 			//each row is a different color
 			case 0:
+
 				//check every row in the level
 				for (int row = 0; row < bricks.getBricks().length; row++)
 				{
@@ -387,6 +399,7 @@ public class Levels implements Disposable
 				
 			//each column is a different color
 			case 1:
+
 				//check every column in the row
 				for (int col = 0; col < bricks.getBricks()[0].length; col++)
 				{

@@ -166,7 +166,7 @@ public class StatDescription extends Entity {
                     return;
 
                 //assign x-coordinate location
-                setX(getX() + (int)(i * getWidth()));
+                setX(x + (int)(i * getWidth()));
 
                 //assign texture
                 super.setTextureId(character.textureId);

@@ -11,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
 import com.gamesbykevin.breakout.R;
-import com.gamesbykevin.breakout.game.Manager;
-import com.gamesbykevin.breakout.game.Manager.Step;
+import com.gamesbykevin.breakout.game.Game;
+import com.gamesbykevin.breakout.game.Game.Step;
 import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.level.Statistics;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
@@ -25,7 +25,7 @@ import java.util.Random;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.gamesbykevin.breakout.game.GameHelper.WIN;
-import static com.gamesbykevin.breakout.game.Manager.STEP;
+import static com.gamesbykevin.breakout.game.Game.STEP;
 
 
 public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -39,7 +39,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
     private static Random RANDOM;
 
     //Our game manager class
-    public static Manager MANAGER;
+    public static Game Game;
 
     //keep track of our level progress
     public static Statistics STATISTICS;
@@ -79,13 +79,14 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
 
         //all the levels in the game
-        LEVELS = new Levels(this);
+        if (LEVELS == null)
+            LEVELS = new Levels(this);
 
         //track our level progress
         STATISTICS = new Statistics(this, LEVELS.getSize());
 
         //create our game manager
-        MANAGER = new Manager(this);
+        Game = new Game(this);
 
         //set the content view
         setContentView(R.layout.activity_game);

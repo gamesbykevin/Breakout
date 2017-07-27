@@ -49,7 +49,7 @@ public abstract class BaseActivity extends Activity {
     /**
      * The default duration of the vibration
      */
-    public static final long VIBRATE_DURATION = 500L;
+    public static final long VIBRATE_DURATION = 150L;
 
     //gson object to retrieve and convert json string to object
     public static Gson GSON;

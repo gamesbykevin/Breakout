@@ -1,5 +1,6 @@
 package com.gamesbykevin.breakout.game;
 
+import com.gamesbykevin.breakout.game.Game.Step;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.opengl.Textures;
 import com.gamesbykevin.breakout.util.StatDescription;
@@ -7,8 +8,8 @@ import com.gamesbykevin.breakout.wall.Wall;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
-import static com.gamesbykevin.breakout.game.Manager.STEP;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
+import static com.gamesbykevin.breakout.game.Game.STEP;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
@@ -45,35 +46,38 @@ public final class GameHelper
 	public static final int LIVES_W = 113;
 	public static final int LIVES_H = 50;
 
-	public static final int LEVEL_TEXT_X = (int)(WIDTH * .6);
-	public static final int LEVEL_TEXT_Y = STAT_Y;
+	public static final int LEVEL_TEXT_X = STAT_X;
+	public static final int LEVEL_TEXT_Y = STAT_Y - (int)(LIVES_H * 1.5);
 	public static final int LEVEL_TEXT_W = 109;
 	public static final int LEVEL_TEXT_H = 50;
 
 	public static final int LEVEL_STAT_X = LEVEL_TEXT_X + LEVEL_TEXT_W + (int)(STAT_WIDTH * .5);
-	public static final int LEVEL_STAT_Y = STAT_Y;
+	public static final int LEVEL_STAT_Y = LEVEL_TEXT_Y;
 
 	//did we win?
 	public static boolean WIN = false;
 
+	//do we show tap start image
+	public static boolean TAP_START = false;
+
 	public static StatDescription getStatDescription() {
 
-		if (STAT_DESCRIPTION == null) {
+		if (STAT_DESCRIPTION == null)
 			STAT_DESCRIPTION = new StatDescription();
-			STAT_DESCRIPTION.setX(STAT_X);
-			STAT_DESCRIPTION.setY(STAT_Y);
-		}
+
+		STAT_DESCRIPTION.setX(STAT_X);
+		STAT_DESCRIPTION.setY(STAT_Y);
 
 		return STAT_DESCRIPTION;
 	}
 
 	public static StatDescription getLevelDescription() {
 
-		if (LEVEL_DESCRIPTION == null) {
+		if (LEVEL_DESCRIPTION == null)
 			LEVEL_DESCRIPTION = new StatDescription();
-			LEVEL_DESCRIPTION.setX(LEVEL_STAT_X);
-			LEVEL_DESCRIPTION.setY(LEVEL_STAT_Y);
-		}
+
+		LEVEL_DESCRIPTION.setX(LEVEL_STAT_X);
+		LEVEL_DESCRIPTION.setY(LEVEL_STAT_Y);
 
 		return LEVEL_DESCRIPTION;
 	}
@@ -85,17 +89,20 @@ public final class GameHelper
      */
     protected final static void resetLevel()
 	{
+		//flag tap start so we display the notification
+		TAP_START = true;
+
 		//reset balls
-		MANAGER.getBalls().reset();
+		Game.getBalls().reset();
 		
         //reset paddle and ball(s)
-		MANAGER.getBalls().add(MANAGER.getPaddle());
+		Game.getBalls().add(Game.getPaddle());
     	
         //hide power ups
-		MANAGER.getPowerups().reset();
+		Game.getPowerups().reset();
 		
         //populate the bricks accordingly
-		MANAGER.getLevels().populate(MANAGER.getBricks());
+		Game.getLevels().populate(Game.getBricks());
 	}
 
     /**
@@ -104,7 +111,7 @@ public final class GameHelper
     protected final static void restartLevel()
     {
         //reset paddle and ball(s)
-		MANAGER.getBalls().add(MANAGER.getPaddle());
+		Game.getBalls().add(Game.getPaddle());
     }
 
     /**
@@ -113,13 +120,13 @@ public final class GameHelper
     protected final static boolean isGameOver()
 	{
 		//if there are no more bricks to be broken the game is over
-		if (MANAGER.getBricks().getCount() <= 0) {
+		if (Game.getBricks().getCount() <= 0) {
 			WIN = true;
 			return true;
 		}
 
 		//if we lost all of our balls the game is over (temporarily)
-		if (MANAGER.getBalls().getCount() < 1) {
+		if (Game.getBalls().getCount() < 1) {
 			WIN = false;
 			return true;
 		}
@@ -146,18 +153,6 @@ public final class GameHelper
 		ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_BACKGROUND);
 		ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_BORDER);
 
-		//render the bricks
-		MANAGER.getBricks().render(openGL);
-
-		//render the power ups
-		MANAGER.getPowerups().render(openGL);
-
-		//render the balls
-		MANAGER.getBalls().render(openGL);
-
-		//render the paddle
-		MANAGER.getPaddle().render(openGL);
-
 		//render the lives information
 		getStatDescription().render(openGL);
 		ENTITY.render(openGL, LIVES_X, LIVES_Y, LIVES_W, LIVES_H, Textures.TEXTURE_ID_WORD_LIVES);
@@ -166,8 +161,20 @@ public final class GameHelper
 		getLevelDescription().render(openGL);
 		ENTITY.render(openGL, LEVEL_TEXT_X, LEVEL_TEXT_Y, LEVEL_TEXT_W, LEVEL_TEXT_H, Textures.TEXTURE_ID_WORD_LEVEL);
 
+		//render the bricks
+		Game.getBricks().render(openGL);
+
+		//render the power ups
+		Game.getPowerups().render(openGL);
+
+		//render the balls
+		Game.getBalls().render(openGL);
+
+		//render the paddle
+		Game.getPaddle().render(openGL);
+
 		//if game over step
-		if (STEP == Manager.Step.GameOver) {
+		if (STEP == Step.GameOver) {
 			if (WIN) {
 				//if we win display "Level Complete" text
 				ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_LEVEL_COMPLETED);
@@ -180,6 +187,9 @@ public final class GameHelper
 					ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_READY);
 				}
 			}
+		} else {
+			if (TAP_START)
+				ENTITY.render(openGL, 0, 0, WIDTH, HEIGHT, Textures.TEXTURE_ID_WORD_TAP_START);
 		}
     }
 }

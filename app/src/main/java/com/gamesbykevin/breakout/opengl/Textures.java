@@ -47,10 +47,11 @@ public class Textures {
     public static final int TOTAL_BACKGROUNDS = 2;
 
     //how many images do we have that are words
-    private static final int TOTAL_WORDS = 5;
+    private static final int TOTAL_WORDS = 6;
 
     public static int TEXTURE_ID_WORD_GAMEOVER = 0;
     public static int TEXTURE_ID_WORD_READY = 0;
+    public static int TEXTURE_ID_WORD_TAP_START = 0;
     public static int TEXTURE_ID_WORD_LEVEL_COMPLETED = 0;
     public static int TEXTURE_ID_WORD_LIVES = 0;
     public static int TEXTURE_ID_WORD_LEVEL = 0;
@@ -172,6 +173,7 @@ public class Textures {
         TEXTURE_ID_WORD_LIVES           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.lives), openGL);
         TEXTURE_ID_WORD_READY           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.ready), openGL);
         TEXTURE_ID_WORD_LEVEL           = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.level_text), openGL);
+        TEXTURE_ID_WORD_TAP_START       = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.tapstart), openGL);
 
         Bitmap numbers = BitmapFactory.decodeResource(activity.getResources(), R.drawable.numbers);
 

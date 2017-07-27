@@ -147,8 +147,15 @@ public class Bricks extends Entity implements ICommon
 	@Override
 	public final void reset() 
 	{
-		//create a new array list for the bricks
-		this.bricks = new Brick[(int)getRow()][(int)getCol()];
+		if (this.bricks != null) {
+
+			//only create new if size changed
+			if (this.bricks.length != getRow() || this.bricks[0].length != getCol())
+				this.bricks = new Brick[(int) getRow()][(int) getCol()];
+		} else {
+			//create a new array list for the bricks
+			this.bricks = new Brick[(int) getRow()][(int) getCol()];
+		}
 		
 		//the size of the bricks
 		int width, height;
@@ -181,22 +188,19 @@ public class Bricks extends Entity implements ICommon
 			{
 				//if a brick does not exist we will create it
 				if (getBricks()[row][col] == null)
-				{
-					//create brick
 					getBricks()[row][col] = new Brick();
-					
-					//assign correct position
-					getBricks()[row][col].setX(START_X + (col * width));
-					getBricks()[row][col].setY(START_Y + (row * height));
-				}
-				
+
+				//assign correct position
+				getBricks()[row][col].setX(START_X + (col * width));
+				getBricks()[row][col].setY(START_Y + (row * height));
+
 				//ensure correct dimensions are assigned
 				getBricks()[row][col].setWidth(width);
 				getBricks()[row][col].setHeight(height);
-				
+
 				//reset brick
 				getBricks()[row][col].reset();
-				
+
 				//make sure all bricks are dead
 				getBricks()[row][col].setDead(true);
 			}

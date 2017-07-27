@@ -12,7 +12,7 @@ import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
 import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.Textures.IDS;
@@ -118,8 +118,9 @@ public class Balls extends Entity implements ICommon
 	{
 		if (getBalls() != null)
 		{
-			for (Ball ball : getBalls())
+			for (int i = 0; i < getBalls().size(); i++)
 			{
+				Ball ball = getBalls().get(i);
 				ball.speedDown();
 			}
 		}
@@ -133,8 +134,9 @@ public class Balls extends Entity implements ICommon
 	{
 		if (getBalls() != null)
 		{
-			for (Ball ball : getBalls())
+			for (int i = 0; i < getBalls().size(); i++)
 			{
+				Ball ball = getBalls().get(i);
 				ball.setFrozen(frozen);
 			}
 		}
@@ -148,9 +150,9 @@ public class Balls extends Entity implements ICommon
 	{
 		if (getBalls() != null)
 		{
-			for (Ball ball : getBalls())
+			for (int i = 0; i < getBalls().size(); i++)
 			{
-				//flag fire
+				Ball ball = getBalls().get(i);
 				ball.setFire(fire);
 			}
 		}
@@ -208,8 +210,10 @@ public class Balls extends Entity implements ICommon
 		final double xOffset = -Ball.WIDTH + getRandomObject().nextInt(Ball.WIDTH * 2);
 		
 		//first see if we can reuse an existing ball
-		for (Ball ball : getBalls())
+		for (int i = 0; i < getBalls().size(); i++)
 		{
+			Ball ball = getBalls().get(i);
+
 			//we can't re-use a ball already in play
 			if (!ball.isHidden())
 				continue;
@@ -254,8 +258,8 @@ public class Balls extends Entity implements ICommon
 	public void update(GameActivity activity)
 	{
 		//set the length
-		final int rowMax = MANAGER.getBricks().getBricks().length;
-		final int colMax = MANAGER.getBricks().getBricks()[0].length;
+		final int rowMax = Game.getBricks().getBricks().length;
+		final int colMax = Game.getBricks().getBricks()[0].length;
 		
 		if (getBalls() != null)
 		{
@@ -284,7 +288,7 @@ public class Balls extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//if there was ball/brick collision no need to check the other bricks
-						if (checkBrickCollision(ball, MANAGER.getBricks().getBricks()[row][col]))
+						if (checkBrickCollision(ball, Game.getBricks().getBricks()[row][col]))
 						{
 							//move to the end
 							row = rowMax;
@@ -320,8 +324,9 @@ public class Balls extends Entity implements ICommon
 				this.frames = 0;
 				
 				//speed up every ball
-				for (Ball ball : getBalls())
+				for (int i = 0; i < getBalls().size(); i++)
 				{
+					Ball ball = getBalls().get(i);
 					ball.speedUp();
 				}
 			}
@@ -395,7 +400,7 @@ public class Balls extends Entity implements ICommon
 					
 					//if the brick contains a power up we will add it
 					if (brick.hasPowerup())
-						MANAGER.getPowerups().add(brick);
+						Game.getPowerups().add(brick);
 				}
 				
 				//we have collision
@@ -413,8 +418,10 @@ public class Balls extends Entity implements ICommon
 		//flag all balls hidden
 		if (getBalls() != null)
 		{
-			for (Ball ball : getBalls())
+			for (int i = 0; i < getBalls().size(); i++)
 			{
+				Ball ball = getBalls().get(i);
+
 				//reset ball
 				ball.reset();
 				

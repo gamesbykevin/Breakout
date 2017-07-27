@@ -7,9 +7,7 @@ import com.gamesbykevin.breakout.activity.BaseActivity;
 import com.gamesbykevin.breakout.game.GameHelper;
 import com.gamesbykevin.breakout.util.StatDescription;
 import com.gamesbykevin.breakout.util.UtilityHelper;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static com.gamesbykevin.breakout.game.GameHelper.STAT_X;
@@ -74,7 +72,7 @@ public class Statistics {
         getStatDescription().setDescription(StatDescription.DEFAULT_LIVES);
 
         //update text word x-coordinate
-        GameHelper.LIVES_X = STAT_X + ((String.valueOf(getStatDescription().getStatValue()).length() + 1) * STAT_WIDTH);
+        GameHelper.LIVES_X = STAT_X + (String.valueOf(getStatDescription().getStatValue()).length() * STAT_WIDTH) + (int)(STAT_WIDTH * .5);
 
         //update level #
         getLevelDescription().setDescription(this.index + 1);

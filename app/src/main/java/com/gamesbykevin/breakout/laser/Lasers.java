@@ -9,11 +9,9 @@ import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
-import android.graphics.Canvas;
-
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
 
 public class Lasers extends Entity implements ICommon 
 {
@@ -32,8 +30,9 @@ public class Lasers extends Entity implements ICommon
 	public void reset() 
 	{
 		//hide all existing lasers
-		for (Laser laser : getLasers())
+		for (int i = 0; i < getLasers().size(); i++)
 		{
+			Laser laser = getLasers().get(i);
 			laser.setHidden(true);
 		}
 	}
@@ -45,7 +44,7 @@ public class Lasers extends Entity implements ICommon
 		
 		if (this.lasers != null)
 		{
-			for (int i=0; i < this.lasers.size(); i++)
+			for (int i = 0; i < this.lasers.size(); i++)
 			{
 				if (this.lasers.get(i) != null)
 				{
@@ -64,8 +63,10 @@ public class Lasers extends Entity implements ICommon
 	{
 		if (getLasers() != null)
 		{
-			for (Laser laser : getLasers())
+			for (int i = 0; i < getLasers().size(); i++)
 			{
+				Laser laser = getLasers().get(i);
+
 				if (laser.isHidden())
 					continue;
 				
@@ -73,8 +74,8 @@ public class Lasers extends Entity implements ICommon
 				laser.update();
 				
 				//set the length
-				final int rowMax = MANAGER.getBricks().getBricks().length;
-				final int colMax = MANAGER.getBricks().getBricks()[0].length;
+				final int rowMax = Game.getBricks().getBricks().length;
+				final int colMax = Game.getBricks().getBricks()[0].length;
 				
 				//check if it hit any bricks etc.....
 				for (int row = 0; row < rowMax; row++)
@@ -82,7 +83,7 @@ public class Lasers extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//get the current brick
-						final Brick brick = MANAGER.getBricks().getBricks()[row][col];
+						final Brick brick = Game.getBricks().getBricks()[row][col];
 						
 						if (!brick.isDead())
 						{
@@ -97,7 +98,7 @@ public class Lasers extends Entity implements ICommon
 								
 								//if the brick contains a power up we will add it
 								if (brick.hasPowerup())
-									MANAGER.getPowerups().add(brick);
+									Game.getPowerups().add(brick);
 								
 								//move to the end
 								row = rowMax;
@@ -124,9 +125,12 @@ public class Lasers extends Entity implements ICommon
 		
 		//the starting point of the laser
 		final int laserY = (int)(paddle.getY() - Laser.HEIGHT);
-		
-		for (Laser laser : getLasers())
+
+		for (int i = 0; i < getLasers().size(); i++)
 		{
+			//get the current laser
+			Laser laser = getLasers().get(i);
+
 			//hidden lasers can be re-used, just make sure we didn't already re-use 2
 			if (laser.isHidden() && count < 2)
 			{

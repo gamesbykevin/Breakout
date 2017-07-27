@@ -1,17 +1,12 @@
 package com.gamesbykevin.breakout.opengl;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView.Renderer;
-import android.opengl.GLUtils;
-
-import com.gamesbykevin.breakout.activity.GameActivity;
-import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
@@ -128,6 +123,6 @@ public class OpenGLRenderer implements Renderer {
         gl.glScalef(scaleRenderX, scaleRenderY, 0.0f);
 
         //render game objects
-        MANAGER.render(gl);
+        Game.render(gl);
     }
 }

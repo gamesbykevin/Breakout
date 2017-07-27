@@ -7,12 +7,11 @@ import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
-import com.gamesbykevin.breakout.game.GameHelper;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.MANAGER;
+import static com.gamesbykevin.breakout.activity.GameActivity.Game;
 import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
 
 public class Powerups extends Entity implements ICommon
@@ -68,8 +67,10 @@ public class Powerups extends Entity implements ICommon
 	public void add(final Brick brick)
 	{
 		//lets see if we can re-use an existing power up
-		for (Powerup powerup : getPowerups())
+		for (int i = 0; i < getPowerups().size(); i++)
 		{
+			Powerup powerup = getPowerups().get(i);
+
 			//if this is hidden we can re-use
 			if (powerup.isHidden())
 			{
@@ -119,7 +120,7 @@ public class Powerups extends Entity implements ICommon
 				continue;
 			
 			//check for paddle collision
-			if (MANAGER.getPaddle().hasCollision(powerup))
+			if (Game.getPaddle().hasCollision(powerup))
 			{
 				//flag the power up as hidden
 				powerup.setHidden(true);
@@ -128,28 +129,28 @@ public class Powerups extends Entity implements ICommon
 				switch (powerup.getKey())
 				{
 					case Magnet:
-						MANAGER.getPaddle().setMagnet(true);
+						Game.getPaddle().setMagnet(true);
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Expand:
-						MANAGER.getPaddle().expand();
+						Game.getPaddle().expand();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Shrink:
-						MANAGER.getPaddle().shrink();
+						Game.getPaddle().shrink();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Laser:
-						MANAGER.getPaddle().setLaser(true);
+						Game.getPaddle().setLaser(true);
 						
 						//play sound effect
 						soundPowerup = true;
@@ -163,29 +164,29 @@ public class Powerups extends Entity implements ICommon
 						break;
 						
 					case ExtraBalls:
-						MANAGER.getBalls().add();
-						MANAGER.getBalls().add();
+						Game.getBalls().add();
+						Game.getBalls().add();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case SpeedUp:
-						MANAGER.getBalls().speedUp();
+						Game.getBalls().speedUp();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case SpeedDown:
-						MANAGER.getBalls().speedDown();
+						Game.getBalls().speedDown();
 						
 						//play sound effect
 						soundPowerup = true;
 						break;
 						
 					case Fireball:
-						MANAGER.getBalls().setFire(true);
+						Game.getBalls().setFire(true);
 						
 						//play sound effect
 						soundFireball = true;
@@ -212,8 +213,10 @@ public class Powerups extends Entity implements ICommon
 	public void reset() 
 	{
 		//reset all power ups
-		for (Powerup powerup : getPowerups())
+		for (int i = 0; i < getPowerups().size(); i++)
 		{
+			Powerup powerup = getPowerups().get(i);
+
 			//hide any existing power ups
 			powerup.setHidden(true);
 		}
@@ -229,7 +232,6 @@ public class Powerups extends Entity implements ICommon
 				try {
 					if (i >= getPowerups().size())
 						continue;
-
 					getPowerups().get(i).render(openGL);
 				} catch (Exception e) {
 					UtilityHelper.handleException(e);
