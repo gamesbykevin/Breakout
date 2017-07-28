@@ -12,7 +12,7 @@ import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.Game;
+import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
 import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.Textures.IDS;
@@ -258,8 +258,8 @@ public class Balls extends Entity implements ICommon
 	public void update(GameActivity activity)
 	{
 		//set the length
-		final int rowMax = Game.getBricks().getBricks().length;
-		final int colMax = Game.getBricks().getBricks()[0].length;
+		final int rowMax = getGame().getBricks().getBricks().length;
+		final int colMax = getGame().getBricks().getBricks()[0].length;
 		
 		if (getBalls() != null)
 		{
@@ -288,7 +288,7 @@ public class Balls extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//if there was ball/brick collision no need to check the other bricks
-						if (checkBrickCollision(ball, Game.getBricks().getBricks()[row][col]))
+						if (checkBrickCollision(ball, getGame().getBricks().getBricks()[row][col]))
 						{
 							//move to the end
 							row = rowMax;
@@ -358,9 +358,9 @@ public class Balls extends Entity implements ICommon
 			{
 				//mark the collision
 				brick.markCollision();
-				
-				//if the brick is solid just bounce the ball off it
-				if (brick.isSolid())
+
+				//if the brick is solid just bounce the ball off it as long as we aren't fire
+				if (!ball.hasFire() && brick.isSolid())
 				{
 					//flag true to play sound
 					soundBrickCollisionSolid = true;
@@ -393,14 +393,24 @@ public class Balls extends Entity implements ICommon
 				{
 					//flag true to play sound
 					soundBrickCollision = true;
-					
-					//if the ball is not a fire ball flip the y-velocity
-					if (!ball.hasFire())
+
+					//fireball will destroy every brick
+					if (ball.hasFire()) {
+
+						//make the brick dead because nothing can stop fire
+						while (!brick.isDead()) {
+							brick.markCollision();
+						}
+
+					} else {
+
+						//if the ball is not a fire ball flip the y-velocity
 						ball.setDY(-ball.getDY());
-					
+					}
+
 					//if the brick contains a power up we will add it
 					if (brick.hasPowerup())
-						Game.getPowerups().add(brick);
+						getGame().getPowerups().add(brick);
 				}
 				
 				//we have collision
@@ -446,24 +456,8 @@ public class Balls extends Entity implements ICommon
 					if (i >= getBalls().size())
 						continue;
 
-					//get the current ball
-					final Ball ball = getBalls().get(i);
-
-					//if hidden don't render
-					if (ball.isHidden())
-						continue;
-
-					//assign values
-					super.setX(ball);
-					super.setY(ball);
-					super.setWidth(ball);
-					super.setHeight(ball);
-
-					//assign the correct texture
-					super.setTextureId(ball.getTextureId());
-
-					//render the current ball
-					super.render(openGL);
+					//render the ball
+					getBalls().get(i).render(openGL);
 
 				} catch (Exception e) {
 					UtilityHelper.handleException(e);

@@ -39,7 +39,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
     private static Random RANDOM;
 
     //Our game manager class
-    public static Game Game;
+    private static Game GAME;
 
     //keep track of our level progress
     public static Statistics STATISTICS;
@@ -86,7 +86,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         STATISTICS = new Statistics(this, LEVELS.getSize());
 
         //create our game manager
-        Game = new Game(this);
+        GAME = new Game(this);
 
         //set the content view
         setContentView(R.layout.activity_game);
@@ -102,6 +102,10 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
         //update level select screen
         refreshLevelSelect();
+    }
+
+    public static Game getGame() {
+        return GAME;
     }
 
     /**
@@ -177,6 +181,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
         //call parent
         super.onPause();
+
+        //pause the game
+        getGame().pause();
 
         //flag paused true
         this.paused = true;

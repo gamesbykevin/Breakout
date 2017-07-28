@@ -8,7 +8,7 @@ import com.gamesbykevin.breakout.wall.Wall;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.Game;
+import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
 import static com.gamesbykevin.breakout.game.Game.STEP;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
@@ -93,16 +93,16 @@ public final class GameHelper
 		TAP_START = true;
 
 		//reset balls
-		Game.getBalls().reset();
+		getGame().getBalls().reset();
 		
         //reset paddle and ball(s)
-		Game.getBalls().add(Game.getPaddle());
+		getGame().getBalls().add(getGame().getPaddle());
     	
         //hide power ups
-		Game.getPowerups().reset();
+		getGame().getPowerups().reset();
 		
         //populate the bricks accordingly
-		Game.getLevels().populate(Game.getBricks());
+		getGame().getLevels().populate(getGame().getBricks());
 	}
 
     /**
@@ -111,7 +111,7 @@ public final class GameHelper
     protected final static void restartLevel()
     {
         //reset paddle and ball(s)
-		Game.getBalls().add(Game.getPaddle());
+		getGame().getBalls().add(getGame().getPaddle());
     }
 
     /**
@@ -120,13 +120,13 @@ public final class GameHelper
     protected final static boolean isGameOver()
 	{
 		//if there are no more bricks to be broken the game is over
-		if (Game.getBricks().getCount() <= 0) {
+		if (getGame().getBricks().getCount() <= 0) {
 			WIN = true;
 			return true;
 		}
 
 		//if we lost all of our balls the game is over (temporarily)
-		if (Game.getBalls().getCount() < 1) {
+		if (getGame().getBalls().getCount() < 1) {
 			WIN = false;
 			return true;
 		}
@@ -162,16 +162,16 @@ public final class GameHelper
 		ENTITY.render(openGL, LEVEL_TEXT_X, LEVEL_TEXT_Y, LEVEL_TEXT_W, LEVEL_TEXT_H, Textures.TEXTURE_ID_WORD_LEVEL);
 
 		//render the bricks
-		Game.getBricks().render(openGL);
+		getGame().getBricks().render(openGL);
 
 		//render the power ups
-		Game.getPowerups().render(openGL);
+		getGame().getPowerups().render(openGL);
 
 		//render the balls
-		Game.getBalls().render(openGL);
+		getGame().getBalls().render(openGL);
 
 		//render the paddle
-		Game.getPaddle().render(openGL);
+		getGame().getPaddle().render(openGL);
 
 		//if game over step
 		if (STEP == Step.GameOver) {

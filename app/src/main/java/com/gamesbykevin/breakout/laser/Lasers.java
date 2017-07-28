@@ -11,7 +11,7 @@ import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.Game;
+import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
 
 public class Lasers extends Entity implements ICommon 
 {
@@ -74,8 +74,8 @@ public class Lasers extends Entity implements ICommon
 				laser.update();
 				
 				//set the length
-				final int rowMax = Game.getBricks().getBricks().length;
-				final int colMax = Game.getBricks().getBricks()[0].length;
+				final int rowMax = getGame().getBricks().getBricks().length;
+				final int colMax = getGame().getBricks().getBricks()[0].length;
 				
 				//check if it hit any bricks etc.....
 				for (int row = 0; row < rowMax; row++)
@@ -83,7 +83,7 @@ public class Lasers extends Entity implements ICommon
 					for (int col = 0; col < colMax; col++)
 					{
 						//get the current brick
-						final Brick brick = Game.getBricks().getBricks()[row][col];
+						final Brick brick = getGame().getBricks().getBricks()[row][col];
 						
 						if (!brick.isDead())
 						{
@@ -98,7 +98,7 @@ public class Lasers extends Entity implements ICommon
 								
 								//if the brick contains a power up we will add it
 								if (brick.hasPowerup())
-									Game.getPowerups().add(brick);
+									getGame().getPowerups().add(brick);
 								
 								//move to the end
 								row = rowMax;

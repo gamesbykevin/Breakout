@@ -11,6 +11,7 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.powerup.Powerup;
+import com.gamesbykevin.breakout.powerup.Powerups;
 import com.gamesbykevin.breakout.util.StatDescription;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
@@ -43,8 +44,9 @@ public class Textures {
     public static final int TOTAL_PARTICLES = 7;
     public static final int TOTAL_LASERS = 1;
     public static final int TOTAL_PADDLES = 1;
-    public static final int TOTAL_POWERUPS = (Powerup.Key.values().length * 8);
+    public static final int TOTAL_POWERUPS = (Powerups.Key.values().length * 8);
     public static final int TOTAL_BACKGROUNDS = 2;
+    public static final int TOTAL_FIREBALLS = 1;
 
     //how many images do we have that are words
     private static final int TOTAL_WORDS = 6;
@@ -66,6 +68,7 @@ public class Textures {
     public static int TEXTURE_ID_PARTICLE_7 = 0;
     public static int TEXTURE_ID_BACKGROUND = 0;
     public static int TEXTURE_ID_BORDER = 0;
+    public static int TEXTURE_ID_FIREBALL = 0;
 
     //list of particles to choose from
     private static List<Integer> PARTICLES;
@@ -76,8 +79,8 @@ public class Textures {
 
         //create array containing all the texture ids
         IDS = new int[
-                TOTAL_BALLS + TOTAL_BRICKS + TOTAL_NUMBERS + TOTAL_BACKGROUNDS +
-                TOTAL_PARTICLES + TOTAL_LASERS + TOTAL_PADDLES + TOTAL_POWERUPS + TOTAL_WORDS];
+                TOTAL_BALLS + TOTAL_BRICKS + TOTAL_NUMBERS + TOTAL_BACKGROUNDS + TOTAL_PARTICLES +
+                TOTAL_LASERS + TOTAL_PADDLES + TOTAL_POWERUPS + TOTAL_WORDS + TOTAL_FIREBALLS];
     }
 
     public static int getTextureIdParticle() {
@@ -134,8 +137,13 @@ public class Textures {
         //load the paddle texture
         TEXTURE_ID_PADDLE = loadTexture(Bitmap.createBitmap(sheet, 80, 64, Paddle.WIDTH, Paddle.HEIGHT), openGL);
 
+        //load fireball texture
+        TEXTURE_ID_FIREBALL = loadTexture(BitmapFactory.decodeResource(activity.getResources(), R.drawable.fireball), openGL);
+
         //load all of the power ups
-        for (Powerup.Key key : Powerup.Key.values()) {
+        for (int i = 0; i < Powerups.getTmpKey().length; i++) {
+
+            Powerups.Key key = Powerups.getTmpKey()[i];
 
             //set the index start in the TEXTURE[] for each animation
             key.setIndexStart(this.index);

@@ -28,7 +28,14 @@ public class Entity extends com.gamesbykevin.androidframework.base.Entity
 			1.0f, 1.0f
 	};
 
+	//texture id so we know what to render
 	private int textureId;
+
+	//current facing angle of the entity
+	private float angle = 0.0f;
+
+	//is this entity rotating?
+	private boolean rotation = false;
 
 	/**
 	 * Default constructor
@@ -57,7 +64,23 @@ public class Entity extends com.gamesbykevin.androidframework.base.Entity
 		textureBuffer.put(textures);
 		textureBuffer.position(0);
 	}
-	
+
+	public void setRotation(final boolean rotation) {
+		this.rotation = rotation;
+	}
+
+	public boolean hasRotation() {
+		return this.rotation;
+	}
+
+	public void setAngle(final float angle) {
+		this.angle = angle;
+	}
+
+	public float getAngle() {
+		return this.angle;
+	}
+
 	/**
 	 * Set the entity up as hidden
 	 * @param hidden true if you want to hide, false otherwise
@@ -135,8 +158,22 @@ public class Entity extends com.gamesbykevin.androidframework.base.Entity
 		//use for quick transformations so it will only apply to this object
 		gl.glPushMatrix();
 
-		//assign render coordinates
-		gl.glTranslatef(x, y, 0.0f);
+		//if an angle is set rotate it
+		if (hasRotation()) {
+
+			//3. now move it back to complete the operation
+			gl.glTranslatef(x + (w/2), y + (h/2), 0.0f);
+
+			//2. now rotate the angle
+			gl.glRotatef(getAngle(), 0.0f, 0.0f, 1.0f);
+
+			//1. reset to origin as this open gl operation is done first (open gl operations done in reverse)
+			gl.glTranslatef( -(w/2), -(h/2), 0.0f);
+		} else {
+
+			//assign render coordinates
+			gl.glTranslatef(x, y, 0.0f);
+		}
 
 		//assign dimensions
 		gl.glScalef(w, h, 0.0f);
@@ -162,10 +199,5 @@ public class Entity extends com.gamesbykevin.androidframework.base.Entity
 
 		//after rendering remove the transformation since we only needed it for this object
 		gl.glPopMatrix();
-
-		//now that we are done, undo client state to prevent any render issues
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_2D);
 	}
 }

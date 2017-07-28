@@ -15,6 +15,7 @@ import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
+import static com.gamesbykevin.breakout.brick.Bricks.ROWS_SMALL;
 
 public class Levels implements Disposable
 {
@@ -23,7 +24,10 @@ public class Levels implements Disposable
 
 	//list of locations used for the bonus bricks
 	private ArrayList<Location> locations;
-	
+
+	//array to avoid memory leak
+	private Key[] tmpKeys;
+
 	/**
 	 * Character representing empty space
 	 */
@@ -47,12 +51,12 @@ public class Levels implements Disposable
 	/**
 	 * How many of the bricks should we flag as a bonus for normal sized bricks
 	 */
-	private static final float BONUS_RATIO_NORMAL = .25f;
+	private static final float BONUS_RATIO_NORMAL = 0.12f;
 	
 	/**
 	 * How many of the bricks should we flag as a bonus for small sized bricks
 	 */
-	private static final float BONUS_RATIO_SMALL = .10f;
+	private static final float BONUS_RATIO_SMALL = 0.06f;
 	
 	/**
 	 * How many of the bricks should we flag as a bonus for xtra small sized bricks
@@ -127,8 +131,8 @@ public class Levels implements Disposable
 			//if the line has the level separator add to the list
 			if (line.contains(LEVEL_SEPARATOR))
 			{
-				//add level to array list
-				if (!level.getKey().isEmpty() && level.getKey().size() > 1)
+				//add level to array list, but make sure it isn't too small or too big
+				if (!level.getKey().isEmpty() && level.getKey().size() > 1 && level.getKey().size() <= ROWS_SMALL - 15)
 					getLevels().add(level);
 				
 				//now create a new object
@@ -139,7 +143,7 @@ public class Levels implements Disposable
 				if (level == null)
 					level = new Level();
 				
-				//add line to level as long as it isn't big enough
+				//add line to level as long as it isn't too big
 				if (line.length() > 0 && line.length() < Bricks.COLS_XSMALL)
 					level.getKey().add(line);
 			}
@@ -164,6 +168,13 @@ public class Levels implements Disposable
 	protected ArrayList<Level> getLevels()
 	{
 		return this.levels;
+	}
+
+	private Key[] getTmpKeys() {
+		if (tmpKeys == null)
+			tmpKeys = Key.values();
+
+		return tmpKeys;
 	}
 
 	/**
@@ -191,7 +202,7 @@ public class Levels implements Disposable
 		else if (level.getKey().get(0).length() == Bricks.COLS_SMALL)
 		{
 			bricks.setCol(Bricks.COLS_SMALL);
-			bricks.setRow(Bricks.ROWS_SMALL);
+			bricks.setRow(ROWS_SMALL);
 			Ball.SPEED_MAX = Brick.HEIGHT_SMALL;
 		}
 		else 
@@ -258,12 +269,10 @@ public class Levels implements Disposable
 						//check if we have a match
 						boolean match = false;
 
-						int size = Key.values().length;
-
 						//check each color key to see if the character matches
-						for (int i = 0; i < size; i++)
+						for (int i = 0; i < getTmpKeys().length; i++)
 						{
-							Key key = Key.values()[i];
+							Key key = getTmpKeys()[i];
 
 							//if we have a match
 							if (key.hasCode(character))
@@ -324,11 +333,9 @@ public class Levels implements Disposable
 	{
 		keys.clear();
 
-		int size = Key.values().length;
-
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < getTmpKeys().length; i++)
 		{
-			Key key = Key.values()[i];
+			Key key = getTmpKeys()[i];
 
 			if (key == Bricks.Key.Silver)
 				continue;

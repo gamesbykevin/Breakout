@@ -18,6 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
 import static com.gamesbykevin.breakout.game.GameHelper.GAME_OVER_FRAMES_DELAY;
 import static com.gamesbykevin.breakout.game.GameHelper.GET_READY_FRAMES_LIMIT;
+import static com.gamesbykevin.breakout.game.GameHelper.TAP_START;
 import static com.gamesbykevin.breakout.game.GameHelper.WIN;
 import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
 import static com.gamesbykevin.breakout.game.GameHelper.restartLevel;
@@ -75,6 +76,33 @@ public class Game {
 
         //default to loading
         STEP = Step.Loading;
+    }
+
+    /**
+     * Pause the game
+     */
+    public void pause() {
+
+        //flag display to show
+        TAP_START = true;
+
+        //go here so nothing is done
+        STEP = Step.Start;
+
+        //freeze the balls etc....
+        getBalls().setFrozen(true);
+    }
+
+    public void resume() {
+
+        //un freeze the balls
+        getBalls().setFrozen(false);
+
+        //remove tap display
+        GameHelper.TAP_START = false;
+
+        //continue updating the game
+        STEP = Step.Updating;
     }
 
     public void reset() {
@@ -272,7 +300,7 @@ public class Game {
     public boolean onTouchEvent(final int action, final float x, final float y) {
 
         //don't continue if we aren't ready yet
-        if (STEP != Step.Updating)
+        if (STEP != Step.Updating && STEP != Step.Start)
             return true;
 
         //if the control is tilt, we can't continue
@@ -281,11 +309,9 @@ public class Game {
 
         if (action == MotionEvent.ACTION_UP)
         {
-            //un freeze any frozen balls here
-            if (this.press) {
-                getBalls().setFrozen(false);
-                GameHelper.TAP_START = false;
-            }
+            //un-pause the game
+            if (this.press)
+                resume();
 
             //un flag press
             this.press = false;

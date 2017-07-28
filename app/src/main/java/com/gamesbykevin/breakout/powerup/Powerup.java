@@ -13,37 +13,10 @@ import javax.microedition.khronos.opengles.GL10;
 import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.Textures.IDS;
+import static com.gamesbykevin.breakout.powerup.Powerups.getTmpKey;
 
 public class Powerup extends Entity implements ICommon
 {
-	//different animations for the power ups
-	public enum Key
-	{
-		Magnet(404), Expand(316), Shrink(338),
-		Laser(448), ExtraLife(426), ExtraBalls(360),
-		SpeedUp(294), SpeedDown(272), Fireball(250);
-
-		private final int y;
-
-		private int indexStart = 0;
-
-		Key(int y) {
-			this.y = y;
-		}
-
-		public int getY() {
-			return this.y;
-		}
-
-		public void setIndexStart(int indexStart) {
-			this.indexStart = indexStart;
-		}
-
-		public int getIndexStart() {
-			return this.indexStart;
-		}
-	}
-	
 	/**
 	 * Default width of a power up animation
 	 */
@@ -79,10 +52,10 @@ public class Powerup extends Entity implements ICommon
 	private static final int ANIMATION_COUNT = 8;
 
 	//how many frames until we switch to the next animation
-	private static final int ANIMATION_DELAY = (FPS / (ANIMATION_COUNT * 3));
+	private static final int ANIMATION_DELAY = (FPS / (ANIMATION_COUNT * 2));
 
 	//the type of power up
-	private Key key;
+	private Powerups.Key key;
 
 	/**
 	 * Default constructor
@@ -102,10 +75,10 @@ public class Powerup extends Entity implements ICommon
 	 * Assign a random key
 	 */
 	public void setKey() {
-		this.key = Key.values()[getRandomObject().nextInt(Key.values().length)];
+		this.key = getTmpKey()[getRandomObject().nextInt(getTmpKey().length)];
 	}
 
-	public Key getKey() {
+	public Powerups.Key getKey() {
 		return this.key;
 	}
 	

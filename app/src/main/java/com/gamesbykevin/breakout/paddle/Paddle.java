@@ -12,7 +12,7 @@ import com.gamesbykevin.breakout.wall.Wall;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static com.gamesbykevin.breakout.activity.GameActivity.Game;
+import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public class Paddle extends Entity implements ICommon
@@ -419,10 +419,10 @@ public class Paddle extends Entity implements ICommon
 		soundLaserFire = false;
 		
 		//check each ball for paddle collision
-		for (int index = 0; index < Game.getBalls().getBalls().size(); index++)
+		for (int index = 0; index < getGame().getBalls().getBalls().size(); index++)
 		{
 			//get the current ball
-			Ball ball = Game.getBalls().getBalls().get(index);
+			Ball ball = getGame().getBalls().getBalls().get(index);
 
 			//only check balls that are moving south
 			if (ball.getDY() < 0)
@@ -571,10 +571,10 @@ public class Paddle extends Entity implements ICommon
 		super.setX(nx);
 		
 		//check if we need to update any frozen balls
-		for (int i = 0; i < Game.getBalls().getBalls().size(); i++)
+		for (int i = 0; i < getGame().getBalls().getBalls().size(); i++)
 		{
 			//get the current ball
-			Ball ball = Game.getBalls().getBalls().get(i);
+			Ball ball = getGame().getBalls().getBalls().get(i);
 
 			//if the ball is frozen we will update the x-coordinate
 			if (ball.isFrozen())

@@ -5,9 +5,13 @@ import com.gamesbykevin.breakout.brick.Brick;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
+import com.gamesbykevin.breakout.opengl.Textures;
 import com.gamesbykevin.breakout.wall.Wall;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
+import static com.gamesbykevin.breakout.opengl.Textures.TEXTURE_ID_FIREBALL;
 
 public final class Ball extends Entity implements ICommon 
 {
@@ -44,7 +48,7 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The minimum speed allowed
 	 */
-	public static final double SPEED_MIN = 6.15;
+	public static final double SPEED_MIN = 4.15;
 	
 	/**
 	 * The rate at which to increase the speed
@@ -67,15 +71,18 @@ public final class Ball extends Entity implements ICommon
 	
 	//store the x-offset
 	private int offsetX;
-	
+
+	//how much do we change the angle every update
+	private static final float ANGLE_CHANGE = 18.0f;
+
 	//the frame count that the ball has been on fire
 	private int frames = 0;
-	
+
 	/**
 	 * The number of frames to keep the ball on fire
 	 */
 	private static final int FIRE_FRAME_LIMIT = (FPS * 20);
-	
+
 	protected Ball()
 	{
 		super(WIDTH, HEIGHT);
@@ -124,10 +131,17 @@ public final class Ball extends Entity implements ICommon
 	public void setFire(final boolean fire)
 	{
 		this.fire = fire;
-		
+
+		//flag this ball rotating or not
+		super.setRotation(fire);
+
 		//if fire is enabled reset frame count
-		if (hasFire())
+		if (hasFire()) {
 			this.frames = 0;
+		} else {
+			//make sure there is no rotation
+			setAngle(0.0f);
+		}
 	}
 	
 	/**
@@ -298,16 +312,24 @@ public final class Ball extends Entity implements ICommon
 			//update location
 			super.setX(super.getX() + (getXRatio() * super.getDX()));
 			super.setY(super.getY() + super.getDY());
-			
+
 			//only count frames if not frozen
 			if (hasFire())
 			{
+				//rotate the fireball
+				setAngle(getAngle() + ANGLE_CHANGE);
+
+				if (getAngle() > 360.0f)
+					setAngle(0.0f);
+
 				//increase frames
 				frames++;
 				
 				//if we have reached the limit
-				if (frames > FIRE_FRAME_LIMIT)
+				if (frames > FIRE_FRAME_LIMIT) {
 					setFire(false);
+					setAngle(0.0f);
+				}
 			}
 		}
 	}
@@ -342,6 +364,34 @@ public final class Ball extends Entity implements ICommon
 			//if the ball goes off the screen let's flag it hidden etc....
 			if (getY() >= OpenGLSurfaceView.HEIGHT)
 				setHidden(true);
+		}
+	}
+
+	public void render(GL10 openGL) {
+
+		//don't show if we are hiding
+		if (isHidden())
+			return;
+
+		//do we render a fireball
+		if (hasFire()) {
+
+			//save the texture id
+			final int textureId = getTextureId();
+
+			//assign the correct texture
+			super.setTextureId(TEXTURE_ID_FIREBALL);
+
+			//render the fireball
+			super.render(openGL);
+
+			//restore original value
+			super.setTextureId(textureId);
+
+		} else {
+
+			//render the ball
+			super.render(openGL);
 		}
 	}
 }
