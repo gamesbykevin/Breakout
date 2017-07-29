@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Nākamais</string>
+<string name="button_text_restart">Restartēt</string>
+<string name="button_text_rate">Likme</string>
+<string name="button_text_more">Vairāk</string>
+<string name="button_text_menu">Izvēlne</string>
+<string name="button_text_start">Sākt</string>
+<string name="button_text_options">Iespējas</string>
+<string name="button_text_exit">Izeja</string>
+<string name="vibrate_on">Vibrozvans: ieslēgts</string>
+<string name="vibrate_off">Vibrozvans: izslēgts</string>
+<string name="sound_on">Skaņa: ieslēgta</string>
+<string name="sound_off">Skaņa: izslēgta</string>
+<string name="control_touch">Kontrole: pieskarieties</string>
+<string name="control_tilt">Kontrole: slīpums</string>
+<string name="text_header_level_select">Līmeņi</string>
+</resources>

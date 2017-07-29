@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Ďalšie</string>
+<string name="button_text_restart">Reštart</string>
+<string name="button_text_rate">rýchlosť</string>
+<string name="button_text_more">viac</string>
+<string name="button_text_menu">Ponuka</string>
+<string name="button_text_start">štart</string>
+<string name="button_text_options">možnosti</string>
+<string name="button_text_exit">Východ</string>
+<string name="vibrate_on">Vibrovanie: Zapnuté</string>
+<string name="vibrate_off">Vibrovanie: Vypnuté</string>
+<string name="sound_on">Zvuk: Zapnutý</string>
+<string name="sound_off">Vypnúť zvuk</string>
+<string name="control_touch">Ovládanie: Dotknite sa</string>
+<string name="control_tilt">Ovládanie: naklonenie</string>
+<string name="text_header_level_select">úrovne</string>
+</resources>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -17,6 +18,7 @@ import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.level.Statistics;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
 import com.gamesbykevin.breakout.ui.CustomAdapter;
+import com.gamesbykevin.breakout.util.StatDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.gamesbykevin.breakout.game.GameHelper.WIN;
 import static com.gamesbykevin.breakout.game.Game.STEP;
+import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
 
 
 public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener {
@@ -327,23 +330,34 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onBackPressed();
     }
 
+    /**
+     * Update the next/restart button text that is displayed depending on if the game is over or level complete
+     */
+    public void updateActionButtonText() {
+
+        //determine what text is showing
+        if (WIN) {
+            ((Button)findViewById(R.id.ButtonNext)).setText(getString(R.string.button_text_next));
+        } else {
+            ((Button)findViewById(R.id.ButtonNext)).setText(getString(R.string.button_text_restart));
+        }
+    }
+
     public void onClickNext(View view) {
 
-        //we only move to the next level if we beat the previous
-        if (WIN)
+        if (WIN) {
+            //since we won, move to the next level
             STATISTICS.setIndex(STATISTICS.getIndex() + 1);
+        } else {
+            //if we lost, reset the lives
+            getStatDescription().setDescription(StatDescription.DEFAULT_LIVES);
+        }
 
         //show loading screen while we reset
         setScreen(Screen.Loading);
 
         //reset the game board
         STEP = Step.Reset;
-    }
-
-    public void onClickRestart(View view) {
-
-        //go back to the ready step
-        setScreen(Screen.Ready);
     }
 
     public void onClickLevelSelect(View view) {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">επόμενος</string>
+<string name="button_text_restart">Επανεκκίνηση</string>
+<string name="button_text_rate">Τιμή</string>
+<string name="button_text_more">Περισσότερο</string>
+<string name="button_text_menu">Μενού</string>
+<string name="button_text_start">Αρχή</string>
+<string name="button_text_options">Επιλογές</string>
+<string name="button_text_exit">Εξοδος</string>
+<string name="vibrate_on">Δόνηση: Ενεργοποίηση</string>
+<string name="vibrate_off">Δόνηση: Απενεργοποίηση</string>
+<string name="sound_on">Ήχος: Ενεργοποίηση</string>
+<string name="sound_off">Χωρίς ήχο</string>
+<string name="control_touch">Έλεγχος: Αγγίξτε</string>
+<string name="control_tilt">Έλεγχος: Tilt</string>
+<string name="text_header_level_select">Επίπεδα</string>
+</resources>

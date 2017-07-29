@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Il prossimo</string>
+<string name="button_text_restart">Ricomincia</string>
+<string name="button_text_rate">Vota</string>
+<string name="button_text_more">Di Più</string>
+<string name="button_text_menu">Menu</string>
+<string name="button_text_start">Inizio</string>
+<string name="button_text_options">Opzioni</string>
+<string name="button_text_exit">Uscita</string>
+<string name="vibrate_on">Vibrare: Sì</string>
+<string name="vibrate_off">Vibrare: Spento</string>
+<string name="sound_on">Suono acceso</string>
+<string name="sound_off">Audio Disattivato</string>
+<string name="control_touch">Controllo: Tocca</string>
+<string name="control_tilt">Controllo: Inclinazione</string>
+<string name="text_header_level_select">livelli</string>
+</resources>

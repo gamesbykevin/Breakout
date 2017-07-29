@@ -69,6 +69,9 @@ public class StatDescription extends Entity {
         //assign our value
         this.statValue = newStatValue;
 
+        if (getStatValue() < 0)
+            this.statValue = 0;
+
         //assign animations
         setDescription(String.valueOf(this.statValue));
     }

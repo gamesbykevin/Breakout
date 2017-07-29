@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">다음 것</string>
+<string name="button_text_restart">재시작</string>
+<string name="button_text_rate">율</string>
+<string name="button_text_more">더</string>
+<string name="button_text_menu">메뉴</string>
+<string name="button_text_start">스타트</string>
+<string name="button_text_options">옵션</string>
+<string name="button_text_exit">출구</string>
+<string name="vibrate_on">진동 : 켜기</string>
+<string name="vibrate_off">진동 : 꺼짐</string>
+<string name="sound_on">소리 : 켜기</string>
+<string name="sound_off">음소거</string>
+<string name="control_touch">제어 : 터치</string>
+<string name="control_tilt">컨트롤 : 틸트</string>
+<string name="text_header_level_select">레벨</string>
+</resources>

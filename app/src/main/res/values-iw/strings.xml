@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">הַבָּא</string>
+<string name="button_text_restart">איתחול</string>
+<string name="button_text_rate">ציון</string>
+<string name="button_text_more">יותר</string>
+<string name="button_text_menu">תַפרִיט</string>
+<string name="button_text_start">הַתחָלָה</string>
+<string name="button_text_options">אפשרויות</string>
+<string name="button_text_exit">יְצִיאָה</string>
+<string name="vibrate_on">רטט: מופעל</string>
+<string name="vibrate_off">רטט: כבוי</string>
+<string name="sound_on">צליל: מופעל</string>
+<string name="sound_off">צליל של</string>
+<string name="control_touch">שליטה: גע</string>
+<string name="control_tilt">שליטה: הטיה</string>
+<string name="text_header_level_select">רמות</string>
+</resources>

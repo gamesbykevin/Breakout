@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Следващия</string>
+<string name="button_text_restart">Рестартирам</string>
+<string name="button_text_rate">скорост</string>
+<string name="button_text_more">| Повече ▼</string>
+<string name="button_text_menu">Меню</string>
+<string name="button_text_start">начало</string>
+<string name="button_text_options">Настроики</string>
+<string name="button_text_exit">изход</string>
+<string name="vibrate_on">Вибриране: Вкл</string>
+<string name="vibrate_off">Вибриране: Изключено</string>
+<string name="sound_on">Звук: Вкл</string>
+<string name="sound_off">Изключен звук</string>
+<string name="control_touch">Контрол: Докоснете</string>
+<string name="control_tilt">Контрол: Наклон</string>
+<string name="text_header_level_select">нива</string>
+</resources>

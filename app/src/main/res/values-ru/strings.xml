@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">следующий</string>
+<string name="button_text_restart">Перезапуск</string>
+<string name="button_text_rate">Ставка</string>
+<string name="button_text_more">Больше</string>
+<string name="button_text_menu">Меню</string>
+<string name="button_text_start">Начало</string>
+<string name="button_text_options">Опции</string>
+<string name="button_text_exit">Выход</string>
+<string name="vibrate_on">Вибрация: включена</string>
+<string name="vibrate_off">Вибрация: выкл.</string>
+<string name="sound_on">Звучать на</string>
+<string name="sound_off">Без звука</string>
+<string name="control_touch">Управление: нажмите</string>
+<string name="control_tilt">Управление: Наклон</string>
+<string name="text_header_level_select">Уровни</string>
+</resources>

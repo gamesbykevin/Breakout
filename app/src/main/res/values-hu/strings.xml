@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Következő</string>
+<string name="button_text_restart">Újrakezd</string>
+<string name="button_text_rate">Arány</string>
+<string name="button_text_more">Több</string>
+<string name="button_text_menu">Menü</string>
+<string name="button_text_start">Rajt</string>
+<string name="button_text_options">Lehetőségek</string>
+<string name="button_text_exit">Kijárat</string>
+<string name="vibrate_on">Rezgés: On</string>
+<string name="vibrate_off">Rezgés: Ki</string>
+<string name="sound_on">Hang: Be</string>
+<string name="sound_off">Nyíltan beszél</string>
+<string name="control_touch">Vezérlés: Érintse meg</string>
+<string name="control_tilt">Control: Tilt</string>
+<string name="text_header_level_select">Levels</string>
+</resources>

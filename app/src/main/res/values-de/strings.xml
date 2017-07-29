@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Nächster</string>
+<string name="button_text_restart">Neustart</string>
+<string name="button_text_rate">Preis</string>
+<string name="button_text_more">Mehr</string>
+<string name="button_text_menu">Menü</string>
+<string name="button_text_start">Anfang</string>
+<string name="button_text_options">Optionen</string>
+<string name="button_text_exit">Ausgang</string>
+<string name="vibrate_on">Vibrieren: Ein</string>
+<string name="vibrate_off">Vibrieren: Aus</string>
+<string name="sound_on">Ton an</string>
+<string name="sound_off">Ton aus</string>
+<string name="control_touch">Kontrolle: Berühren Sie</string>
+<string name="control_tilt">Kontrolle: Neigung</string>
+<string name="text_header_level_select">Ebenen</string>
+</resources>

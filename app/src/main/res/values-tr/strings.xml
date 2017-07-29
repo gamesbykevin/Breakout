@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Sonraki</string>
+<string name="button_text_restart">Tekrar başlat</string>
+<string name="button_text_rate">oran</string>
+<string name="button_text_more">Daha</string>
+<string name="button_text_menu">Menü</string>
+<string name="button_text_start">Başlama</string>
+<string name="button_text_options">Seçenekler</string>
+<string name="button_text_exit">çıkış</string>
+<string name="vibrate_on">Titreşim: Açık</string>
+<string name="vibrate_off">Titreşim: Kapalı</string>
+<string name="sound_on">Ses açık</string>
+<string name="sound_off">Sesi kapamak</string>
+<string name="control_touch">Kontrol: Dokunmatik</string>
+<string name="control_tilt">Kontrol: Eğim</string>
+<string name="text_header_level_select">Seviyeleri</string>
+</resources>

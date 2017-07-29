@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Kitas</string>
+<string name="button_text_restart">Perkrauti</string>
+<string name="button_text_rate">Reitingas</string>
+<string name="button_text_more">Daugiau</string>
+<string name="button_text_menu">Meniu</string>
+<string name="button_text_start">Pradėti</string>
+<string name="button_text_options">Nustatymai</string>
+<string name="button_text_exit">Išeiti</string>
+<string name="vibrate_on">Vibracija: įjungta</string>
+<string name="vibrate_off">Vibracija: išjungta</string>
+<string name="sound_on">Garsas: on</string>
+<string name="sound_off">Garsas išjungtas</string>
+<string name="control_touch">Valdymas: Palieskite</string>
+<string name="control_tilt">Kontrolė: pakreipti</string>
+<string name="text_header_level_select">Lygiai</string>
+</resources>

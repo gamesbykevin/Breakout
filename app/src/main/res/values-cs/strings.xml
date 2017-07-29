@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">další</string>
+<string name="button_text_restart">Restartujte</string>
+<string name="button_text_rate">Hodnotit</string>
+<string name="button_text_more">Více</string>
+<string name="button_text_menu">Jídelní lístek</string>
+<string name="button_text_start">Start</string>
+<string name="button_text_options">Možnosti</string>
+<string name="button_text_exit">Výstup</string>
+<string name="vibrate_on">Vibrace: Zapnuto</string>
+<string name="vibrate_off">Vibrace: Vypnuto</string>
+<string name="sound_on">Zvuk: Zapnuto</string>
+<string name="sound_off">Zvuk: Vypnuto</string>
+<string name="control_touch">Ovládání: Dotkněte se</string>
+<string name="control_tilt">Ovládání: naklonění</string>
+<string name="text_header_level_select">Úrovně</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">次</string>
+<string name="button_text_restart">再起動</string>
+<string name="button_text_rate">レート</string>
+<string name="button_text_more">もっと</string>
+<string name="button_text_menu">メニュー</string>
+<string name="button_text_start">開始</string>
+<string name="button_text_options">オプション</string>
+<string name="button_text_exit">出口</string>
+<string name="vibrate_on">振動：オン</string>
+<string name="vibrate_off">振動：オフ</string>
+<string name="sound_on">サウンド：オン</string>
+<string name="sound_off">サウンド：オフ</string>
+<string name="control_touch">コントロール：タッチ</string>
+<string name="control_tilt">コントロール：傾き</string>
+<string name="text_header_level_select">レベル</string>
+</resources>

@@ -48,17 +48,17 @@ public final class Ball extends Entity implements ICommon
 	/**
 	 * The minimum speed allowed
 	 */
-	public static final double SPEED_MIN = 4.15;
+	public static final int SPEED_MIN = 4;
 	
 	/**
 	 * The rate at which to increase the speed
 	 */
-	public static final double SPEED_INCREASE = 1.08; 
-	
+	public static final int SPEED_INCREASE = 1;
+
 	/**
 	 * The rate at which to decrease the speed
 	 */
-	public static final double SPEED_DECREASE = 0.95;
+	public static final int SPEED_DECREASE = 1;
 
 	//store the x-ratio for paddle collision
 	private double xratio = 1.0;

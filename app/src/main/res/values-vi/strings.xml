@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Kế tiếp</string>
+<string name="button_text_restart">Khởi động lại</string>
+<string name="button_text_rate">Tỷ lệ</string>
+<string name="button_text_more">Hơn</string>
+<string name="button_text_menu">Thực đơn</string>
+<string name="button_text_start">Khởi đầu</string>
+<string name="button_text_options">Tùy chọn</string>
+<string name="button_text_exit">Lối thoát</string>
+<string name="vibrate_on">Rung: Bật</string>
+<string name="vibrate_off">Rung: Tắt</string>
+<string name="sound_on">Âm thanh: Bật</string>
+<string name="sound_off">Âm thanh: Tắt</string>
+<string name="control_touch">Kiểm soát: Chạm vào</string>
+<string name="control_tilt">Kiểm soát: nghiêng</string>
+<string name="text_header_level_select">Trình độ</string>
+</resources>

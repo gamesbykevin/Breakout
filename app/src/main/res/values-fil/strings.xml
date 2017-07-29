@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Susunod</string>
+<string name="button_text_restart">I-restart</string>
+<string name="button_text_rate">Rate</string>
+<string name="button_text_more">Higit pa</string>
+<string name="button_text_menu">Menu</string>
+<string name="button_text_start">Magsimula</string>
+<string name="button_text_options">Mga Opsyon</string>
+<string name="button_text_exit">Lumabas</string>
+<string name="vibrate_on">Mag-vibrate: Sa</string>
+<string name="vibrate_off">Mag-vibrate: Naka-off</string>
+<string name="sound_on">Tunog: Bukas</string>
+<string name="sound_off">Tunog: Sarado</string>
+<string name="control_touch">Kontrol: Pindutin</string>
+<string name="control_tilt">Control: Ikiling</string>
+<string name="text_header_level_select">Mga Antas</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Seterusnya</string>
+<string name="button_text_restart">Mula semula</string>
+<string name="button_text_rate">Kadar</string>
+<string name="button_text_more">Lebih banyak</string>
+<string name="button_text_menu">Menu</string>
+<string name="button_text_start">Mulakan</string>
+<string name="button_text_options">Pilihan</string>
+<string name="button_text_exit">Keluar</string>
+<string name="vibrate_on">Getaran: Aktif</string>
+<string name="vibrate_off">Vibrate: Off</string>
+<string name="sound_on">Bunyi: Aktif</string>
+<string name="sound_off">Bunyi: Tidak aktif</string>
+<string name="control_touch">Kawalan: Sentuh</string>
+<string name="control_tilt">Kawalan: Tilt</string>
+<string name="text_header_level_select">Tahap</string>
+</resources>

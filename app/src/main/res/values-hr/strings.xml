@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Sljedeći</string>
+<string name="button_text_restart">Ponovno pokretanje</string>
+<string name="button_text_rate">Stopa</string>
+<string name="button_text_more">Više</string>
+<string name="button_text_menu">Jelovnik </string>
+<string name="button_text_start">Početak</string>
+<string name="button_text_options">Opcije</string>
+<string name="button_text_exit">Izlaz </string>
+<string name="vibrate_on">Vibriraj: On</string>
+<string name="vibrate_off">Vibriraj: Isključeno</string>
+<string name="sound_on">Zvuk: uključen</string>
+<string name="sound_off">Zvuk isključen</string>
+<string name="control_touch">Kontrola: dodirnite</string>
+<string name="control_tilt">Kontrola: Nagib</string>
+<string name="text_header_level_select">razine</string>
+</resources>

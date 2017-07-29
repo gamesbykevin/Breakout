@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">التالى</string>
+<string name="button_text_restart">إعادة بدء</string>
+<string name="button_text_rate">معدل</string>
+<string name="button_text_more">أكثر من</string>
+<string name="button_text_menu">قائمة طعام</string>
+<string name="button_text_start">بداية</string>
+<string name="button_text_options">خيارات</string>
+<string name="button_text_exit">ىخرج</string>
+<string name="vibrate_on">الاهتزاز: تشغيل</string>
+<string name="vibrate_off">الاهتزاز: إيقاف</string>
+<string name="sound_on">الصوت مفعل</string>
+<string name="sound_off">الصوت مقفل</string>
+<string name="control_touch">التحكم: المس</string>
+<string name="control_tilt">التحكم: الميل</string>
+<string name="text_header_level_select">مستويات</string>
+</resources>

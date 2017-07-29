@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Următor →</string>
+<string name="button_text_restart">Repornire</string>
+<string name="button_text_rate">rată</string>
+<string name="button_text_more">Mai Mult</string>
+<string name="button_text_menu">Meniul</string>
+<string name="button_text_start">start</string>
+<string name="button_text_options">Opțiuni</string>
+<string name="button_text_exit">Ieșire</string>
+<string name="vibrate_on">Vibrați: Pornit</string>
+<string name="vibrate_off">Vibrați: Oprit</string>
+<string name="sound_on">Sunet: Activat</string>
+<string name="sound_off">Fara sunet</string>
+<string name="control_touch">Control: atingeți</string>
+<string name="control_tilt">Control: Înclinare</string>
+<string name="text_header_level_select">niveluri</string>
+</resources>

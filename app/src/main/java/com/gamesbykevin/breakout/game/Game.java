@@ -181,6 +181,9 @@ public class Game {
                 //if the game is over, move to the next step
                 if (GameHelper.isGameOver()) {
 
+                    //make sure we display the correct button text
+                    activity.updateActionButtonText();
+
                     //did we win?
                     if (WIN) {
 

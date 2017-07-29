@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Далі</string>
+<string name="button_text_restart">Перезапустити</string>
+<string name="button_text_rate">Оцінити</string>
+<string name="button_text_more">Більше</string>
+<string name="button_text_menu">Меню</string>
+<string name="button_text_start">Почати</string>
+<string name="button_text_options">Опції</string>
+<string name="button_text_exit">ВХІД</string>
+<string name="vibrate_on">Вібросигнал: Увімкнено</string>
+<string name="vibrate_off">Вібросигнал: вимкнено</string>
+<string name="sound_on">Звук: увімкнено</string>
+<string name="sound_off">Звук: вимкнено</string>
+<string name="control_touch">Контроль: торкнутися</string>
+<string name="control_tilt">Контроль: нахил</string>
+<string name="text_header_level_select">Рівні</string>
+</resources>

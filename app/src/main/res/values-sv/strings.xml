@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Nästa</string>
+<string name="button_text_restart">Omstart</string>
+<string name="button_text_rate">Betygsätta</string>
+<string name="button_text_more">Mer</string>
+<string name="button_text_menu">Meny</string>
+<string name="button_text_start">Start</string>
+<string name="button_text_options">alternativ</string>
+<string name="button_text_exit">Utgång</string>
+<string name="vibrate_on">Vibrera: På</string>
+<string name="vibrate_off">Vibrera: Av</string>
+<string name="sound_on">Ljud: På</string>
+<string name="sound_off">Ljud av</string>
+<string name="control_touch">Kontroll: Tryck på</string>
+<string name="control_tilt">Kontroll: Tilt</string>
+<string name="text_header_level_select">nivåer</string>
+</resources>

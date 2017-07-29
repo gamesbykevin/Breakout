@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="button_text_next">Naslednji</string>
+<string name="button_text_restart">Ponovni zagon</string>
+<string name="button_text_rate">Oceniti</string>
+<string name="button_text_more">Več</string>
+<string name="button_text_menu">Meni</string>
+<string name="button_text_start">Začni</string>
+<string name="button_text_options">Opcije</string>
+<string name="button_text_exit">Izhod</string>
+<string name="vibrate_on">Vibriranje: Vključeno</string>
+<string name="vibrate_off">Vibriranje: izključeno</string>
+<string name="sound_on">Zvok: Vklopljen</string>
+<string name="sound_off">Zvok: Izključeno</string>
+<string name="control_touch">Nadzor: dotaknite se</string>
+<string name="control_tilt">Nadzor: nagibanje</string>
+<string name="text_header_level_select">Raven</string>
+</resources>
