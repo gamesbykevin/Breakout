@@ -548,11 +548,11 @@ public class Paddle extends Entity implements ICommon
 		
 		//play sound effects accordingly
 		if (soundPaddleCollision)
-			activity.playSound(R.raw.paddlecollision);
+			activity.playSoundEffect(R.raw.paddlecollision);
 		if (soundPaddleCollisionMagnet)
-			activity.playSound(R.raw.paddlecatch);
+			activity.playSoundEffect(R.raw.paddlecatch);
 		if (soundLaserFire)
-			activity.playSound(R.raw.laser);
+			activity.playSoundEffect(R.raw.laser);
 	}
 	
 	@Override

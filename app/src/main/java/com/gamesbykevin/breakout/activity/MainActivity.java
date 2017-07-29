@@ -13,7 +13,7 @@ public class MainActivity extends BaseActivity {
     /**
      * Do we debug the application?
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        super.playSong(R.raw.menu);
     }
 
     @Override

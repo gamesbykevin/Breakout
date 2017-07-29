@@ -91,13 +91,20 @@ public abstract class BaseActivity extends Activity {
 
             //create new list
             SOUND = new HashMap<>();
-            /*
-            loadSound(R.raw.challenge);
-            loadSound(R.raw.infinite);
-            loadSound(R.raw.original);
-            loadSound(R.raw.puzzle);
-            loadSound(R.raw.title);
-            */
+            loadSound(R.raw.ballbounce);
+            loadSound(R.raw.ballbouncesolid);
+            loadSound(R.raw.complete);
+            loadSound(R.raw.firepickup);
+            loadSound(R.raw.gameover);
+            loadSound(R.raw.laser);
+            loadSound(R.raw.loseball);
+            loadSound(R.raw.menu);
+            loadSound(R.raw.newlife);
+            loadSound(R.raw.paddlecatch);
+            loadSound(R.raw.paddlecollision);
+            loadSound(R.raw.powerup);
+            loadSound(R.raw.theme);
+            loadSound(R.raw.wallcollision);
         }
     }
 
@@ -192,30 +199,35 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
-    public void playSound(final int resId) {
-        playSound(resId, false);
+    public void playSong(final int resId) {
+        stopSound(R.raw.theme);
+        stopSound(R.raw.menu);
+        stopSound(R.raw.complete);
+        stopSound(R.raw.gameover);
+        playSound(resId, false, true);
     }
 
-    public void playSound(final int resId, boolean restart) {
+    public void playSoundEffect(final int resId) {
+        playSound(resId, false, false);
+    }
+
+    public void playSound(final int resId, boolean restart, boolean loop) {
 
         try {
             //if there is no sound, we can't play it
-            if (SOUND != null || SOUND.isEmpty())
+            if (SOUND == null || SOUND.isEmpty())
                 return;
 
             //we can't play if the sound is not enabled
             if (!getBooleanValue(R.string.sound_file_key))
                 return;
 
-            //stop all sound in case any other is playing
-            stopSound();
-
             //if restarting go to beginning of sound
             if (restart)
                 SOUND.get(resId).seekTo(0);
 
-            //we want our sound to loop
-            SOUND.get(resId).setLooping(true);
+            //do we want our sound to loop
+            SOUND.get(resId).setLooping(loop);
 
             //resume playing
             SOUND.get(resId).start();
@@ -265,9 +277,11 @@ public abstract class BaseActivity extends Activity {
 
     public void stopSound(final int resId) {
         try {
-            //get the song and stop if playing
-            if (SOUND.get(resId).isPlaying() || SOUND.get(resId).isLooping())
-                SOUND.get(resId).pause();
+            if (SOUND != null) {
+                //get the song and stop if playing
+                if (SOUND.get(resId).isPlaying() || SOUND.get(resId).isLooping())
+                    SOUND.get(resId).pause();
+            }
         } catch (Exception e) {
             UtilityHelper.handleException(e);
         }

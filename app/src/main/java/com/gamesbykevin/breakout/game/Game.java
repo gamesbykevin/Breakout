@@ -192,7 +192,7 @@ public class Game {
                         STATISTICS.save();
 
                         //play sound
-                        activity.playSound(R.raw.complete);
+                        activity.playSong(R.raw.complete);
 
                         //display message
                         UtilityHelper.logEvent("GAME OVER WIN!!!");
@@ -210,7 +210,7 @@ public class Game {
 
                         //no more lives
                         if (getStatDescription().getStatValue() <= 0)
-                            activity.playSound(R.raw.gameover);
+                            activity.playSong(R.raw.gameover);
                     }
 
                     //move to game over step

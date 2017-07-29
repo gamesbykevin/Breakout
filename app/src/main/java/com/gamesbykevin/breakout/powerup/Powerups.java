@@ -240,11 +240,11 @@ public class Powerups extends Entity implements ICommon
 
 		//play sound effects accordingly
 		if (soundPowerup)
-			activity.playSound(R.raw.powerup);
+			activity.playSoundEffect(R.raw.powerup);
 		if (soundFireball)
-			activity.playSound(R.raw.firepickup);
+			activity.playSoundEffect(R.raw.firepickup);
 		if (soundNewlife)
-			activity.playSound(R.raw.newlife);
+			activity.playSoundEffect(R.raw.newlife);
 	}
 
 	@Override

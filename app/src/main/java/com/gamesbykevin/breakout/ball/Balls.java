@@ -333,13 +333,13 @@ public class Balls extends Entity implements ICommon
 			
 			//play sound effects accordingly
 			if (soundBrickCollisionSolid)
-				activity.playSound(R.raw.ballbouncesolid);
+				activity.playSoundEffect(R.raw.ballbouncesolid);
 			if (soundBrickCollision)
-				activity.playSound(R.raw.ballbounce);
+				activity.playSoundEffect(R.raw.ballbounce);
 			if (soundWallCollision)
-				activity.playSound(R.raw.wallcollision);
+				activity.playSoundEffect(R.raw.wallcollision);
 			if (soundLoseBall)
-				activity.playSound(R.raw.loseball);
+				activity.playSoundEffect(R.raw.loseball);
 		}
 	}
 	

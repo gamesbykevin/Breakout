@@ -50,9 +50,6 @@ public class Statistics {
             while (getList().size() < count) {
                 update(getList().size(), false);
             }
-
-            //save our results
-            save();
         }
     }
 

@@ -208,7 +208,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onResume();
 
         //resume sound playing
-        //playSound();
+        super.playSong(R.raw.theme);
 
         //if the game was previously paused create a new view
         if (this.paused) {

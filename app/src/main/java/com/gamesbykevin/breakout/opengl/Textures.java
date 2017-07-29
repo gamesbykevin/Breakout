@@ -241,7 +241,7 @@ public class Textures {
                 throw new Exception("Error loading texture: " + index);
             } else {
                 //display texture id
-                UtilityHelper.logEvent("Texture loaded id: " + IDS[index]);
+                //UtilityHelper.logEvent("Texture loaded id: " + IDS[index]);
             }
 
         } catch (Exception e) {
