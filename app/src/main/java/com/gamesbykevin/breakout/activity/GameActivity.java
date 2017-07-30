@@ -353,6 +353,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
             getStatDescription().setDescription(StatDescription.DEFAULT_LIVES);
         }
 
+        //play song
+        super.playSong(R.raw.theme);
+
         //show loading screen while we reset
         setScreen(Screen.Loading);
 
