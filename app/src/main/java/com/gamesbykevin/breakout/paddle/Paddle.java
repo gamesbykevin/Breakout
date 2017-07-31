@@ -17,7 +17,6 @@ import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 
 public class Paddle extends Entity implements ICommon
 {
-	
 	/**
 	 * 100% Touch power (full)
 	 */

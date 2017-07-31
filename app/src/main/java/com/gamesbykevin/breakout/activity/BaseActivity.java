@@ -277,7 +277,7 @@ public abstract class BaseActivity extends Activity {
 
     public void stopSound(final int resId) {
         try {
-            if (SOUND != null) {
+            if (SOUND != null && !SOUND.isEmpty() && SOUND.get(resId) != null) {
                 //get the song and stop if playing
                 if (SOUND.get(resId).isPlaying() || SOUND.get(resId).isLooping())
                     SOUND.get(resId).pause();

@@ -211,6 +211,13 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onDestroy();
 
         //cleanup resources
+        if (GAME != null) {
+            try {
+                GAME.dispose();
+            } catch (Exception e) {
+                UtilityHelper.handleException(e);
+            }
+        }
     }
 
     @Override
