@@ -40,7 +40,7 @@ public class Powerup extends Entity implements ICommon
 	/**
 	 * The rate at which the power up falls
 	 */
-	public static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .25);
+	public static final double Y_VELOCITY = (Brick.HEIGHT_NORMAL * .15);
 
 	//keep track of the elapsed frames
 	private int frames = 0;

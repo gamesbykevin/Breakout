@@ -424,6 +424,14 @@ public class Paddle extends Entity implements ICommon
 			//get the current ball
 			Ball ball = getGame().getBalls().getBalls().get(index);
 
+			//if the ball isn't close, skip it
+			if (ball.getY() + ball.getHeight() < getY())
+				continue;
+
+			//if the ball doesn't have the x-coordinate range
+			if (ball.getX() > getX() + getWidth() || ball.getX() + ball.getWidth() < getX())
+				continue;
+
 			//only check balls that are moving south
 			if (ball.getDY() < 0)
 				continue;

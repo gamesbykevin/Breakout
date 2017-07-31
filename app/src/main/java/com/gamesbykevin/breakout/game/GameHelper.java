@@ -120,7 +120,7 @@ public final class GameHelper
     protected final static boolean isGameOver()
 	{
 		//if there are no more bricks to be broken the game is over
-		if (getGame().getBricks().getCount() <= 0) {
+		if (getGame().getBricks().isComplete()) {
 			WIN = true;
 			return true;
 		}

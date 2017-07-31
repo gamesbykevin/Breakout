@@ -306,10 +306,6 @@ public class Game {
         if (STEP != Step.Updating && STEP != Step.Start)
             return true;
 
-        //if the control is tilt, we can't continue
-        if (!activity.getBooleanValue(R.string.control_file_key))
-            return true;
-
         if (action == MotionEvent.ACTION_UP)
         {
             //un-pause the game
@@ -319,28 +315,54 @@ public class Game {
             //un flag press
             this.press = false;
 
+            //if the control is tilt, we can't continue
+            if (!activity.getBooleanValue(R.string.control_file_key) && activity.getAccelerometer() != null)
+                return true;
+
             //update the paddle
-            getPaddle().touch(x, false, Paddle.TOUCH_POWER_0);
+            updateTilt(x, false, Paddle.TOUCH_POWER_0);
         }
         else if (action == MotionEvent.ACTION_DOWN)
         {
             //flag that we pressed down
             this.press = true;
 
+            //if the control is tilt, we can't continue
+            if (!activity.getBooleanValue(R.string.control_file_key) && activity.getAccelerometer() != null)
+                return true;
+
             //update the paddle
-            getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
+            updateTilt(x, true, Paddle.TOUCH_POWER_100);
         }
         else if (action == MotionEvent.ACTION_MOVE)
         {
             //flag press
             this.press = true;
 
+            //if the control is tilt, we can't continue
+            if (!activity.getBooleanValue(R.string.control_file_key) && activity.getAccelerometer() != null)
+                return true;
+
             //update the paddle
-            getPaddle().touch(x, true, Paddle.TOUCH_POWER_100);
+            updateTilt(x, true, Paddle.TOUCH_POWER_100);
         }
 
         //return true to keep receiving events
         return true;
+    }
+
+    public void updateTilt(float destinationX, boolean touch) {
+        updateTilt(destinationX, touch, Paddle.TOUCH_POWER_100);
+    }
+
+    public void updateTilt(float destinationX, boolean touch, float velocityRatio) {
+
+        //can't do anything if the paddle doesn't exist
+        if (getPaddle() == null)
+            return;
+
+        //update the paddle accordingly
+        getPaddle().touch(destinationX, touch, velocityRatio);
     }
 
     /**

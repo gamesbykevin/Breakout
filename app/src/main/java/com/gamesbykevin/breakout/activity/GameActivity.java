@@ -1,6 +1,11 @@
 package com.gamesbykevin.breakout.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +22,10 @@ import com.gamesbykevin.breakout.game.Game.Step;
 import com.gamesbykevin.breakout.level.Levels;
 import com.gamesbykevin.breakout.level.Statistics;
 import com.gamesbykevin.breakout.opengl.OpenGLSurfaceView;
+import com.gamesbykevin.breakout.paddle.Paddle;
 import com.gamesbykevin.breakout.ui.CustomAdapter;
 import com.gamesbykevin.breakout.util.StatDescription;
+import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +38,7 @@ import static com.gamesbykevin.breakout.game.Game.STEP;
 import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
 
 
-public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener, SensorEventListener {
 
     //our open GL surface view
     private GLSurfaceView glSurfaceView;
@@ -75,6 +82,18 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
     //our custom adapter that we bind to GridView
     private CustomAdapter customAdapter;
 
+    //manage all the phones sensors
+    private SensorManager sensorManager;
+
+    //sensor to detect tilt
+    private Sensor accelerometer;
+
+    //the values from our accelerometer sensor
+    private float[] gravity;
+
+    //the minimum tilt needed to be considered valid
+    private static final float TILT_MIMINUM = 1.75f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,8 +122,23 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         this.layouts.add((LinearLayout)findViewById(R.id.loadingScreenLayout));
         this.layouts.add((TableLayout)findViewById(R.id.levelSelectLayout));
 
+        //if we want tilt control, make sure our settings match the same
+        if (!super.getBooleanValue(R.string.control_file_key)) {
+
+            //get the sensor manager that manages all sensors
+            this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+            //get the tilt sensor
+            if (this.sensorManager != null)
+                this.accelerometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
         //update level select screen
         refreshLevelSelect();
+    }
+
+    public Sensor getAccelerometer() {
+        return this.accelerometer;
     }
 
     public static Game getGame() {
@@ -126,8 +160,8 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         //set our adapter to the grid view
         levelSelectGrid.setAdapter(this.customAdapter);
 
-        //scroll to position
-        levelSelectGrid.smoothScrollToPosition(STATISTICS.getIndex());
+        //show current position, without having to scroll
+        levelSelectGrid.setSelection(STATISTICS.getIndex());
     }
 
     @Override
@@ -185,6 +219,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         //call parent
         super.onPause();
 
+        if (this.sensorManager != null && this.accelerometer != null)
+            this.sensorManager.unregisterListener(this);
+
         //pause the game
         getGame().pause();
 
@@ -206,6 +243,10 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
         //call parent
         super.onResume();
+
+        //register the listener upon resume
+        if (this.sensorManager != null && this.accelerometer != null)
+            this.sensorManager.registerListener(this, this.accelerometer, SensorManager.SENSOR_DELAY_UI);
 
         //resume sound playing
         super.playSong(R.raw.theme);
@@ -365,6 +406,9 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
 
     public void onClickLevelSelect(View view) {
 
+        //resume sound playing
+        super.playSong(R.raw.theme);
+
         //go back to level select screen
         setScreen(Screen.LevelSelect);
 
@@ -378,4 +422,47 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        //if no values exist, do nothing
+        if (event.values == null)
+            return;
+
+        //make sure we have the correct sensor
+        switch (event.sensor.getType()) {
+
+            //if accelerometer, get the values
+            case Sensor.TYPE_ACCELEROMETER:
+                gravity = event.values;
+                break;
+        }
+
+        //values should have been retrieved
+        if (gravity == null) {
+            UtilityHelper.logEvent("gravity is null");
+            return;
+        } else {
+
+            //make sure the game exists before we try to update it
+            if (getGame() != null) {
+
+                //check our thresh-hold to ensure the tilt is valid
+                if (gravity[0] <= -TILT_MIMINUM) {
+                    //we are tilting right
+                    getGame().updateTilt(OpenGLSurfaceView.WIDTH, true, Paddle.TOUCH_POWER_50);
+                } else if (gravity[0] >= TILT_MIMINUM) {
+                    //we are tilting left
+                    getGame().updateTilt(0, true, Paddle.TOUCH_POWER_50);
+                } else {
+                    //no tilt, stop the paddle if it exists
+                    getGame().updateTilt(0, false);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 }

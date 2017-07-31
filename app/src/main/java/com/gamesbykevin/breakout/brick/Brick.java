@@ -256,9 +256,7 @@ public final class Brick extends Entity implements ICommon
 	@Override
 	public void update(GameActivity activity)
 	{
-		//if dead keep count of frames
-		if (isDead())
-			this.frames++;
+		//do we need to do anything here
 	}
 
 	@Override
@@ -267,12 +265,15 @@ public final class Brick extends Entity implements ICommon
 		//if dead render particles
 		if (isDead())
 		{
-			//assign the particle texture id
-			super.setTextureId(particleTextureId);
-
 			//only render the particles for a limited number of frames
 			if (frames <= FRAMES_PARTICLE_LIMIT)
 			{
+				//increase the frames
+				frames++;
+
+				//assign the particle texture id
+				super.setTextureId(particleTextureId);
+
 				//store values
 				final double x = getX();
 				final double y = getY();

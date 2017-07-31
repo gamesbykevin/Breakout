@@ -95,7 +95,11 @@ public class Lasers extends Entity implements ICommon
 								
 								//mark the collision
 								brick.markCollision();
-								
+
+								//if the brick has been destroyed, track it
+								if (!brick.isSolid() && brick.isDead())
+									getGame().getBricks().setDestroyed(getGame().getBricks().getDestroyed() + 1);
+
 								//if the brick contains a power up we will add it
 								if (brick.hasPowerup())
 									getGame().getPowerups().add(brick);

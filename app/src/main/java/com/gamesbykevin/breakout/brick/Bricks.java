@@ -117,7 +117,7 @@ public class Bricks extends Entity implements ICommon
 	/**
 	 * Dimensions of bricks board with normal size bricks
 	 */
-	public static final int ROWS_NORMAL = 18;
+	public static final int ROWS_NORMAL = 21;
 
 	/**
 	 * Dimensions of bricks board with smaller bricks
@@ -138,7 +138,16 @@ public class Bricks extends Entity implements ICommon
 	 * The starting y-coordinate
 	 */
 	public static final int START_Y = 20;
-	
+
+	//is the brick board complete?
+	private boolean complete = false;
+
+	//how many bricks do we begin with
+	private int beginTotal = 0;
+
+	//how many have we destroyed
+	private int destroyed = 0;
+
 	public Bricks()
 	{
 		super(Brick.WIDTH_NORMAL, Brick.HEIGHT_NORMAL);
@@ -156,7 +165,10 @@ public class Bricks extends Entity implements ICommon
 			//create a new array list for the bricks
 			this.bricks = new Brick[(int) getRow()][(int) getCol()];
 		}
-		
+
+		//flag brick board as not complete
+		this.complete = false;
+
 		//the size of the bricks
 		int width, height;
 		
@@ -180,7 +192,10 @@ public class Bricks extends Entity implements ICommon
 		//assign dimensions
 		super.setWidth(width);
 		super.setHeight(height);
-		
+
+		//reset the number of destroyed bricks back to 0
+		setDestroyed(0);
+
 		//create a brick at every position and mark dead (to start)
 		for (int row = 0; row < getBricks().length; row++)
 		{
@@ -215,7 +230,15 @@ public class Bricks extends Entity implements ICommon
 	{
 		return this.bricks;
 	}
-	
+
+	/**
+	 * Is the brick board complete?
+	 * @return true if all bricks are flagged dead, false otherwise
+	 */
+	public boolean isComplete() {
+		return this.complete;
+	}
+
 	/**
 	 * Count the number of bricks
 	 * @return The total number of breakable bricks that are not flagged dead
@@ -258,23 +281,41 @@ public class Bricks extends Entity implements ICommon
 		
 		this.bricks = null;
 	}
-	
+
+	/**
+	 * Assign the total number of destroyed bricks
+	 * @param destroyed The desired number of destroyed bricks
+	 */
+	public void setDestroyed(final int destroyed) {
+		this.destroyed = destroyed;
+	}
+
+	/**
+	 * Get the number of destroyed bricks
+	 * @return The total number of bricks destroyed
+	 */
+	public int getDestroyed() {
+		return this.destroyed;
+	}
+
+	public void setBeginTotal(final int beginTotal) {
+		this.beginTotal = beginTotal;
+	}
+
+	/**
+	 * How many bricks do we start out with
+	 * @return The total number of bricks we have to destroy to beat the level
+	 */
+	public int getBeginTotal() {
+		return this.beginTotal;
+	}
+
 	@Override
 	public void update(GameActivity activity)
 	{
-		//update bricks?
-		for (int row = 0; row < getBricks().length; row++)
-		{
-			for (int col = 0; col < getBricks()[0].length; col++)
-			{
-				//skip if it does not exist
-				if (getBricks()[row][col] == null)
-					continue;
-				
-				//update brick
-				getBricks()[row][col].update(activity);
-			}
-		}
+		//if the number of destroyed bricks
+		if (getDestroyed() == getBeginTotal())
+			this.complete = true;
 	}
 	
 	@Override
@@ -307,6 +348,10 @@ public class Bricks extends Entity implements ICommon
 
 					//is the brick dead?
 					if (!brick.isDead()) {
+
+						//has the board been completed
+						this.complete = false;
+
 						//position brick
 						super.setX(brick.getX());
 						super.setY(brick.getY());

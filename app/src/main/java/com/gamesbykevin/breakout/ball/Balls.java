@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.gamesbykevin.breakout.R;
 import com.gamesbykevin.breakout.activity.GameActivity;
 import com.gamesbykevin.breakout.brick.Brick;
+import com.gamesbykevin.breakout.brick.Bricks;
 import com.gamesbykevin.breakout.common.ICommon;
 import com.gamesbykevin.breakout.entity.Entity;
 import com.gamesbykevin.breakout.paddle.Paddle;
@@ -281,25 +282,42 @@ public class Balls extends Entity implements ICommon
 				
 				//update ball
 				ball.update(activity);
-				
-				//check if the ball has hit any of the bricks
-				for (int row = 0; row < rowMax; row++)
-				{
-					for (int col = 0; col < colMax; col++)
-					{
+
+				//size of a brick
+				int tmpW = (int)getGame().getBricks().getBricks()[0][0].getWidth();
+				int tmpH = (int)getGame().getBricks().getBricks()[0][0].getHeight();
+
+				//get our location
+				int middleCol = (int)(ball.getX() - Bricks.START_X) / tmpW;
+				int middleRow = (int)(ball.getY() - Bricks.START_Y) / tmpH;
+
+				//calculate the bricks we are near to check for collision
+				for (int row = middleRow - 1; row <= middleRow + 1; row++) {
+					for (int col = middleCol - 1; col <= middleCol + 1; col++) {
+
+						//make sure in bounds
+						if (col < 0 || col >= colMax)
+							continue;
+						if (row < 0 || row >= rowMax)
+							continue;
+
 						//if there was ball/brick collision no need to check the other bricks
 						if (checkBrickCollision(ball, getGame().getBricks().getBricks()[row][col]))
 						{
+							//count the number of bricks destroyed so we can tell if the game is complete
+							if (!getGame().getBricks().getBricks()[row][col].isSolid())
+								getGame().getBricks().setDestroyed(getGame().getBricks().getDestroyed() + 1);
+
 							//move to the end
 							row = rowMax;
 							col = colMax;
-							
+
 							//no need to check the other bricks since the ball already hit
 							break;
 						}
 					}
 				}
-				
+
 				final boolean hidden = ball.isHidden();
 				final double dx = ball.getDX();
 				final double dy = ball.getDY();
@@ -326,8 +344,7 @@ public class Balls extends Entity implements ICommon
 				//speed up every ball
 				for (int i = 0; i < getBalls().size(); i++)
 				{
-					Ball ball = getBalls().get(i);
-					ball.speedUp();
+					getBalls().get(i).speedUp();
 				}
 			}
 			

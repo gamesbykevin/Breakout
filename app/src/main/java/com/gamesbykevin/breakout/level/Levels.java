@@ -131,8 +131,8 @@ public class Levels implements Disposable
 			//if the line has the level separator add to the list
 			if (line.contains(LEVEL_SEPARATOR))
 			{
-				//add level to array list, but make sure it isn't too small or too big
-				if (!level.getKey().isEmpty() && level.getKey().size() > 1 && level.getKey().size() <= ROWS_SMALL - 15)
+				//add level to array list
+				if (!level.getKey().isEmpty())
 					getLevels().add(level);
 				
 				//now create a new object
@@ -143,9 +143,8 @@ public class Levels implements Disposable
 				if (level == null)
 					level = new Level();
 				
-				//add line to level as long as it isn't too big
-				if (line.length() > 0 && line.length() < Bricks.COLS_XSMALL)
-					level.getKey().add(line);
+				//add line to level
+				level.getKey().add(line);
 			}
 		}
 
@@ -214,7 +213,10 @@ public class Levels implements Disposable
 		
 		//reset bricks
 		bricks.reset();
-		
+
+		//how many breakable brocks are we starting out with
+		int beginTotal = 0;
+
 		//check every row in the level
 		for (int row = 0; row < level.getKey().size(); row++)
 		{
@@ -263,6 +265,9 @@ public class Levels implements Disposable
 						
 						//add place as possible location 
 						getLocations().add(new Location(col, row));
+
+						//add to the count
+						beginTotal++;
 					}
 					else
 					{
@@ -288,7 +293,10 @@ public class Levels implements Disposable
 								
 								//add place as possible location 
 								getLocations().add(new Location(col, row));
-								
+
+								//add to the count
+								beginTotal++;
+
 								//exit for loop
 								break;
 							}
@@ -316,6 +324,9 @@ public class Levels implements Disposable
 					break;
 				}
 			}
+
+			//assign the number of bricks that need to be destroyed to win
+			bricks.setBeginTotal(beginTotal);
 		}
 		
 		//if there are bricks without an assigned color, populate all bricks with colors

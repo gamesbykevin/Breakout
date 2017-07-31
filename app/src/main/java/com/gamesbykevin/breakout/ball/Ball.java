@@ -186,7 +186,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedUpX()
 	{
-		this.setDX(super.getDX() * SPEED_INCREASE);
+		this.setDX(super.getDX() + SPEED_INCREASE);
 	}
 	
 	/**
@@ -194,7 +194,7 @@ public final class Ball extends Entity implements ICommon
 	 */
 	public void speedUpY()
 	{
-		this.setDY(super.getDY() * SPEED_INCREASE);
+		this.setDY(super.getDY() + SPEED_INCREASE);
 	}
 	
 	/**

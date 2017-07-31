@@ -13,7 +13,7 @@ public class MainActivity extends BaseActivity {
     /**
      * Do we debug the application?
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,10 +3,14 @@ package com.gamesbykevin.breakout.opengl;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 
+import com.gamesbykevin.breakout.util.UtilityHelper;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
+import static com.gamesbykevin.breakout.activity.MainActivity.DEBUG;
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FRAME_DURATION;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.HEIGHT;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
@@ -113,6 +117,9 @@ public class OpenGLRenderer implements Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
 
+        //get the current time
+        long time = System.currentTimeMillis();
+
         //clears the screen and depth buffer.
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
@@ -124,5 +131,15 @@ public class OpenGLRenderer implements Renderer {
 
         //render game objects
         getGame().render(gl);
+
+        if (DEBUG) {
+
+            //calculate how long it took to render a single frame
+            long duration = System.currentTimeMillis() - time;
+
+            //if it took too long, notify command line
+            if (duration > FRAME_DURATION)
+                UtilityHelper.logEvent("Single render duration: " + (System.currentTimeMillis() - time));
+        }
     }
 }
