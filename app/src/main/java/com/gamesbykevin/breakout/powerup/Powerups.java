@@ -270,7 +270,18 @@ public class Powerups extends Entity implements ICommon
 				try {
 					if (i >= getPowerups().size())
 						continue;
-					getPowerups().get(i).render(openGL);
+
+					Powerup powerup = getPowerups().get(i);
+
+					if (powerup.isHidden())
+						continue;
+
+					super.setX(powerup);
+					super.setY(powerup);
+					super.setTextureId(powerup.getTextureId());
+					super.render(openGL);
+
+					//getPowerups().get(i).render(openGL);
 				} catch (Exception e) {
 					UtilityHelper.handleException(e);
 				}

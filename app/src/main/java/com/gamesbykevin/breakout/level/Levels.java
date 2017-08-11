@@ -15,7 +15,6 @@ import com.gamesbykevin.breakout.brick.Bricks.Key;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
 import static com.gamesbykevin.breakout.activity.GameActivity.STATISTICS;
-import static com.gamesbykevin.breakout.brick.Bricks.ROWS_SMALL;
 
 public class Levels implements Disposable
 {
@@ -52,16 +51,6 @@ public class Levels implements Disposable
 	 * How many of the bricks should we flag as a bonus for normal sized bricks
 	 */
 	private static final float BONUS_RATIO_NORMAL = 0.12f;
-	
-	/**
-	 * How many of the bricks should we flag as a bonus for small sized bricks
-	 */
-	private static final float BONUS_RATIO_SMALL = 0.06f;
-	
-	/**
-	 * How many of the bricks should we flag as a bonus for xtra small sized bricks
-	 */
-	private static final float BONUS_RATIO_XSMALL = .065f;
 	
 	//list to choose random keys from
 	private ArrayList<Bricks.Key> keys = new ArrayList<Bricks.Key>();
@@ -192,25 +181,10 @@ public class Levels implements Disposable
 		boolean noColor = false;
 		
 		//set bricks array size
-		if (level.getKey().get(0).length() == Bricks.COLS_NORMAL)
-		{
-			bricks.setCol(Bricks.COLS_NORMAL);
-			bricks.setRow(Bricks.ROWS_NORMAL);
-			Ball.SPEED_MAX = Brick.HEIGHT_NORMAL;
-		}
-		else if (level.getKey().get(0).length() == Bricks.COLS_SMALL)
-		{
-			bricks.setCol(Bricks.COLS_SMALL);
-			bricks.setRow(ROWS_SMALL);
-			Ball.SPEED_MAX = Brick.HEIGHT_SMALL;
-		}
-		else 
-		{
-			bricks.setCol(Bricks.COLS_XSMALL);
-			bricks.setRow(Bricks.ROWS_XSMALL);
-			Ball.SPEED_MAX = Brick.HEIGHT_XSMALL;
-		}
-		
+		bricks.setCol(Bricks.COLS_NORMAL);
+		bricks.setRow(Bricks.ROWS_NORMAL);
+		Ball.SPEED_MAX = Brick.HEIGHT_NORMAL;
+
 		//reset bricks
 		bricks.reset();
 
@@ -471,22 +445,8 @@ public class Levels implements Disposable
 	private void populateBonuses(final Bricks bricks)
 	{
 		//# bricks that should be flagged as a bonus
-		final int limit;
-		
-		//set bricks array size
-		if (get().getKey().get(0).length() == Bricks.COLS_NORMAL)
-		{
-			limit = (int)(bricks.getCount() * BONUS_RATIO_NORMAL);
-		}
-		else if (get().getKey().get(0).length() == Bricks.COLS_SMALL)
-		{
-			limit = (int)(bricks.getCount() * BONUS_RATIO_SMALL);
-		}
-		else
-		{
-			limit = (int)(bricks.getCount() * BONUS_RATIO_XSMALL);
-		}
-		
+		final int limit = (int)(bricks.getCount() * BONUS_RATIO_NORMAL);
+
 		//track the count
 		int count = 0;
 		

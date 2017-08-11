@@ -119,12 +119,17 @@ public class Powerup extends Entity implements ICommon
 		//pick a random power up
 		setKey();
 	}
+
+	@Override
+	public int getTextureId() {
+		return (IDS[getKey().getIndexStart() + index]);
+	}
 	
 	@Override
 	public void render(GL10 openGL)
 	{
 		//assign the animation
-		super.setTextureId(IDS[getKey().getIndexStart() + index]);
+		super.setTextureId(this.getTextureId());
 
 		//render power up
 		super.render(openGL);

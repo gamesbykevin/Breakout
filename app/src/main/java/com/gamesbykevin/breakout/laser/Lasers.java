@@ -176,6 +176,7 @@ public class Lasers extends Entity implements ICommon
 	}
 
 	public void render(GL10 openGL) {
+
 		if (getLasers() != null)
 		{
 			for (int i = 0; i < getLasers().size(); i++)
@@ -191,8 +192,13 @@ public class Lasers extends Entity implements ICommon
 					if (laser.isHidden())
 						continue;
 
+					super.setX(laser);
+					super.setY(laser);
+					super.setTextureId(laser.getTextureId());
+					super.render(openGL);
+
 					//render the laser
-					laser.render(openGL);
+					//laser.render(openGL);
 
 				} catch (Exception e) {
 					UtilityHelper.handleException(e);

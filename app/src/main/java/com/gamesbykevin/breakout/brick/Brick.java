@@ -59,26 +59,6 @@ public final class Brick extends Entity implements ICommon
 	public static final int HEIGHT_NORMAL = 20;
 	
 	/**
-	 * Small width of a brick
-	 */
-	public static final int WIDTH_SMALL = 20;
-	
-	/**
-	 * Small height of a brick
-	 */
-	public static final int HEIGHT_SMALL = 10;
-	
-	/**
-	 * Xtra small width of a brick
-	 */
-	public static final int WIDTH_XSMALL = 10;
-	
-	/**
-	 * Xtra small height of a brick
-	 */
-	public static final int HEIGHT_XSMALL = 5;
-
-	/**
 	 * The number of times a solid brick can be hit before it is dead
 	 */
 	private static final int COLLISIONS_LIMIT_SOLID = 3;
@@ -126,6 +106,9 @@ public final class Brick extends Entity implements ICommon
 	{
 		//reset frame count
 		this.frames = 0;
+
+		//pick a texture id
+		assignParticleTextureId();
 	}
 
 	public float getTransparency() {
@@ -154,12 +137,12 @@ public final class Brick extends Entity implements ICommon
 	public void setDead(final boolean dead)
 	{
 		this.dead = dead;
-
-		//if dead pick a particle id
-		if (isDead())
-			this.particleTextureId = getTextureIdParticle();
 	}
-	
+
+	public void assignParticleTextureId() {
+		this.particleTextureId = getTextureIdParticle();
+	}
+
 	/**
 	 * Is the brick dead?
 	 * @return true if dead, false otherwise

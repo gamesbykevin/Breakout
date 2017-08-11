@@ -105,30 +105,10 @@ public class Bricks extends Entity implements ICommon
 	public static final int COLS_NORMAL = 11;
 
 	/**
-	 * Dimensions of bricks board with smaller bricks
-	 */
-	public static final int COLS_SMALL = 22;
-	
-	/**
-	 * Dimensions of bricks board with xtra smaller bricks
-	 */
-	public static final int COLS_XSMALL = 44;
-	
-	/**
 	 * Dimensions of bricks board with normal size bricks
 	 */
 	public static final int ROWS_NORMAL = 21;
 
-	/**
-	 * Dimensions of bricks board with smaller bricks
-	 */
-	public static final int ROWS_SMALL = 36;
-	
-	/**
-	 * Dimensions of bricks board with xtra smaller bricks
-	 */
-	public static final int ROWS_XSMALL = 72;
-	
 	/**
 	 * The starting x-coordinate
 	 */
@@ -170,24 +150,7 @@ public class Bricks extends Entity implements ICommon
 		this.complete = false;
 
 		//the size of the bricks
-		int width, height;
-		
-		//determine the size of the bricks
-		if (getBricks()[0].length == COLS_NORMAL)
-		{
-			width = Brick.WIDTH_NORMAL;
-			height = Brick.HEIGHT_NORMAL;
-		}
-		else if (getBricks()[0].length == COLS_SMALL)
-		{
-			width = Brick.WIDTH_SMALL;
-			height = Brick.HEIGHT_SMALL;
-		}
-		else
-		{
-			width = Brick.WIDTH_XSMALL;
-			height = Brick.HEIGHT_XSMALL;
-		}
+		final int width = Brick.WIDTH_NORMAL, height = Brick.HEIGHT_NORMAL;
 		
 		//assign dimensions
 		super.setWidth(width);
@@ -269,13 +232,13 @@ public class Bricks extends Entity implements ICommon
 	public void dispose()
 	{
 		super.dispose();
-		
-		for (int row = 0; row < getBricks().length; row++)
-		{
-			for (int col = 0; col < getBricks()[0].length; col++)
-			{
-				if (getBricks()[row][col] != null)
-					getBricks()[row][col] = null;
+
+		if (getBricks() != null) {
+			for (int row = 0; row < getBricks().length; row++) {
+				for (int col = 0; col < getBricks()[0].length; col++) {
+					if (getBricks()[row][col] != null)
+						getBricks()[row][col] = null;
+				}
 			}
 		}
 		

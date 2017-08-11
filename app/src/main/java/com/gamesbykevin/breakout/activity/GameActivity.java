@@ -27,16 +27,23 @@ import com.gamesbykevin.breakout.ui.CustomAdapter;
 import com.gamesbykevin.breakout.util.StatDescription;
 import com.gamesbykevin.breakout.util.UtilityHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Exchanger;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.gamesbykevin.breakout.game.GameHelper.WIN;
 import static com.gamesbykevin.breakout.game.Game.STEP;
 import static com.gamesbykevin.breakout.game.GameHelper.getStatDescription;
-
+import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.WIDTH;
 
 public class GameActivity extends BaseActivity implements AdapterView.OnItemClickListener, SensorEventListener {
 
@@ -458,7 +465,7 @@ public class GameActivity extends BaseActivity implements AdapterView.OnItemClic
                 //check our thresh-hold to ensure the tilt is valid
                 if (gravity[0] <= -TILT_MIMINUM) {
                     //we are tilting right
-                    getGame().updateTilt(OpenGLSurfaceView.WIDTH, true, Paddle.TOUCH_POWER_50);
+                    getGame().updateTilt(WIDTH, true, Paddle.TOUCH_POWER_50);
                 } else if (gravity[0] >= TILT_MIMINUM) {
                     //we are tilting left
                     getGame().updateTilt(0, true, Paddle.TOUCH_POWER_50);

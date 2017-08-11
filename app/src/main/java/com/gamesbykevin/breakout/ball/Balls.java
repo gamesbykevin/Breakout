@@ -17,6 +17,7 @@ import static com.gamesbykevin.breakout.activity.GameActivity.getGame;
 import static com.gamesbykevin.breakout.activity.GameActivity.getRandomObject;
 import static com.gamesbykevin.breakout.opengl.OpenGLSurfaceView.FPS;
 import static com.gamesbykevin.breakout.opengl.Textures.IDS;
+import static com.gamesbykevin.breakout.opengl.Textures.TEXTURE_ID_FIREBALL;
 import static com.gamesbykevin.breakout.opengl.Textures.TOTAL_BALLS;
 
 public class Balls extends Entity implements ICommon
@@ -283,13 +284,9 @@ public class Balls extends Entity implements ICommon
 				//update ball
 				ball.update(activity);
 
-				//size of a brick
-				int tmpW = (int)getGame().getBricks().getBricks()[0][0].getWidth();
-				int tmpH = (int)getGame().getBricks().getBricks()[0][0].getHeight();
-
 				//get our location
-				int middleCol = (int)(ball.getX() - Bricks.START_X) / tmpW;
-				int middleRow = (int)(ball.getY() - Bricks.START_Y) / tmpH;
+				int middleCol = (int)(ball.getX() - Bricks.START_X) / Brick.WIDTH_NORMAL;
+				int middleRow = (int)(ball.getY() - Bricks.START_Y) / Brick.HEIGHT_NORMAL;
 
 				//calculate the bricks we are near to check for collision
 				for (int row = middleRow - 1; row <= middleRow + 1; row++) {
@@ -473,8 +470,21 @@ public class Balls extends Entity implements ICommon
 					if (i >= getBalls().size())
 						continue;
 
-					//render the ball
-					getBalls().get(i).render(openGL);
+					Ball ball = getBalls().get(i);
+
+					if (ball.isHidden())
+						continue;
+
+					super.setX(ball);
+					super.setY(ball);
+
+					if (ball.hasFire()) {
+						super.setTextureId(TEXTURE_ID_FIREBALL);
+					} else {
+						super.setTextureId(ball.getTextureId());
+					}
+
+					super.render(openGL);
 
 				} catch (Exception e) {
 					UtilityHelper.handleException(e);

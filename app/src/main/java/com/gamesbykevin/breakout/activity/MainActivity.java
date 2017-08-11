@@ -6,14 +6,13 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.gamesbykevin.breakout.R;
-import com.gamesbykevin.breakout.util.UtilityHelper;
 
 public class MainActivity extends BaseActivity {
 
     /**
      * Do we debug the application?
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
